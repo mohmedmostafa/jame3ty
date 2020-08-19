@@ -1,14 +1,15 @@
-const express = require("express");
-const fileUpload = require("express-fileupload");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const uploader = require('./app/middleware/uploader');
+const { PORT, ENV } = require('./app/config/env.config');
+const db = require('./app/models');
 
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: 'http://localhost:' + `${PORT}`,
 };
-
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
@@ -17,56 +18,62 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(fileUpload({
-  limits: { fileSize: 500 * 1024 * 1024 },
-}));
-
-
-// database
-const db = require("./app/models");
-const Role = db.role;
-
-db.sequelize.sync().then(() => {
-  //add seed data
-  // initial();
-});
-//MMostafa
-// force: true will drop the table if it already exists
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-//   initial();
-// });
-
-
 // check route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to jame3ty application." });
+app.get('/', uploader.none(), (req, res) => {
+  res.json({ message: 'Welcome to jame3ty application.' });
 });
 
 // routes
-require('./app/routes/auth.routes')(app);
-require('./app/routes/user.routes')(app);
+require('./app/routes/auth.routes')(app, uploader);
+require('./app/routes/user.routes')(app, uploader);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-
+  console.log(
+    `Server set up and running on port number: ${PORT}, environment: ${ENV}`
+  );
 });
 
+//--------------------------------------
+//--------------------------------------
+//--------------------------------------
+//ٍSync DB Tables according to Models
+//force: true will drop the table if it already exists
+if (1) {
+  db.connection
+    .query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
+    .then(async (result) => {
+      await db.connection.sync({ force: true }).then((result) => {
+        initial();
+      });
+    })
+    .then((result) => {
+      db.connection.query('SET FOREIGN_KEY_CHECKS = 1', null, { raw: true });
+    });
+}
+
+//Initialize tables with data such roles
 function initial() {
+  const ROLES_AR = ['user', 'admin', 'instructor'];
+  const ROLES_EN = ['طالب', 'مدير', 'محاضر'];
+
+  const Role = db.Role;
+
   Role.create({
     id: 1,
-    name: "user"
+    name_ar: ROLES_AR[0],
+    name_en: ROLES_EN[0],
   });
- 
+
   Role.create({
     id: 2,
-    name: "instructor"
+    name_ar: ROLES_AR[1],
+    name_en: ROLES_EN[1],
   });
- 
+
   Role.create({
     id: 3,
-    name: "admin"
+    name_ar: ROLES_AR[2],
+    name_en: ROLES_EN[2],
   });
 }

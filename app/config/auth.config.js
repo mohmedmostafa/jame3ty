@@ -1,3 +1,3 @@
 module.exports = {
-  secret: "sola-secret-key"
+  secret: 'sola-secret-key',
 };
