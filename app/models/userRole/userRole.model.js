@@ -1,5 +1,5 @@
 module.exports = (connection, Sequelize) => {
-  const userRole = connection.define(
+  const UserRole = connection.define(
     'userRoles',
     {
       id: {
@@ -25,19 +25,18 @@ module.exports = (connection, Sequelize) => {
       },
       createdAt: {
         type: Sequelize.DATE(3),
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP(3)'),
+        defaultValue: Sequelize.NOW,
         allowNull: false,
       },
       updatedAt: {
         type: Sequelize.DATE(3),
-        defaultValue: Sequelize.literal(
-          'CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)'
-        ),
+        defaultValue: Sequelize.NOW,
+        onUpdate: Sequelize.NOW,
         allowNull: false,
       },
     },
     { freezeTableName: true }
   );
 
-  return userRole;
+  return UserRole;
 };

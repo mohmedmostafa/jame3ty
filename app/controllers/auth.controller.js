@@ -4,8 +4,8 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 const { userSchema } = require('../models/user/user.validation');
 
-const User = db.user;
-const Role = db.role;
+const User = db.User;
+const Role = db.Role;
 
 const Op = db.Sequelize.Op;
 
@@ -77,9 +77,20 @@ exports.signin = (req, res) => {
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 86400, // 24 hours
       });
+      console.log(`Token: ${token}`);
 
       var authorities = [];
-      user.getRoles().then((roles) => {
+      User.findAll({
+        include: [
+          {
+            model: Role,
+            through: {
+              attributes: ['createdAt'],
+            },
+          },
+        ],
+      }).then((roles) => {
+        console.log(roles);
         for (let i = 0; i < roles.length; i++) {
           authorities.push('ROLE_' + roles[i].name.toUpperCase());
         }

@@ -26,7 +26,16 @@ db.connection = connection;
 
 db.User = require('./user/user.model.js')(connection, Sequelize);
 db.Role = require('./role/role.model.js')(connection, Sequelize);
-db.userRole = require('./userRole/userRole.model')(connection, Sequelize);
+db.UserRole = require('./userRole/userRole.model')(connection, Sequelize);
+db.User.belongsToMany(db.Role, {
+  through: 'userRoles',
+  foreignKey: 'role_id',
+});
+db.Role.belongsToMany(db.User, {
+  through: 'userRoles',
+  foreignKey: 'user_id',
+});
+
 db.University = require('./university/university.model')(connection, Sequelize);
 db.Faculty = require('./faculty/faculty.model')(connection, Sequelize);
 db.Department = require('./department/department.model')(connection, Sequelize);
@@ -69,4 +78,7 @@ db.lessonDiscussionComment = require('./lesson/lessonDiscussionComments.model')(
   Sequelize
 );
 
+//-----------------------
+
+//
 module.exports = db;

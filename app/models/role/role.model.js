@@ -14,6 +14,17 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      createdAt: {
+        type: Sequelize.DATE(3),
+        defaultValue: Sequelize.NOW,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: Sequelize.DATE(3),
+        defaultValue: Sequelize.NOW,
+        onUpdate: Sequelize.NOW,
+        allowNull: false,
+      },
     },
     { freezeTableName: true }
   );
