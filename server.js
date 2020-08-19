@@ -58,8 +58,8 @@ function initial() {
   //--------------------------------------------------
   /////////////////Role//////////////////////////////
   //--------------------------------------------------
-  const ROLES_AR = ['user', 'admin', 'instructor'];
-  const ROLES_EN = ['طالب', 'مدير', 'محاضر'];
+  const ROLES_EN = ['user', 'admin', 'instructor'];
+  const ROLES_AR = ['طالب', 'مدير', 'محاضر'];
   const Role = db.Role;
   Role.create({
     id: 1,

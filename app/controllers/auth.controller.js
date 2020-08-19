@@ -4,21 +4,18 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 const { userSchema } = require('../models/user/user.validation');
 
-const User = db.User;
-const Role = db.Role;
-
 const Op = db.Sequelize.Op;
 
 exports.signup = (req, res) => {
   // Save User to Database
-  User.create({
+  db.User.create({
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
   })
     .then((user) => {
       if (req.body.roles) {
-        Role.findAll({
+        db.Role.findAll({
           where: {
             name: {
               [Op.or]: req.body.roles,
@@ -52,7 +49,7 @@ exports.signin = (req, res) => {
     });
   }
 
-  User.findOne({
+  db.User.findOne({
     where: {
       username: req.body.username,
     },
@@ -80,7 +77,7 @@ exports.signin = (req, res) => {
       console.log(`Token: ${token}`);
 
       var authorities = [];
-      User.findAll({
+      db.User.findAll({
         include: [
           {
             model: Role,
@@ -92,7 +89,7 @@ exports.signin = (req, res) => {
       }).then((roles) => {
         console.log(roles);
         for (let i = 0; i < roles.length; i++) {
-          authorities.push('ROLE_' + roles[i].name.toUpperCase());
+          authorities.push('ROLE_' + roles[i].name_en.toUpperCase());
         }
         res.status(200).send({
           id: user.id,

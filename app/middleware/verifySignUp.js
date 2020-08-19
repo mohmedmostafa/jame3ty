@@ -1,12 +1,8 @@
 const db = require('../models');
 const Joi = require('joi');
 
-const Role = db.Role;
-const User = db.User;
-
 const schema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
-
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
 });
 
@@ -22,7 +18,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
   }
 
   // Username
-  User.findOne({
+  db.User.findOne({
     where: {
       username: req.body.username,
     },
@@ -35,7 +31,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     }
 
     // Email
-    User.findOne({
+    db.User.findOne({
       where: {
         email: req.body.email,
       },
@@ -55,7 +51,7 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
 checkRolesExisted = (req, res, next) => {
   if (req.body.roles) {
     for (let i = 0; i < req.body.roles.length; i++) {
-      if (!Role.includes(req.body.roles[i])) {
+      if (!db.Role.findAll({ where: { name_en: req.body.roles[i] } })) {
         res.status(422).send({
           message: 'Failed! Role does not exist = ' + req.body.roles[i],
         });
