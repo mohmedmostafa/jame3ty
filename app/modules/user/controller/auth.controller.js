@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const db = require('../models');
-const config = require('../config/auth.config');
-const { Response } = require('../common/response.handler');
+const db = require('../../../modules');
+const config = require('../../../config/auth.config');
+const { Response } = require('../../../common/response.handler');
 
 const db_connection = db.connection;
 const db_User = db.User;

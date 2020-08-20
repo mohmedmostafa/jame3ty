@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const uploader = require('./app/common/uploader');
 const { PORT, ENV } = require('./app/config/env.config');
-const db = require('./app/models');
+const db = require('./app/modules');
 
 const app = express();
 
@@ -24,9 +24,9 @@ app.get('/', uploader.none(), (req, res) => {
 });
 
 // routes
-require('./app/routes/auth.routes')(app, uploader);
-require('./app/routes/user.routes')(app, uploader);
-require('./app/routes/university.routes')(app, uploader);
+require('./app/modules/user/auth.routes')(app, uploader);
+require('./app/modules/user/user.routes')(app, uploader);
+require('./app/modules/university/university.routes')(app, uploader);
 
 // set port, listen for requests
 app.listen(PORT, () => {

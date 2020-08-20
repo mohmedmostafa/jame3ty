@@ -1,5 +1,5 @@
-const db = require('../models');
-const { Response, ValidateResponse } = require('../common/response.handler');
+const db = require('../../../modules');
+const { Response } = require('../../../common/response.handler');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;

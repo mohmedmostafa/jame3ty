@@ -1,5 +1,6 @@
-const AuthController = require('../controllers/auth.controller');
-const { VerifySignUp, UserValidation } = require('../middleware');
+const AuthController = require('../user/controller/auth.controller');
+const { VerifySignUp } = require('../../middleware');
+const UserValidation = require('./validation/user.validation');
 
 module.exports = function (app, uploader) {
   app.use(function (req, res, next) {

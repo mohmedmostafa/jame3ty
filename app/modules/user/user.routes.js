@@ -1,5 +1,5 @@
-const { AuthJwt } = require('../middleware');
-const UserController = require('../controllers/user.controller');
+const { AuthJwt } = require('../../middleware');
+const UserController = require('../../modules/user/controller/user.controller');
 
 module.exports = function (app, uploader) {
   app.use(function (req, res, next) {

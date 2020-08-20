@@ -1,5 +1,6 @@
-const { AuthJwt, UniversityValidation } = require('../middleware');
-const UniversityController = require('../controllers/university.controller');
+const { AuthJwt } = require('../../middleware');
+const UniversityValidation = require('./validation/university.validation');
+const UniversityController = require('../../modules/university/controller/university.controller');
 
 module.exports = function (app, uploader) {
   app.use(function (req, res, next) {

@@ -1,7 +1,7 @@
 const { Response, ValidateResponse } = require('../common/response.handler');
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');
-const db = require('../models');
+const db = require('../../app/modules');
 
 //---------------------------------------
 verifyToken = (req, res, next) => {
