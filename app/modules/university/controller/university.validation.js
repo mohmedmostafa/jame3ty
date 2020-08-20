@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { ValidateResponse } = require('../../../common/response.handler');
-const db = require('../../../modules');
+const db = require('../..');
 
 //----------------------------------------------------------
 addUniversityValidation = (req, res, next) => {

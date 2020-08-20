@@ -1,6 +1,6 @@
 const Joi = require('joi');
-const { Response, ValidateResponse } = require('../common/response.handler');
-const db = require('../modules');
+const { Response, ValidateResponse } = require('../../../common/response.handler');
+const db = require('../..');
 const db_User = db.User;
 const db_Role = db.Role;
 const Op = db.Sequelize.Op;
