@@ -14,7 +14,7 @@ module.exports = (connection, Sequelize) => {
       name_en: {
         type: Sequelize.STRING(255),
       },
-      faculty_id: {
+      facultyId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'faculties',

@@ -23,21 +23,21 @@ module.exports = (connection, Sequelize) => {
       img: {
         type: Sequelize.STRING(255),
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
           key: 'id',
         },
       },
-      academicYear_id: {
+      academicYearId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'academicYears',
           key: 'id',
         },
       },
-      department_id: {
+      departmentId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'departments',

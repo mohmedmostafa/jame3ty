@@ -40,7 +40,7 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
         defaultValue: 0,
       },
-      group_id: {
+      groupId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'groups',
@@ -48,7 +48,7 @@ module.exports = (connection, Sequelize) => {
         },
         allowNull: true,
       },
-      course_id: {
+      courseId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'courses',

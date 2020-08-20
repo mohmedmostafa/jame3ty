@@ -23,14 +23,14 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.DATE(3),
         allowNull: false,
       },
-      course_id: {
+      courseId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'courses',
           key: 'id',
         },
       },
-      instructor_id: {
+      instructorId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'instructors',

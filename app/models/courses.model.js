@@ -49,14 +49,14 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.ENUM('Live Streaming', 'Recorded Lessons'),
         allowNull: false,
       },
-      subjectYearDept_id: {
+      subjectYearDeptId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'subjectYearDept',
           key: 'id',
         },
       },
-      instructor_id: {
+      instructorId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'instructors',

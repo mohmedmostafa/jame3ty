@@ -15,14 +15,14 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      student_id: {
+      studentId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'students',
           key: 'id',
         },
       },
-      lesson_id: {
+      lessonId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'lessons',

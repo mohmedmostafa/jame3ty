@@ -32,7 +32,7 @@ module.exports = (connection, Sequelize) => {
       img: {
         type: Sequelize.STRING(255),
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',

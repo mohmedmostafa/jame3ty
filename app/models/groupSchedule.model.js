@@ -15,7 +15,7 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.DATE(3),
         allowNull: false,
       },
-      group_id: {
+      groupId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'groups',

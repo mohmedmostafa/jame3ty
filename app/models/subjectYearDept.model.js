@@ -7,21 +7,21 @@ module.exports = (connection, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      academicYear_id: {
+      academicYearId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'academicYears',
           key: 'id',
         },
       },
-      subject_id: {
+      subjectId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'subjects',
           key: 'id',
         },
       },
-      department_id: {
+      departmentId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'departments',

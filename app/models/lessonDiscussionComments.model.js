@@ -15,14 +15,14 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.DATE(3),
         allowNull: false,
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
           key: 'id',
         },
       },
-      lessonDiscussion_id: {
+      lessonDiscussionId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'lessonDiscussions',

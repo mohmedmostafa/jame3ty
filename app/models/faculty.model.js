@@ -18,7 +18,7 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      university_id: {
+      universityId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'universities',

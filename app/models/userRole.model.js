@@ -7,7 +7,7 @@ module.exports = (connection, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
@@ -16,14 +16,13 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
         unique: 'userRoles_unique',
       },
-      role_id: {
+      roleId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'roles',
           key: 'id',
         },
         allowNull: false,
-
         unique: 'userRoles_unique',
       },
       createdAt: {

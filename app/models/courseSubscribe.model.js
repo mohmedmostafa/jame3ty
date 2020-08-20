@@ -7,21 +7,21 @@ module.exports = (connection, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      student_id: {
+      studentId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'students',
           key: 'id',
         },
       },
-      group_id: {
+      groupId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'groups',
           key: 'id',
         },
       },
-      course_id: {
+      courseId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'courses',

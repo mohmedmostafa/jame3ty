@@ -31,17 +31,17 @@ db.UserRole = require('./userRole.model')(connection, Sequelize);
 //Relations
 db.User.belongsToMany(db.Role, {
   through: 'userRoles',
-  foreignKey: 'user_id',
+  foreignKey: 'userId',
 });
 db.Role.belongsToMany(db.User, {
   through: 'userRoles',
-  foreignKey: 'role_id',
+  foreignKey: 'roleId',
 });
 //
 db.University = require('./university.model')(connection, Sequelize);
 db.Faculty = require('./faculty.model')(connection, Sequelize);
 db.University.hasMany(db.Faculty, {
-  foreignKey: 'university_id',
+  foreignKey: 'universityId',
 });
 db.Faculty.belongsTo(db.University);
 //
