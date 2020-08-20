@@ -20,4 +20,37 @@ module.exports = function (app, uploader) {
     ],
     UniversityController.addUniversity
   );
+
+  app.put(
+    '/api/updateUniversity/:id',
+    uploader.none(),
+    [
+      UniversityValidation.updateUniversityValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+    ],
+    UniversityController.updateUniversity
+  );
+
+  app.get(
+    '/api/listUniversity',
+    uploader.none(),
+    [
+      UniversityValidation.listUniversityValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    UniversityController.listUniversity
+  );
+
+  app.post(
+    '/api/deleteUniversity/:id',
+    uploader.none(),
+    [
+      UniversityValidation.deleteUniversityValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+    ],
+    UniversityController.deleteUniversity
+  );
 };

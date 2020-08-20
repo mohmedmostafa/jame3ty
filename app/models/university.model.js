@@ -10,7 +10,6 @@ module.exports = (connection, Sequelize) => {
       name_ar: {
         type: Sequelize.STRING(255),
         unique: 'universities_name_ar_unique',
-        allowNull: false,
       },
       name_en: {
         type: Sequelize.STRING(255),

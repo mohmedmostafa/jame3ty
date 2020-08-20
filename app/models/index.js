@@ -37,9 +37,14 @@ db.Role.belongsToMany(db.User, {
   through: 'userRoles',
   foreignKey: 'role_id',
 });
-
+//
 db.University = require('./university.model')(connection, Sequelize);
 db.Faculty = require('./faculty.model')(connection, Sequelize);
+db.University.hasMany(db.Faculty, {
+  foreignKey: 'university_id',
+});
+db.Faculty.belongsTo(db.University);
+//
 db.Department = require('./department.model')(connection, Sequelize);
 db.AcademicYear = require('./academicYear.model')(connection, Sequelize);
 db.Subject = require('./subject.model')(connection, Sequelize);

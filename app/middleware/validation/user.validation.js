@@ -42,21 +42,6 @@ signupValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-addUniversityValidation = (req, res, next) => {
-  const schema = Joi.object({
-    name_ar: Joi.string().alphanum().min(7).max(30).required(),
-    name_en: Joi.string().alphanum().min(7).max(30).required(),
-  });
-
-  const { error } = schema.validate(req.body);
-  if (error) {
-    return ValidateResponse(res, error.details, {});
-  }
-
-  return next();
-};
-
-//----------------------------------------------------------
 const UserValidation = {
   signinValidation: signinValidation,
   signupValidation: signupValidation,
