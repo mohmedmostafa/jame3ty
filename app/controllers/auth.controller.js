@@ -1,106 +1,138 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const db = require('../models');
 const config = require('../config/auth.config');
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-const { userSchema } = require('../models/user/user.validation');
+const {
+  signinValidation,
+  signUPValidation,
+} = require('../models/user/user.validation');
+const { Response, ValidateResponse } = require('../common/response.handler');
 
+const db_User = db.User;
+const db_Role = db.Role;
+const db_connection = db.connection;
 const Op = db.Sequelize.Op;
 
-exports.signup = (req, res) => {
-  // Save User to Database
-  db.User.create({
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
-  })
-    .then((user) => {
-      if (req.body.roles) {
-        db.Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.roles,
-            },
-          },
-        }).then((roles) => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: 'User registered successfully!' });
-          });
-        });
-      } else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: 'User registered successfully!' });
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-};
-
-exports.signin = (req, res) => {
-  const { error, value } = userSchema.validate({
-    username: req.body.username,
-    password: req.body.password,
-  });
+//---------------------------------------------------------------
+exports.signup = async (req, res) => {
+  //Validation
+  const { error } = signUPValidation(req.body);
   if (error) {
-    res.status(422).send({
-      message: error.details,
-    });
+    return ValidateResponse(res, error.details, {});
   }
 
-  db.User.findOne({
+  //Get all info about roles attached with the new account
+  const roles = await db_Role.findAll({
     where: {
-      username: req.body.username,
+      name_en: {
+        [Op.in]: [req.body.roles.split(',')],
+      },
     },
-  })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: 'User Not found.' });
-      }
+  });
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
+  //Check that count of returned row equals to count of submited roles
+  if (roles.length != req.body.roles.split(',').length) {
+    return Response(res, 404, 'Roles are not valid!', {});
+  }
+
+  //Start "Managed" Transaction
+  try {
+    const user = await db_connection.transaction(async (t) => {
+      //Save the new account to DB
+      const user = await db_User.create(
+        {
+          username: req.body.username,
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 8),
+        },
+        { transaction: t }
       );
 
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: 'Invalid Password!',
+      //Add the roles to the new user
+      await user.setRoles(roles, { transaction: t });
+
+      return user;
+    });
+
+    //Success
+    return Response(res, 200, 'Success!', { user });
+  } catch (error) {
+    return Response(res, 500, 'Fail to add the new account!', { error });
+  }
+};
+
+//---------------------------------------------------------------
+exports.signin = async (req, res) => {
+  //Validation
+  const { error } = signinValidation(req.body);
+  if (error) {
+    return ValidateResponse(res, error.details, {});
+  }
+
+  //Get account info
+  await db_User
+    .findAll({
+      where: {
+        username: req.body.username,
+      },
+      include: [
+        {
+          model: db_Role,
+        },
+      ],
+    })
+    .then((loginUser) => {
+      //If username not found
+      if (loginUser.length <= 0) {
+        return Response(res, 404, 'User Not found!', {});
+      } else {
+        //Focus on the desired data
+        loginUser = loginUser.map(function (user) {
+          return user.get({ plain: true });
         });
-      }
+        loginUser = loginUser[0];
+        loginUser = JSON.parse(JSON.stringify(loginUser));
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400, // 24 hours
-      });
-      console.log(`Token: ${token}`);
-
-      var authorities = [];
-      db.User.findAll({
-        include: [
-          {
-            model: Role,
-            through: {
-              attributes: ['createdAt'],
-            },
-          },
-        ],
-      }).then((roles) => {
-        console.log(roles);
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push('ROLE_' + roles[i].name_en.toUpperCase());
+        //Get Roles For user
+        let authorities = [];
+        if (loginUser.roles.length > 0) {
+          loginUser.roles.forEach((elm) => {
+            authorities.push(elm.name_en);
+          });
         }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
+
+        console.log(loginUser);
+        console.log(authorities);
+
+        //Validate PW
+        var passwordIsValid = bcrypt.compareSync(
+          req.body.password,
+          loginUser.password
+        );
+
+        //If wrong PW
+        if (!passwordIsValid) {
+          return Response(res, 401, 'Invalid Password!', {});
+        }
+
+        //Generate JWT token for that user
+        var token = jwt.sign({ id: loginUser.id }, config.secret, {
+          expiresIn: 86400, // 24 hours
+        });
+
+        //Success
+        return Response(res, 200, 'Success!', {
+          id: loginUser.id,
+          username: loginUser.username,
+          email: loginUser.email,
           roles: authorities,
           accessToken: token,
         });
-      });
+      }
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      //Error
+      console.log(err);
+      return Response(res, 500, err.message, {});
     });
 };

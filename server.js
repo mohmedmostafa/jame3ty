@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
 const uploader = require('./app/middleware/uploader');
 const { PORT, ENV } = require('./app/config/env.config');
 const db = require('./app/models');
@@ -58,7 +57,7 @@ function initial() {
   //--------------------------------------------------
   /////////////////Role//////////////////////////////
   //--------------------------------------------------
-  const ROLES_EN = ['user', 'admin', 'instructor'];
+  const ROLES_EN = ['student', 'admin', 'instructor'];
   const ROLES_AR = ['طالب', 'مدير', 'محاضر'];
   const Role = db.Role;
   Role.create({
