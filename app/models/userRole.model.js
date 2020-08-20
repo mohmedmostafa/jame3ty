@@ -1,42 +1,30 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const Group = connection.define(
-    'group',
+  const UserRole = connection.define(
+    'userRoles',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      maxNumOfStudents: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      startDate: {
-        type: Sequelize.DATE(3),
-        allowNull: false,
-      },
-      endDate: {
-        type: Sequelize.DATE(3),
-        allowNull: false,
-      },
-      course_id: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'courses',
+          model: 'users',
           key: 'id',
         },
+        allowNull: false,
+        unique: 'userRoles_unique',
       },
-      instructor_id: {
+      role_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'instructors',
+          model: 'roles',
           key: 'id',
         },
+        allowNull: false,
+
+        unique: 'userRoles_unique',
       },
       createdAt: {
         type: Sequelize.DATE(3),
@@ -53,5 +41,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return Group;
+  return UserRole;
 };

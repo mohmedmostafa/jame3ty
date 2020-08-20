@@ -1,31 +1,31 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const SubjectYearDept = connection.define(
-    'subjectYearDept',
+  const lessonDiscussionComment = connection.define(
+    'lessonDiscussionComments',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      academicYear_id: {
+      text: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+      },
+      time: {
+        type: Sequelize.DATE(3),
+        allowNull: false,
+      },
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'academicYears',
+          model: 'users',
           key: 'id',
         },
       },
-      subject_id: {
+      lessonDiscussion_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'subjects',
-          key: 'id',
-        },
-      },
-      department_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'departments',
+          model: 'lessonDiscussions',
           key: 'id',
         },
       },
@@ -44,5 +44,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return SubjectYearDept;
+  return lessonDiscussionComment;
 };

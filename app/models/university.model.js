@@ -1,7 +1,6 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const AcademicYear = connection.define(
-    'academicYears',
+  const University = connection.define(
+    'universities',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -10,17 +9,12 @@ module.exports = (connection, Sequelize) => {
       },
       name_ar: {
         type: Sequelize.STRING(255),
+        unique: 'universities_name_ar_unique',
         allowNull: false,
       },
       name_en: {
         type: Sequelize.STRING(255),
-      },
-      faculty_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'faculties',
-          key: 'id',
-        },
+        unique: 'universities_name_en_unique',
       },
       createdAt: {
         type: Sequelize.DATE(3),
@@ -37,5 +31,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return AcademicYear;
+  return University;
 };

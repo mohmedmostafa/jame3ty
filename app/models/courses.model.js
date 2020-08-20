@@ -1,7 +1,6 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const Lesson = connection.define(
-    'lessons',
+  const Course = connection.define(
+    'courses',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -15,44 +14,52 @@ module.exports = (connection, Sequelize) => {
       name_en: {
         type: Sequelize.STRING(255),
       },
-      desc: {
+      code: {
         type: Sequelize.STRING(255),
+      },
+      desc: {
+        type: Sequelize.STRING(500),
+      },
+      prerequisiteText: {
+        type: Sequelize.STRING(500),
+      },
+      whatYouWillLearn: {
+        type: Sequelize.STRING(255),
+      },
+      numOfLessons: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      price: {
+        type: Sequelize.DOUBLE,
+        allowNull: false,
+      },
+      priceAfterDiscount: {
+        type: Sequelize.DOUBLE,
+      },
+      startDate: {
+        type: Sequelize.DATE(3),
+        allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM('Assignment', 'Visual Lesson'),
-        allowNull: true,
-      },
-      youtubeLink: {
-        type: Sequelize.STRING(255),
-      },
-      attachments: {
-        type: Sequelize.STRING(255),
-      },
-      isLiveStreaming: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.ENUM('Assignment', 'Subject'),
         allowNull: false,
-        defaultValue: 0,
       },
-      liveStreamingInfo: {
-        type: Sequelize.STRING(255),
-      },
-      isAssostatedWithGroup: {
-        type: Sequelize.BOOLEAN,
+      method: {
+        type: Sequelize.ENUM('Live Streaming', 'Recorded Lessons'),
         allowNull: false,
-        defaultValue: 0,
       },
-      group_id: {
+      subjectYearDept_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'groups',
+          model: 'subjectYearDept',
           key: 'id',
         },
-        allowNull: true,
       },
-      course_id: {
+      instructor_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'courses',
+          model: 'instructors',
           key: 'id',
         },
       },
@@ -71,5 +78,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return Lesson;
+  return Course;
 };

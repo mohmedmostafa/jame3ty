@@ -1,5 +1,5 @@
-const { authJwt } = require('../middleware');
-const controller = require('../controllers/user.controller');
+const { AuthJwt } = require('../middleware');
+const UserController = require('../controllers/user.controller');
 
 module.exports = function (app, uploader) {
   app.use(function (req, res, next) {
@@ -10,26 +10,26 @@ module.exports = function (app, uploader) {
     next();
   });
 
-  app.get('/api/test/all', uploader.none(), controller.allAccess);
+  app.get('/api/test/all', uploader.none(), UserController.allAccess);
 
   app.get(
     '/api/test/user',
     uploader.none(),
-    [authJwt.verifyToken],
-    controller.userBoard
+    [AuthJwt.VerifyToken],
+    UserController.userBoard
   );
 
   app.get(
     '/api/test/instructor',
     uploader.none(),
-    [authJwt.verifyToken, authJwt.isInstructor],
-    controller.instructorBoard
+    [AuthJwt.VerifyToken, AuthJwt.isInstructor],
+    UserController.instructorBoard
   );
 
   app.get(
     '/api/test/admin',
     uploader.none(),
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
+    [AuthJwt.VerifyToken, AuthJwt.isAdmin],
+    UserController.adminBoard
   );
 };

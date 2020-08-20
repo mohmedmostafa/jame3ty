@@ -1,32 +1,27 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const LessonDiscussion = connection.define(
-    'lessonDiscussions',
+  const Faculty = connection.define(
+    'faculties',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      text: {
+      name_ar: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      time: {
-        type: Sequelize.DATE(3),
-        allowNull: false,
+      name_en: {
+        type: Sequelize.STRING(255),
       },
-      user_id: {
+      bio: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      university_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'users',
-          key: 'id',
-        },
-      },
-      lesson_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'lessons',
+          model: 'universities',
           key: 'id',
         },
       },
@@ -45,5 +40,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return LessonDiscussion;
+  return Faculty;
 };

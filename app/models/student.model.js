@@ -1,31 +1,46 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const CourseSubscribe = connection.define(
-    'coursesSubscribes',
+  const Student = connection.define(
+    'students',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      student_id: {
+      name: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+      },
+      mobile: {
+        type: Sequelize.STRING(255),
+        unique: 'students_mobile_unique',
+      },
+      email: {
+        type: Sequelize.STRING(255),
+        unique: 'students_mobile_unique',
+        allowNull: false,
+      },
+      img: {
+        type: Sequelize.STRING(255),
+      },
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'students',
+          model: 'users',
           key: 'id',
         },
       },
-      group_id: {
+      academicYear_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'groups',
+          model: 'academicYears',
           key: 'id',
         },
       },
-      course_id: {
+      department_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'courses',
+          model: 'departments',
           key: 'id',
         },
       },
@@ -44,5 +59,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return CourseSubscribe;
+  return Student;
 };

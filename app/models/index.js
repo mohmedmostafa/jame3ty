@@ -24,56 +24,43 @@ const db = {};
 db.Sequelize = Sequelize;
 db.connection = connection;
 
-db.User = require('./user/user.model.js')(connection, Sequelize);
-db.Role = require('./role/role.model.js')(connection, Sequelize);
-db.UserRole = require('./userRole/userRole.model')(connection, Sequelize);
+//Models
+db.User = require('./user.model.js')(connection, Sequelize);
+db.Role = require('./role.model.js')(connection, Sequelize);
+db.UserRole = require('./userRole.model')(connection, Sequelize);
+//Relations
 db.User.belongsToMany(db.Role, {
-  through: 'userRoles',
-  foreignKey: 'role_id',
-});
-db.Role.belongsToMany(db.User, {
   through: 'userRoles',
   foreignKey: 'user_id',
 });
+db.Role.belongsToMany(db.User, {
+  through: 'userRoles',
+  foreignKey: 'role_id',
+});
 
-db.University = require('./university/university.model')(connection, Sequelize);
-db.Faculty = require('./faculty/faculty.model')(connection, Sequelize);
-db.Department = require('./department/department.model')(connection, Sequelize);
-db.AcademicYear = require('./academicYear/academicYear.model')(
+db.University = require('./university.model')(connection, Sequelize);
+db.Faculty = require('./faculty.model')(connection, Sequelize);
+db.Department = require('./department.model')(connection, Sequelize);
+db.AcademicYear = require('./academicYear.model')(connection, Sequelize);
+db.Subject = require('./subject.model')(connection, Sequelize);
+db.SubjectYearDept = require('./subjectYearDept.model')(connection, Sequelize);
+db.Instructor = require('./instructor.model')(connection, Sequelize);
+db.Course = require('./courses.model')(connection, Sequelize);
+db.Student = require('./student.model')(connection, Sequelize);
+db.Group = require('./group.model')(connection, Sequelize);
+db.Lesson = require('./lesson.model')(connection, Sequelize);
+db.AssignmentSubmission = require('./assignmentSubmission.model')(
   connection,
   Sequelize
 );
-db.Subject = require('./subject/subject.model')(connection, Sequelize);
-db.SubjectYearDept = require('./subjectYearDept/subjectYearDept.model')(
+db.CourseSubscribe = require('./courseSubscribe.model')(connection, Sequelize);
+db.RatingAndReview = require('./ratingAndReview.model')(connection, Sequelize);
+db.GroupSchedule = require('./groupSchedule.model')(connection, Sequelize);
+db.LessonDiscussion = require('./lessonDiscussion.model')(
   connection,
   Sequelize
 );
-db.Instructor = require('./instructor/instructor.model')(connection, Sequelize);
-db.Course = require('./courses/courses.model')(connection, Sequelize);
-db.Student = require('./student/student.model')(connection, Sequelize);
-db.Group = require('./group/group.model')(connection, Sequelize);
-db.Lesson = require('./lesson/lesson.model')(connection, Sequelize);
-db.AssignmentSubmission = require('./assignmentSubmission/assignmentSubmission.model')(
-  connection,
-  Sequelize
-);
-db.CourseSubscribe = require('./courseSubscribe/courseSubscribe.model')(
-  connection,
-  Sequelize
-);
-db.RatingAndReview = require('./courseSubscribe/ratingAndReview.model')(
-  connection,
-  Sequelize
-);
-db.GroupSchedule = require('./group/groupSchedule.model')(
-  connection,
-  Sequelize
-);
-db.LessonDiscussion = require('./lesson/lessonDiscussion.model')(
-  connection,
-  Sequelize
-);
-db.lessonDiscussionComment = require('./lesson/lessonDiscussionComments.model')(
+db.lessonDiscussionComment = require('./lessonDiscussionComments.model')(
   connection,
   Sequelize
 );

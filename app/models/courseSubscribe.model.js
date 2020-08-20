@@ -1,20 +1,11 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const AssignmentSubmission = connection.define(
-    'assignmentsSubmission',
+  const CourseSubscribe = connection.define(
+    'coursesSubscribes',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-      },
-      submissionDate: {
-        type: Sequelize.DATE(3),
-        allowNull: false,
-      },
-      attachments: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
       },
       student_id: {
         type: Sequelize.INTEGER,
@@ -23,10 +14,17 @@ module.exports = (connection, Sequelize) => {
           key: 'id',
         },
       },
-      lesson_id: {
+      group_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'lessons',
+          model: 'groups',
+          key: 'id',
+        },
+      },
+      course_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'courses',
           key: 'id',
         },
       },
@@ -45,5 +43,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return AssignmentSubmission;
+  return CourseSubscribe;
 };

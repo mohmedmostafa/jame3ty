@@ -1,5 +1,5 @@
-const { verifySignUp } = require('../middleware');
-const controller = require('../controllers/auth.controller');
+const AuthController = require('../controllers/auth.controller');
+const { VerifySignUp, UserValidation } = require('../middleware');
 
 module.exports = function (app, uploader) {
   app.use(function (req, res, next) {
@@ -7,18 +7,24 @@ module.exports = function (app, uploader) {
       'Access-Control-Allow-Headers',
       'x-access-token, Origin, Content-Type, Accept'
     );
-    next();
+    return next();
   });
+
+  app.post(
+    '/api/auth/signin',
+    uploader.none(),
+    [UserValidation.signinValidation],
+    AuthController.signin
+  );
 
   app.post(
     '/api/auth/signup',
     uploader.none(),
     [
-      verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted,
+      UserValidation.signupValidation,
+      VerifySignUp.checkDuplicateUsernameOrEmail,
+      VerifySignUp.checkRolesExisted,
     ],
-    controller.signup
+    AuthController.signup
   );
-
-  app.post('/api/auth/signin', uploader.none(), controller.signin);
 };

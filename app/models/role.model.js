@@ -1,7 +1,6 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const Faculty = connection.define(
-    'faculties',
+  const Role = connection.define(
+    'roles',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -9,22 +8,14 @@ module.exports = (connection, Sequelize) => {
         autoIncrement: true,
       },
       name_ar: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING,
         allowNull: false,
+        unique: 'roles_name_ar_unique',
       },
       name_en: {
-        type: Sequelize.STRING(255),
-      },
-      bio: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      university_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'universities',
-          key: 'id',
-        },
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: 'roles_name_en_unique',
       },
       createdAt: {
         type: Sequelize.DATE(3),
@@ -41,5 +32,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return Faculty;
+  return Role;
 };

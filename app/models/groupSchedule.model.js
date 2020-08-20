@@ -1,27 +1,26 @@
 module.exports = (connection, Sequelize) => {
-  const UserRole = connection.define(
-    'userRoles',
+  const GroupSchedule = connection.define(
+    'groupSchedules',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
-        unique: 'userRoles_unique',
+      day: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
       },
-      role_id: {
+      time: {
+        type: Sequelize.DATE(3),
+        allowNull: false,
+      },
+      group_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'roles',
+          model: 'groups',
           key: 'id',
         },
-        unique: 'userRoles_unique',
       },
       createdAt: {
         type: Sequelize.DATE(3),
@@ -38,5 +37,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return UserRole;
+  return GroupSchedule;
 };

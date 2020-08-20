@@ -1,18 +1,25 @@
 module.exports = (connection, Sequelize) => {
-  const Role = connection.define(
-    'roles',
+  const AcademicYear = connection.define(
+    'academicYears',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
       },
       name_ar: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(255),
         allowNull: false,
       },
       name_en: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING(255),
+      },
+      faculty_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'faculties',
+          key: 'id',
+        },
       },
       createdAt: {
         type: Sequelize.DATE(3),
@@ -29,5 +36,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return Role;
+  return AcademicYear;
 };

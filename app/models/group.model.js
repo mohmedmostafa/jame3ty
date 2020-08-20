@@ -1,28 +1,39 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const RatingAndReview = connection.define(
-    'RatingAndReviews',
+  const Group = connection.define(
+    'group',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      date: {
+      name: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+      },
+      maxNumOfStudents: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      startDate: {
         type: Sequelize.DATE(3),
         allowNull: false,
       },
-      reviewText: {
-        type: Sequelize.STRING(255),
-      },
-      rate: {
-        type: Sequelize.STRING(255),
+      endDate: {
+        type: Sequelize.DATE(3),
         allowNull: false,
       },
-      courseSubscribe_id: {
+      course_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'coursesSubscribes',
+          model: 'courses',
+          key: 'id',
+        },
+      },
+      instructor_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'instructors',
           key: 'id',
         },
       },
@@ -41,5 +52,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return RatingAndReview;
+  return Group;
 };

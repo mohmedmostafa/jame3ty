@@ -1,4 +1,3 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
   const Department = connection.define(
     'departments',

@@ -2,25 +2,15 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const config = require('../config/auth.config');
-const {
-  signinValidation,
-  signUPValidation,
-} = require('../models/user/user.validation');
-const { Response, ValidateResponse } = require('../common/response.handler');
+const { Response } = require('../common/response.handler');
 
+const db_connection = db.connection;
 const db_User = db.User;
 const db_Role = db.Role;
-const db_connection = db.connection;
 const Op = db.Sequelize.Op;
 
 //---------------------------------------------------------------
 exports.signup = async (req, res) => {
-  //Validation
-  const { error } = signUPValidation(req.body);
-  if (error) {
-    return ValidateResponse(res, error.details, {});
-  }
-
   //Get all info about roles attached with the new account
   const roles = await db_Role.findAll({
     where: {
@@ -29,11 +19,6 @@ exports.signup = async (req, res) => {
       },
     },
   });
-
-  //Check that count of returned row equals to count of submited roles
-  if (roles.length != req.body.roles.split(',').length) {
-    return Response(res, 404, 'Roles are not valid!', {});
-  }
 
   //Start "Managed" Transaction
   try {
@@ -57,18 +42,12 @@ exports.signup = async (req, res) => {
     //Success
     return Response(res, 200, 'Success!', { user });
   } catch (error) {
-    return Response(res, 500, 'Fail to add the new account!', { error });
+    return Response(res, 500, 'Fail to add the new user!', { error });
   }
 };
 
 //---------------------------------------------------------------
 exports.signin = async (req, res) => {
-  //Validation
-  const { error } = signinValidation(req.body);
-  if (error) {
-    return ValidateResponse(res, error.details, {});
-  }
-
   //Get account info
   await db_User
     .findAll({

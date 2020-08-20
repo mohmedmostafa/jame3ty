@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const uploader = require('./app/middleware/uploader');
+const uploader = require('./app/common/uploader');
 const { PORT, ENV } = require('./app/config/env.config');
 const db = require('./app/models');
 
@@ -26,6 +26,7 @@ app.get('/', uploader.none(), (req, res) => {
 // routes
 require('./app/routes/auth.routes')(app, uploader);
 require('./app/routes/user.routes')(app, uploader);
+require('./app/routes/university.routes')(app, uploader);
 
 // set port, listen for requests
 app.listen(PORT, () => {

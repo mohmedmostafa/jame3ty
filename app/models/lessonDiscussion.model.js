@@ -1,28 +1,33 @@
 module.exports = (connection, Sequelize) => {
-  const University = connection.define(
-    'universities',
+  const LessonDiscussion = connection.define(
+    'lessonDiscussions',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      name_ar: {
+      text: {
         type: Sequelize.STRING(255),
-        unique: 'universities_name_ar_unique',
         allowNull: false,
       },
-      name_en: {
-        type: Sequelize.STRING(255),
-        unique: 'universities_name_en_unique',
+      time: {
+        type: Sequelize.DATE(3),
+        allowNull: false,
       },
-      bio: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
-      address: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+      lesson_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'lessons',
+          key: 'id',
+        },
       },
       createdAt: {
         type: Sequelize.DATE(3),
@@ -39,5 +44,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return University;
+  return LessonDiscussion;
 };

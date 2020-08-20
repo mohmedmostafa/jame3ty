@@ -1,25 +1,30 @@
-const University = require('../university/university.model');
 module.exports = (connection, Sequelize) => {
-  const GroupSchedule = connection.define(
-    'groupSchedules',
+  const SubjectYearDept = connection.define(
+    'subjectYearDept',
     {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      day: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      time: {
-        type: Sequelize.DATE(3),
-        allowNull: false,
-      },
-      group_id: {
+      academicYear_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'groups',
+          model: 'academicYears',
+          key: 'id',
+        },
+      },
+      subject_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'subjects',
+          key: 'id',
+        },
+      },
+      department_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'departments',
           key: 'id',
         },
       },
@@ -38,5 +43,5 @@ module.exports = (connection, Sequelize) => {
     { freezeTableName: true }
   );
 
-  return GroupSchedule;
+  return SubjectYearDept;
 };
