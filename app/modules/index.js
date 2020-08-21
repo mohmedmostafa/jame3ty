@@ -171,14 +171,14 @@ db.Instructor.hasMany(db.Group, {
 db.Group.belongsTo(db.Instructor);
 //
 //
-db.Instructor.hasOne(db.User);
-db.User.belongsTo(db.Instructor, {
+db.Instructor.belongsTo(db.User);
+db.User.hasOne(db.Instructor, {
   foreignKey: 'userId',
 });
 //
 //
-db.Student.hasOne(db.User);
-db.User.belongsTo(db.Student, {
+db.Student.belongsTo(db.User);
+db.User.hasOne(db.Student, {
   foreignKey: 'userId',
 });
 //

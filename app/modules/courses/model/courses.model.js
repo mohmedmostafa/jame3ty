@@ -45,13 +45,13 @@ module.exports = (connection, Sequelize) => {
         //type: Sequelize.ENUM('Assignment', 'Subject'),
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: '1:Subject | 2:Assignment',
+        comment: '0:Subject | 1:Assignment',
       },
       method: {
         //type: Sequelize.ENUM('Live Streaming', 'Recorded Lessons'),
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: '1:Live Streaming | 2:Recorded Lessons',
+        comment: '0:Live Streaming | 1:Recorded Lessons',
       },
       subjectId: {
         type: Sequelize.INTEGER,
