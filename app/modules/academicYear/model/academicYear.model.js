@@ -14,12 +14,12 @@ module.exports = (connection, Sequelize) => {
       name_en: {
         type: Sequelize.STRING(255),
       },
-      facultyId: {
+      departmentId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT',
         references: {
-          model: 'faculties',
+          model: 'departments',
           key: 'id',
         },
       },

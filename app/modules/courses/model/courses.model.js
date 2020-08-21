@@ -34,7 +34,7 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.DOUBLE,
         allowNull: false,
       },
-      priceAfterDiscount: {
+      priceBeforeDiscount: {
         type: Sequelize.DOUBLE,
       },
       startDate: {
@@ -42,19 +42,23 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM('Assignment', 'Subject'),
+        //type: Sequelize.ENUM('Assignment', 'Subject'),
+        type: Sequelize.INTEGER,
         allowNull: false,
+        comment: '1:Subject | 2:Assignment',
       },
       method: {
-        type: Sequelize.ENUM('Live Streaming', 'Recorded Lessons'),
+        //type: Sequelize.ENUM('Live Streaming', 'Recorded Lessons'),
+        type: Sequelize.INTEGER,
         allowNull: false,
+        comment: '1:Live Streaming | 2:Recorded Lessons',
       },
-      subjectYearDeptId: {
+      subjectId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT',
         references: {
-          model: 'subjectYearDept',
+          model: 'subjects',
           key: 'id',
         },
       },

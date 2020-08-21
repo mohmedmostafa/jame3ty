@@ -51,10 +51,6 @@ db.Subject = require('../modules/subject/model/subject.model')(
   connection,
   Sequelize
 );
-db.SubjectYearDept = require('../modules/subjectYearDept/model/subjectYearDept.model')(
-  connection,
-  Sequelize
-);
 db.Instructor = require('../modules/instructor/model/instructor.model')(
   connection,
   Sequelize
@@ -108,20 +104,148 @@ db.Role.belongsToMany(db.User, {
   foreignKey: 'roleId',
 });
 //
+//
 db.University.hasMany(db.Faculty, {
   foreignKey: 'universityId',
 });
 db.Faculty.belongsTo(db.University);
 //
-db.Faculty.hasMany(db.AcademicYear, {
-  foreignKey: 'facultyId',
-});
-db.AcademicYear.belongsTo(db.Faculty);
 //
 db.Faculty.hasMany(db.Department, {
   foreignKey: 'facultyId',
 });
 db.Department.belongsTo(db.Faculty);
+//
+//
+db.Department.hasMany(db.AcademicYear, {
+  foreignKey: 'departmentId',
+});
+db.AcademicYear.belongsTo(db.Department);
+//
+//
+db.AcademicYear.hasMany(db.Subject, {
+  foreignKey: '',
+});
+db.Subject.belongsTo(db.AcademicYear);
+//
+//
+db.Subject.hasMany(db.Course, {
+  foreignKey: 'subjectId',
+});
+db.Course.belongsTo(db.Subject);
+//
+//
+db.Course.hasMany(db.Group, {
+  foreignKey: 'courseId',
+});
+db.Group.belongsTo(db.Course);
+//
+//
+db.Instructor.hasMany(db.Course, {
+  foreignKey: 'instructorId',
+});
+db.Course.belongsTo(db.Instructor);
+//
+//
+db.Group.hasMany(db.GroupSchedule, {
+  foreignKey: 'groupId',
+});
+db.GroupSchedule.belongsTo(db.Group);
+//
+//
+db.Course.hasMany(db.Lesson, {
+  foreignKey: 'courseId',
+});
+db.Lesson.belongsTo(db.Course);
+//
+//
+db.Group.hasMany(db.Lesson, {
+  foreignKey: 'groupId',
+});
+db.Lesson.belongsTo(db.Group);
+//
+//
+db.Instructor.hasMany(db.Group, {
+  foreignKey: 'instructorId',
+});
+db.Group.belongsTo(db.Instructor);
+//
+//
+db.Instructor.hasOne(db.User);
+db.User.belongsTo(db.Instructor, {
+  foreignKey: 'userId',
+});
+//
+//
+db.Student.hasOne(db.User);
+db.User.belongsTo(db.Student, {
+  foreignKey: 'userId',
+});
+//
+//
+db.Student.belongsToMany(db.AssignmentSubmission, {
+  through: 'assignmentsSubmission',
+  foreignKey: 'studentId',
+});
+db.Lesson.belongsToMany(db.AssignmentSubmission, {
+  through: 'assignmentsSubmission',
+  foreignKey: 'lessonId',
+});
+//
+//
+db.AcademicYear.hasMany(db.Student, {
+  foreignKey: 'academicYearId',
+});
+db.Student.belongsTo(db.AcademicYear);
+//
+//
+db.Lesson.hasMany(db.LessonDiscussion, {
+  foreignKey: 'lessonId',
+});
+db.LessonDiscussion.belongsTo(db.Lesson);
+//
+//
+db.User.hasMany(db.LessonDiscussion, {
+  foreignKey: 'userId',
+});
+db.LessonDiscussion.belongsTo(db.User);
+//
+//
+db.User.hasMany(db.lessonDiscussionComment, {
+  foreignKey: 'userId',
+});
+db.lessonDiscussionComment.belongsTo(db.User);
+//
+//
+db.LessonDiscussion.hasMany(db.lessonDiscussionComment, {
+  foreignKey: 'lessonDiscussionId',
+});
+db.lessonDiscussionComment.belongsTo(db.LessonDiscussion);
+//
+//
+db.Student.hasMany(db.CourseSubscribe, {
+  foreignKey: 'studentId',
+});
+db.CourseSubscribe.belongsTo(db.Student);
+//
+//
+db.CourseSubscribe.hasMany(db.RatingAndReview, {
+  foreignKey: 'courseSubscribeId',
+});
+db.RatingAndReview.belongsTo(db.CourseSubscribe);
+//
+//
+db.Course.hasMany(db.CourseSubscribe, {
+  foreignKey: 'courseId',
+});
+db.CourseSubscribe.belongsTo(db.Course);
+//
+//
+db.Group.hasMany(db.CourseSubscribe, {
+  foreignKey: 'groupId',
+});
+db.CourseSubscribe.belongsTo(db.Group);
+//
 //
 
 module.exports = db;

@@ -4,6 +4,7 @@ const { Response } = require('../../../common/response.handler');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_AcademicYear = db.AcademicYear;
 const db_Department = db.Department;
 const db_connection = db.connection;
 
@@ -85,6 +86,9 @@ exports.deleteFaculty = async (req, res) => {
       where: { id: req.params.id },
       include: [
         {
+          model: db_AcademicYear,
+        },
+        {
           model: db_Department,
         },
       ],
@@ -97,7 +101,7 @@ exports.deleteFaculty = async (req, res) => {
     faculty = faculty.get({ plain: true });
 
     //Check if the Universtiy has Faculty
-    if (faculty.departments.length > 0) {
+    if (faculty.academicYears.length > 0 || faculty.departments.length > 0) {
       return Response(res, 400, "Can't Delete. Has Childs", {
         faculty,
       });
@@ -159,6 +163,9 @@ exports.listFaculty = async (req, res) => {
         },
         include: [
           {
+            model: db_AcademicYear,
+          },
+          {
             model: db_Department,
           },
         ],
@@ -182,6 +189,9 @@ exports.listFaculty = async (req, res) => {
           ],
         },
         include: [
+          {
+            model: db_AcademicYear,
+          },
           {
             model: db_Department,
           },

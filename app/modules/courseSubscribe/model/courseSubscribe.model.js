@@ -20,6 +20,7 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT',
+        allowNull: true,
         references: {
           model: 'groups',
           key: 'id',

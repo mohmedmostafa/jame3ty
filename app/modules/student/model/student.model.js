@@ -41,15 +41,6 @@ module.exports = (connection, Sequelize) => {
           key: 'id',
         },
       },
-      departmentId: {
-        type: Sequelize.INTEGER,
-        onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
-        references: {
-          model: 'departments',
-          key: 'id',
-        },
-      },
       createdAt: {
         type: Sequelize.DATE(3),
         defaultValue: Sequelize.NOW,
