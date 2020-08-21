@@ -27,6 +27,7 @@ app.get('/', uploader.none(), (req, res) => {
 require('./app/modules/user/auth.routes')(app, uploader);
 require('./app/modules/user/user.routes')(app, uploader);
 require('./app/modules/university/university.routes')(app, uploader);
+require('./app/modules/faculty/faculty.routes')(app, uploader);
 
 // set port, listen for requests
 app.listen(PORT, () => {

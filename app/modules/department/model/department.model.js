@@ -20,6 +20,8 @@ module.exports = (connection, Sequelize) => {
       },
       facultyId: {
         type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
         references: {
           model: 'faculties',
           key: 'id',

@@ -34,6 +34,8 @@ module.exports = (connection, Sequelize) => {
       },
       userId: {
         type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
         references: {
           model: 'users',
           key: 'id',

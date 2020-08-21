@@ -1,6 +1,6 @@
 const { AuthJwt } = require('../../middleware');
-const UniversityValidation = require('./controller/university.validation');
-const UniversityController = require('./controller/university.controller');
+const FacultyValidation = require('./controller/faculty.validation');
+const FacultyController = require('./controller/faculty.controller');
 
 module.exports = function (app, uploader) {
   app.use(function (req, res, next) {
@@ -12,46 +12,47 @@ module.exports = function (app, uploader) {
   });
 
   app.post(
-    '/api/addUniversity',
+    '/api/addFaculty',
     uploader.none(),
     [
-      UniversityValidation.addUniversityValidation,
+      FacultyValidation.addFacultyValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isAdmin,
     ],
-    UniversityController.addUniversity
-  );
-
-  app.put(
-    '/api/updateUniversity/:id',
-    uploader.none(),
-    [
-      UniversityValidation.updateUniversityValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    UniversityController.updateUniversity
-  );
-
-  app.get(
-    '/api/listUniversity',
-    uploader.none(),
-    [
-      UniversityValidation.listUniversityValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
-    ],
-    UniversityController.listUniversity
+    FacultyController.addFaculty
   );
 
   app.post(
-    '/api/deleteUniversity/:id',
+    '/api/updateFaculty/:id',
     uploader.none(),
     [
-      UniversityValidation.deleteUniversityValidation,
+      FacultyValidation.updateFacultyValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isAdmin,
     ],
-    UniversityController.deleteUniversity
+    FacultyController.updateFaculty
+  );
+
+  /*
+  app.get(
+    '/api/listFaculty',
+    uploader.none(),
+    [
+      FacultyValidation.listFacultyValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    FacultyController.listFaculty
+  );*/
+
+  app.post(
+    '/api/deleteFaculty/:id',
+    uploader.none(),
+    [
+      FacultyValidation.deleteFacultyValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+    ],
+    FacultyController.deleteFaculty
   );
 };

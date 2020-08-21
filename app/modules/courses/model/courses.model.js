@@ -51,6 +51,8 @@ module.exports = (connection, Sequelize) => {
       },
       subjectYearDeptId: {
         type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
         references: {
           model: 'subjectYearDept',
           key: 'id',
@@ -58,6 +60,8 @@ module.exports = (connection, Sequelize) => {
       },
       instructorId: {
         type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
         references: {
           model: 'instructors',
           key: 'id',

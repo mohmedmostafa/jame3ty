@@ -1,13 +1,14 @@
 const Joi = require('joi');
 const { ValidateResponse } = require('../../../common/response.handler');
-const db = require('../..');
+const db = require('../../');
 
 //----------------------------------------------------------
-addUniversityValidation = (req, res, next) => {
+addFacultyValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
+    universityId: Joi.number().integer().required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -19,7 +20,7 @@ addUniversityValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-updateUniversityValidation = (req, res, next) => {
+updateFacultyValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -36,6 +37,7 @@ updateUniversityValidation = (req, res, next) => {
   const schema = Joi.object({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
+    universityId: Joi.number().integer().required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -47,7 +49,7 @@ updateUniversityValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-listUniversityValidation = (req, res, next) => {
+listFacultyValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     doPagination: Joi.number().integer().valid(1, 0).default(1),
@@ -66,7 +68,7 @@ listUniversityValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-deleteUniversityValidation = (req, res, next) => {
+deleteFacultyValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -83,11 +85,11 @@ deleteUniversityValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-const UniversityValidation = {
-  addUniversityValidation: addUniversityValidation,
-  updateUniversityValidation: updateUniversityValidation,
-  listUniversityValidation: listUniversityValidation,
-  deleteUniversityValidation: deleteUniversityValidation,
+const FacultyValidation = {
+  addFacultyValidation: addFacultyValidation,
+  updateFacultyValidation: updateFacultyValidation,
+  listFacultyValidation: listFacultyValidation,
+  deleteFacultyValidation: deleteFacultyValidation,
 };
 
-module.exports = UniversityValidation;
+module.exports = FacultyValidation;

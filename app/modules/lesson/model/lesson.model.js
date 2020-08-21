@@ -42,6 +42,8 @@ module.exports = (connection, Sequelize) => {
       },
       groupId: {
         type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
         references: {
           model: 'groups',
           key: 'id',
@@ -50,6 +52,8 @@ module.exports = (connection, Sequelize) => {
       },
       courseId: {
         type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT',
         references: {
           model: 'courses',
           key: 'id',

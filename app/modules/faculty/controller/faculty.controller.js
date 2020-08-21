@@ -1,21 +1,32 @@
-const db = require('../../../modules');
+const db = require('../..');
 const { Response } = require('../../../common/response.handler');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_connection = db.connection;
 
 //---------------------------------------------------------------
-exports.addUniversity = async (req, res) => {
+exports.addFaculty = async (req, res) => {
   try {
-    //Save TO DB
-    const uni = await db_University.create({
+    //Check if the University is already exsits
+    const university = await db_University.findByPk(
+      parseInt(req.body.universityId)
+    );
+
+    if (!university) {
+      return Response(res, 400, 'University Not Found!', {});
+    }
+
+    //Save to DB
+    const faculty = await db_Faculty.create({
       name_ar: req.body.name_ar,
       name_en: req.body.name_en,
+      universityId: parseInt(req.body.universityId),
     });
 
     //Success
-    return Response(res, 200, 'Success!', { uni });
+    return Response(res, 200, 'Success!', { faculty });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add', { error });
@@ -23,27 +34,42 @@ exports.addUniversity = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-exports.updateUniversity = async (req, res) => {
+exports.updateFaculty = async (req, res) => {
   try {
-    //Check if the University is already exsits
-    let university = await db_University.findByPk(req.params.id);
-    university = university.get({ plain: true });
+    //Check if the faculty is already exsits
+    let faculty = await db_Faculty.findByPk(req.params.id);
+    faculty = faculty.get({ plain: true });
 
-    if (!university) {
-      return Response(res, 400, 'University Not Found!', {});
+    if (!faculty) {
+      return Response(res, 400, 'Faculty Not Found!', {});
+    }
+
+    //Check the universityId is changed
+    if (req.body.universityId != faculty.universityId) {
+      //Check if the University is already exsits
+      const university = await db_University.findByPk(
+        parseInt(req.body.universityId)
+      );
+
+      if (!university) {
+        return Response(res, 400, 'University Not Found!', {});
+      }
     }
 
     //Do Update
-    university = await db_University.update(
+    faculty = await db_Faculty.update(
       {
-        name_ar: req.body.name_ar ? req.body.name_ar : university.name_ar,
-        name_en: req.body.name_en ? req.body.name_en : university.name_en,
+        name_ar: req.body.name_ar ? req.body.name_ar : faculty.name_ar,
+        name_en: req.body.name_en ? req.body.name_en : faculty.name_en,
+        universityId: req.body.universityId
+          ? req.body.universityId
+          : faculty.universityId,
       },
       { where: { id: req.params.id } }
     );
 
     //Success
-    return Response(res, 200, 'Success!', { university });
+    return Response(res, 200, 'Success!', { faculty });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -51,10 +77,10 @@ exports.updateUniversity = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-exports.deleteUniversity = async (req, res) => {
+exports.deleteFaculty = async (req, res) => {
   try {
     //Select Childs
-    let university = await db_University.findOne({
+    let faculty = await db_Faculty.findOne({
       where: { id: req.params.id },
       include: [
         {
@@ -62,22 +88,22 @@ exports.deleteUniversity = async (req, res) => {
         },
       ],
     });
-    university = university.get({ plain: true });
+    faculty = faculty.get({ plain: true });
 
     //Check if the Universtiy has Faculty
-    if (university.faculties.length > 0) {
-      return Response(res, 400, "Can't Delete. The University has childs", {
-        university,
+    if (faculty.faculties.length > 0) {
+      return Response(res, 400, "Can't Delete. The University has faculties", {
+        faculty,
       });
     }
-
+    /*
     //Delete
-    university = await db_University.destroy({
+    faculty = await db_University.destroy({
       where: { id: req.params.id },
     });
-
+*/
     //Success
-    return Response(res, 200, 'Success!', { university });
+    return Response(res, 200, 'Success!', { faculty });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -85,7 +111,7 @@ exports.deleteUniversity = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-exports.listUniversity = async (req, res) => {
+exports.listFaculty = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
