@@ -4,6 +4,8 @@ const { Response } = require('../../../common/response.handler');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_AcademicYear = db.AcademicYear;
+const db_Department = db.Department;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
@@ -79,29 +81,37 @@ exports.updateFaculty = async (req, res) => {
 //---------------------------------------------------------------
 exports.deleteFaculty = async (req, res) => {
   try {
-    //Select Childs
+    //Check if the faculty is already exsits
     let faculty = await db_Faculty.findOne({
       where: { id: req.params.id },
       include: [
         {
-          model: db_Faculty,
+          model: db_AcademicYear,
+        },
+        {
+          model: db_Department,
         },
       ],
     });
+
+    if (!faculty) {
+      return Response(res, 400, 'Faculty Not Found!', {});
+    }
+
     faculty = faculty.get({ plain: true });
 
     //Check if the Universtiy has Faculty
-    if (faculty.faculties.length > 0) {
-      return Response(res, 400, "Can't Delete. The University has faculties", {
+    if (faculty.academicYears.length > 0 || faculty.departments.length > 0) {
+      return Response(res, 400, "Can't Delete. Has Childs", {
         faculty,
       });
     }
-    /*
+
     //Delete
-    faculty = await db_University.destroy({
+    faculty = await db_Faculty.destroy({
       where: { id: req.params.id },
     });
-*/
+
     //Success
     return Response(res, 200, 'Success!', { faculty });
   } catch (error) {
@@ -117,7 +127,7 @@ exports.listFaculty = async (req, res) => {
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_University.count({}).catch((error) => {
+  let numRows = await db_Faculty.count({}).catch((error) => {
     return Response(res, 500, 'Fail to Count!', { error });
   });
   numRows = parseInt(numRows);
@@ -133,10 +143,10 @@ exports.listFaculty = async (req, res) => {
   let name_ar = req.query.name_ar ? req.query.name_ar : '';
   let name_en = req.query.name_en ? req.query.name_en : '';
 
-  let data;
-  if (doPagination) {
-    data = await db_University
-      .findAll({
+  try {
+    let data;
+    if (doPagination) {
+      data = await db_Faculty.findAll({
         where: {
           [Op.or]: [
             {
@@ -151,16 +161,19 @@ exports.listFaculty = async (req, res) => {
             },
           ],
         },
+        include: [
+          {
+            model: db_AcademicYear,
+          },
+          {
+            model: db_Department,
+          },
+        ],
         offset: skip,
         limit: _limit,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(res, 500, 'Fail to Find!', { error });
       });
-  } else {
-    data = await db_University
-      .findAll({
+    } else {
+      data = await db_Faculty.findAll({
         where: {
           [Op.or]: [
             {
@@ -175,21 +188,28 @@ exports.listFaculty = async (req, res) => {
             },
           ],
         },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(res, 500, 'Fail to Find!', { error });
+        include: [
+          {
+            model: db_AcademicYear,
+          },
+          {
+            model: db_Department,
+          },
+        ],
       });
+    }
+
+    let result = {
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    //Success
+    return Response(res, 200, 'Success!', { result });
+  } catch (error) {
+    return Response(res, 500, 'Fail To Find!', { error });
   }
-
-  let result = {
-    numRows,
-    numPerPage,
-    numPages,
-    page,
-    data,
-  };
-
-  //Success
-  return Response(res, 200, 'Success!', { result });
 };

@@ -113,5 +113,15 @@ db.University.hasMany(db.Faculty, {
 });
 db.Faculty.belongsTo(db.University);
 //
+db.Faculty.hasMany(db.AcademicYear, {
+  foreignKey: 'facultyId',
+});
+db.AcademicYear.belongsTo(db.Faculty);
+//
+db.Faculty.hasMany(db.Department, {
+  foreignKey: 'facultyId',
+});
+db.Department.belongsTo(db.Faculty);
+//
 
 module.exports = db;

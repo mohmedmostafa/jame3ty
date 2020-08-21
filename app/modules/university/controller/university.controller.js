@@ -27,11 +27,12 @@ exports.updateUniversity = async (req, res) => {
   try {
     //Check if the University is already exsits
     let university = await db_University.findByPk(req.params.id);
-    university = university.get({ plain: true });
 
     if (!university) {
       return Response(res, 400, 'University Not Found!', {});
     }
+
+    university = university.get({ plain: true });
 
     //Do Update
     university = await db_University.update(
@@ -53,7 +54,7 @@ exports.updateUniversity = async (req, res) => {
 //---------------------------------------------------------------
 exports.deleteUniversity = async (req, res) => {
   try {
-    //Select Childs
+    //Check if the faculty is already exsits
     let university = await db_University.findOne({
       where: { id: req.params.id },
       include: [
@@ -62,6 +63,11 @@ exports.deleteUniversity = async (req, res) => {
         },
       ],
     });
+
+    if (!university) {
+      return Response(res, 400, 'University Not Found!', {});
+    }
+
     university = university.get({ plain: true });
 
     //Check if the Universtiy has Faculty
@@ -107,10 +113,10 @@ exports.listUniversity = async (req, res) => {
   let name_ar = req.query.name_ar ? req.query.name_ar : '';
   let name_en = req.query.name_en ? req.query.name_en : '';
 
-  let data;
-  if (doPagination) {
-    data = await db_University
-      .findAll({
+  try {
+    let data;
+    if (doPagination) {
+      data = await db_University.findAll({
         where: {
           [Op.or]: [
             {
@@ -127,14 +133,9 @@ exports.listUniversity = async (req, res) => {
         },
         offset: skip,
         limit: _limit,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(res, 500, 'Fail to Find!', { error });
       });
-  } else {
-    data = await db_University
-      .findAll({
+    } else {
+      data = await db_University.findAll({
         where: {
           [Op.or]: [
             {
@@ -149,21 +150,20 @@ exports.listUniversity = async (req, res) => {
             },
           ],
         },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(res, 500, 'Fail to Find!', { error });
       });
+    }
+
+    let result = {
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    //Success
+    return Response(res, 200, 'Success!', { result });
+  } catch (error) {
+    return Response(res, 500, 'Fail To Find!', { error });
   }
-
-  let result = {
-    numRows,
-    numPerPage,
-    numPages,
-    page,
-    data,
-  };
-
-  //Success
-  return Response(res, 200, 'Success!', { result });
 };

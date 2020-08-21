@@ -33,7 +33,6 @@ module.exports = function (app, uploader) {
     FacultyController.updateFaculty
   );
 
-  /*
   app.get(
     '/api/listFaculty',
     uploader.none(),
@@ -43,7 +42,7 @@ module.exports = function (app, uploader) {
       AuthJwt.isInstructorOrAdmin,
     ],
     FacultyController.listFaculty
-  );*/
+  );
 
   app.post(
     '/api/deleteFaculty/:id',

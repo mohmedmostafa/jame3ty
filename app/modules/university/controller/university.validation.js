@@ -23,7 +23,7 @@ updateUniversityValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).max(30).required(),
+      id: Joi.number().integer().required(),
     });
 
     const { error } = schemaParam.validate(req.params);
@@ -70,7 +70,7 @@ deleteUniversityValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).max(30).required(),
+      id: Joi.number().integer().required(),
     });
 
     const { error } = schemaParam.validate(req.params);
