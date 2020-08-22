@@ -1,5 +1,7 @@
 const Joi = require('joi');
 const { ValidateResponse } = require('../../../common/response.handler');
+const Uploader = require('../../../common/uploader');
+const UploaderOnError = require('../../../common/uploaderOnError');
 const db = require('../../');
 
 //----------------------------------------------------------
@@ -23,6 +25,7 @@ addCourseValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
+    UploaderOnError.onErrorDeleteFiles(req, Uploader);
     return ValidateResponse(res, error.details, {});
   }
 

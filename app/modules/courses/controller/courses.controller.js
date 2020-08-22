@@ -19,8 +19,6 @@ exports.addCourse = async (req, res) => {
   }
 };
 
-//Build attachments for add
-
 //Add Course with 'Recorded Lessons' as a Method
 function addRecordedLessonsCourse(req) {}
 

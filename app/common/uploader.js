@@ -112,6 +112,7 @@ const validForm_DataParamNames_With_Mimtypes = [
 ];
 
 //-----------------------------------------------------------------
+//Extract the valid params names
 validForm_DataParamNames = () => {
   let valid = [];
   validForm_DataParamNames_With_Mimtypes.forEach((type) => {
@@ -124,7 +125,7 @@ validForm_DataParamNames = () => {
 //NOTE: Parameter Name in (form-data) MUST be 1 of these names:-
 //[img, vedio, file, pdf, word, powerpoint, excel, compressed]
 //Upload Multi Fields and Return Paths to be stored in DB
-uploadMultiFields_With_MultiFields = (req, res, next) => {
+uploadMultiFields_With_MultiFiles = (req, res, next) => {
   try {
     console.log(req.files);
     console.log(req.files);
@@ -149,6 +150,7 @@ uploadMultiFields_With_MultiFields = (req, res, next) => {
   }
 };
 
+//----------------------------------------------------------
 //Validate ONE Field against it Mim Types
 validateFieldMimTypes = (req, res, validParamName, VaildMimTypes) => {
   if (req.files[validParamName].length > 0) {
@@ -172,7 +174,8 @@ validateFieldMimTypes = (req, res, validParamName, VaildMimTypes) => {
 //----------------------------------------------------------
 const uploader = {
   upload: upload,
-  uploadMultiFields_With_MultiFields: uploadMultiFields_With_MultiFields,
+  validForm_DataParamNames_With_Mimtypes: validForm_DataParamNames_With_Mimtypes,
+  uploadMultiFields_With_MultiFiles: uploadMultiFields_With_MultiFiles,
   validForm_DataParamNames: validForm_DataParamNames(),
 };
 

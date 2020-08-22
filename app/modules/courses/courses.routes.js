@@ -39,8 +39,8 @@ module.exports = function (app, Uploader) {
       });
     },
     [
-      Uploader.uploadMultiFields_With_MultiFields,
       CourseValidation.addCourseValidation,
+      Uploader.uploadMultiFields_With_MultiFiles,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
