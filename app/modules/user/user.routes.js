@@ -1,7 +1,7 @@
 const { AuthJwt } = require('../../middleware');
 const UserController = require('../../modules/user/controller/user.controller');
 
-module.exports = function (app, uploader) {
+module.exports = function (app, Uploader) {
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
@@ -10,25 +10,25 @@ module.exports = function (app, uploader) {
     next();
   });
 
-  app.get('/api/test/all', uploader.none(), UserController.allAccess);
+  app.get('/api/test/all', Uploader.upload.none(), UserController.allAccess);
 
   app.get(
     '/api/test/user',
-    uploader.none(),
+    Uploader.upload.none(),
     [AuthJwt.VerifyToken],
     UserController.userBoard
   );
 
   app.get(
     '/api/test/instructor',
-    uploader.none(),
+    Uploader.upload.none(),
     [AuthJwt.VerifyToken, AuthJwt.isInstructor],
     UserController.instructorBoard
   );
 
   app.get(
     '/api/test/admin',
-    uploader.none(),
+    Uploader.upload.none(),
     [AuthJwt.VerifyToken, AuthJwt.isAdmin],
     UserController.adminBoard
   );

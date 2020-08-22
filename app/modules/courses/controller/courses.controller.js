@@ -9,31 +9,23 @@ const db_Department = db.Department;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
-exports.addFaculty = async (req, res) => {
-  try {
-    //Check if the University is already exsits
-    const university = await db_University.findByPk(
-      parseInt(req.body.universityId)
-    );
-
-    if (!university) {
-      return Response(res, 400, 'University Not Found!', {});
-    }
-
-    //Save to DB
-    const faculty = await db_Faculty.create({
-      name_ar: req.body.name_ar,
-      name_en: req.body.name_en,
-      universityId: parseInt(req.body.universityId),
-    });
-
-    //Success
-    return Response(res, 200, 'Success!', { faculty });
-  } catch (error) {
-    console.log(error);
-    return Response(res, 500, 'Fail to Add', { error });
+exports.addCourse = async (req, res) => {
+  //If the Course Methiod is 'Recorded Lessons'
+  if (req.body.method === '0') {
+    addRecordedLessonsCourse(req);
+  } else if (res.body.method === '1') {
+    //If the Course Methiod is 'Live Streaming'
+    addLiveStreamingCourse(req);
   }
 };
+
+//Build attachments for add
+
+//Add Course with 'Recorded Lessons' as a Method
+function addRecordedLessonsCourse(req) {}
+
+//Add Course with 'Live Streaming' as a Method
+function addLiveStreamingCourse(req) {}
 
 //---------------------------------------------------------------
 exports.updateFaculty = async (req, res) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const uploader = require('./app/common/uploader');
+const Uploader = require('./app/common/uploader');
 const { PORT, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
 
@@ -19,15 +19,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // check route
-app.get('/', uploader.none(), (req, res) => {
+app.get('/', upload.none(), (req, res) => {
   res.json({ message: 'Welcome to jame3ty application.' });
 });
 
 // routes
-require('./app/modules/user/auth.routes')(app, uploader);
-require('./app/modules/user/user.routes')(app, uploader);
-require('./app/modules/university/university.routes')(app, uploader);
-require('./app/modules/faculty/faculty.routes')(app, uploader);
+require('./app/modules/user/auth.routes')(app, Uploader);
+require('./app/modules/user/user.routes')(app, Uploader);
+require('./app/modules/university/university.routes')(app, Uploader);
+require('./app/modules/faculty/faculty.routes')(app, Uploader);
+require('./app/modules/courses/courses.routes')(app, Uploader);
 
 // set port, listen for requests
 app.listen(PORT, () => {
@@ -41,7 +42,7 @@ app.listen(PORT, () => {
 //--------------------------------------
 //ٍSync DB Tables according to Models
 //force: true will drop the table if it already exists
-if (1) {
+if (0) {
   db.connection
     .query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
     .then(async (result) => {

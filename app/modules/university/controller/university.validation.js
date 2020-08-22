@@ -53,8 +53,7 @@ listUniversityValidation = (req, res, next) => {
     doPagination: Joi.number().integer().valid(1, 0).default(1),
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
-    name_ar: Joi.any().required(),
-    name_en: Joi.any().required(),
+    searchKey: Joi.string().allow('', null).required(),
   });
 
   const { error } = schema.validate(req.query);

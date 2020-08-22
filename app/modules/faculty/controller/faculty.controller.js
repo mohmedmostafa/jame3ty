@@ -136,9 +136,6 @@ exports.listFaculty = async (req, res) => {
   let _limit = numPerPage;
 
   //Query
-  let name_ar = req.query.name_ar ? req.query.name_ar : '';
-  let name_en = req.query.name_en ? req.query.name_en : '';
-
   try {
     let data;
     if (doPagination) {
@@ -147,12 +144,12 @@ exports.listFaculty = async (req, res) => {
           [Op.or]: [
             {
               name_ar: {
-                [Op.substring]: name_ar,
+                [Op.substring]: req.query.searchKey,
               },
             },
             {
               name_en: {
-                [Op.substring]: name_en,
+                [Op.substring]: req.query.searchKey,
               },
             },
           ],
@@ -171,12 +168,12 @@ exports.listFaculty = async (req, res) => {
           [Op.or]: [
             {
               name_ar: {
-                [Op.substring]: name_ar,
+                [Op.substring]: req.query.searchKey,
               },
             },
             {
               name_en: {
-                [Op.substring]: name_en,
+                [Op.substring]: req.query.searchKey,
               },
             },
           ],

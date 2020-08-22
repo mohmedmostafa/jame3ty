@@ -1,8 +1,9 @@
 const { AuthJwt } = require('../../middleware');
-const FacultyValidation = require('./controller/faculty.validation');
-const FacultyController = require('./controller/courses.controller');
+const { ValidateResponse } = require('../../common/response.handler');
+const CourseValidation = require('./controller/courses.validation');
+const CourseController = require('./controller/courses.controller');
 
-module.exports = function (app, uploader) {
+module.exports = function (app, Uploader) {
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
@@ -11,47 +12,71 @@ module.exports = function (app, uploader) {
     next();
   });
 
-  app.post(
-    '/api/addFaculty',
-    uploader.none(),
-    [
-      FacultyValidation.addFacultyValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    FacultyController.addFaculty
-  );
+  const addCourseFileFieldsNames = Uploader.upload.fields([
+    {
+      name: Uploader.validForm_DataParamNames[0],
+      maxCount: 1,
+    },
+    {
+      name: Uploader.validForm_DataParamNames[1],
+      maxCount: 1,
+    },
+  ]);
 
   app.post(
-    '/api/updateFaculty/:id',
-    uploader.none(),
+    '/api/addCourse',
+    (req, res, next) => {
+      addCourseFileFieldsNames(req, res, (err) => {
+        if (err) {
+          return ValidateResponse(
+            res,
+            'form-data params names not valid name!. Accepted Param Names are : ' +
+              Uploader.validForm_DataParamNames,
+            {}
+          );
+        }
+        return next();
+      });
+    },
     [
-      FacultyValidation.updateFacultyValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    FacultyController.updateFaculty
-  );
-
-  app.get(
-    '/api/listFaculty',
-    uploader.none(),
-    [
-      FacultyValidation.listFacultyValidation,
+      Uploader.uploadMultiFields_With_MultiFields,
+      CourseValidation.addCourseValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    FacultyController.listFaculty
+    CourseController.addCourse
   );
 
-  app.post(
-    '/api/deleteFaculty/:id',
-    uploader.none(),
-    [
-      FacultyValidation.deleteFacultyValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    FacultyController.deleteFaculty
-  );
+  // app.post(
+  //   '/api/updateFaculty/:id',
+  //   Uploader.upload.none(),
+  //   [
+  //     FacultyValidation.updateFacultyValidation,
+  //     AuthJwt.VerifyToken,
+  //     AuthJwt.isAdmin,
+  //   ],
+  //   FacultyController.updateFaculty
+  // );
+
+  // app.get(
+  //   '/api/listFaculty',
+  //   Uploader.upload.none(),
+  //   [
+  //     FacultyValidation.listFacultyValidation,
+  //     AuthJwt.VerifyToken,
+  //     AuthJwt.isInstructorOrAdmin,
+  //   ],
+  //   FacultyController.listFaculty
+  // );
+
+  // app.post(
+  //   '/api/deleteFaculty/:id',
+  //   Uploader.upload.none(),
+  //   [
+  //     FacultyValidation.deleteFacultyValidation,
+  //     AuthJwt.VerifyToken,
+  //     AuthJwt.isAdmin,
+  //   ],
+  //   FacultyController.deleteFaculty
+  // );
 };
