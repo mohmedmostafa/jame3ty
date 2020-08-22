@@ -15,10 +15,10 @@ module.exports = function (app, Uploader) {
   const addCourseFileFieldsNames = Uploader.upload.fields([
     {
       name: Uploader.validForm_DataParamNames[0],
-      maxCount: 1,
+      maxCount: 2,
     },
     {
-      name: Uploader.validForm_DataParamNames[1],
+      name: Uploader.validForm_DataParamNames[10],
       maxCount: 1,
     },
   ]);
