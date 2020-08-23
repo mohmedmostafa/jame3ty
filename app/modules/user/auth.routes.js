@@ -2,7 +2,7 @@ const AuthController = require('../user/controller/auth.controller');
 const VerifySignUp = require('./controller/verifySignUp');
 const UserValidation = require('./controller/user.validation');
 
-module.exports = function (app, uploader) {
+module.exports = function (app, Uploader) {
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
@@ -13,14 +13,14 @@ module.exports = function (app, uploader) {
 
   app.post(
     '/api/auth/signin',
-    uploader.none(),
+    Uploader.upload.none(),
     [UserValidation.signinValidation],
     AuthController.signin
   );
 
   app.post(
     '/api/auth/signup',
-    uploader.none(),
+    Uploader.upload.none(),
     [
       UserValidation.signupValidation,
       VerifySignUp.checkDuplicateUsernameOrEmail,

@@ -42,16 +42,14 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
       },
       type: {
-        //type: Sequelize.ENUM('Assignment', 'Subject'),
         type: Sequelize.INTEGER,
         allowNull: false,
         comment: '0:Subject | 1:Assignment',
       },
       method: {
-        //type: Sequelize.ENUM('Live Streaming', 'Recorded Lessons'),
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: '0:Live Streaming | 1:Recorded Lessons',
+        comment: '0:Recorded Lessons | 1:Live Streaming',
       },
       subjectId: {
         type: Sequelize.INTEGER,
