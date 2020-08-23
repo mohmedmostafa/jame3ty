@@ -10,6 +10,12 @@ const db_connection = db.connection;
 
 //---------------------------------------------------------------
 exports.addCourse = async (req, res) => {
+  console.log(req.files);
+
+  // let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
+  // req.body[
+  //   `${exports.validForm_DataParamNames_With_Mimtypes[index][0]}`
+  // ] = fileUrl;
   //If the Course Methiod is 'Recorded Lessons'
   if (req.body.method === '0') {
     addRecordedLessonsCourse(req);

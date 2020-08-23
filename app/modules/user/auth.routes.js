@@ -1,8 +1,9 @@
 const AuthController = require('../user/controller/auth.controller');
 const VerifySignUp = require('./controller/verifySignUp');
 const UserValidation = require('./controller/user.validation');
+const { upload } = require('../../common/multerConfig');
 
-module.exports = function (app, Uploader) {
+module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
@@ -13,14 +14,14 @@ module.exports = function (app, Uploader) {
 
   app.post(
     '/api/auth/signin',
-    Uploader.upload.none(),
+    upload.none(),
     [UserValidation.signinValidation],
     AuthController.signin
   );
 
   app.post(
     '/api/auth/signup',
-    Uploader.upload.none(),
+    upload.none(),
     [
       UserValidation.signupValidation,
       VerifySignUp.checkDuplicateUsernameOrEmail,

@@ -1,8 +1,9 @@
 const { AuthJwt } = require('../../middleware');
 const FacultyValidation = require('./controller/faculty.validation');
 const FacultyController = require('./controller/faculty.controller');
+const { upload } = require('../../common/multerConfig');
 
-module.exports = function (app, Uploader) {
+module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
@@ -13,7 +14,7 @@ module.exports = function (app, Uploader) {
 
   app.post(
     '/api/addFaculty',
-    Uploader.upload.none(),
+    upload.none(),
     [
       FacultyValidation.addFacultyValidation,
       AuthJwt.VerifyToken,
@@ -24,7 +25,7 @@ module.exports = function (app, Uploader) {
 
   app.post(
     '/api/updateFaculty/:id',
-    Uploader.upload.none(),
+    upload.none(),
     [
       FacultyValidation.updateFacultyValidation,
       AuthJwt.VerifyToken,
@@ -35,7 +36,7 @@ module.exports = function (app, Uploader) {
 
   app.get(
     '/api/listFaculty',
-    Uploader.upload.none(),
+    upload.none(),
     [
       FacultyValidation.listFacultyValidation,
       AuthJwt.VerifyToken,
@@ -46,7 +47,7 @@ module.exports = function (app, Uploader) {
 
   app.post(
     '/api/deleteFaculty/:id',
-    Uploader.upload.none(),
+    upload.none(),
     [
       FacultyValidation.deleteFacultyValidation,
       AuthJwt.VerifyToken,

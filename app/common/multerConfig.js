@@ -2,7 +2,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
 //
-const { ValidateResponse } = require('../common/response.handler');
+const { ValidateResponse } = require('./response.handler');
 const multer = require('multer');
 const path = require('path');
 
@@ -12,7 +12,6 @@ const maxSize = 500 * 1024 * 1024;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let ext = path.extname(file.originalname);
-    console.log(ext);
     //Images
     if (ext === '.jpg' || ext === '.png' || ext === '.jpeg') {
       cb(null, './public/images/');
@@ -53,7 +52,47 @@ const storage = multer.diskStorage({
   },
 });
 
-upload = multer({ storage: storage });
+exports.upload = multer({ storage: storage, fileFilter: fieldsFileFilter });
+
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+//NOTE: Parameter Name in (form-data) MUST be 1 of these names:-
+//[img, vedio, file, pdf, word, powerpoint, excel, compressed]
+//Upload Multi Fields and Return Paths to be stored in DB
+function fieldsFileFilter(req, file, cb) {
+  console.log(req.body);
+  let index = exports.validForm_DataParamNames().indexOf(`${file.fieldname}`);
+  console.log(index);
+
+  if (index > -1) {
+    const validParamName =
+      exports.validForm_DataParamNames_With_Mimtypes[index][0];
+    const VaildMimTypes =
+      exports.validForm_DataParamNames_With_Mimtypes[index][1];
+
+    //In case of NOT a valid Min type
+    if (VaildMimTypes.indexOf(file.mimetype) === -1) {
+      req.fileVaildMimTypesError = file;
+
+      return cb(
+        `File Extension Not Valid, Only Accept { ${VaildMimTypes} }`,
+        false
+      );
+    }
+
+    return cb(null, true);
+  }
+}
+
+//-----------------------------------------------------------------
+//Extract the valid params names
+function validForm_DataParamNames() {
+  let valid = [];
+  exports.validForm_DataParamNames_With_Mimtypes.forEach((type) => {
+    valid.push(type[0]);
+  });
+  return valid;
+}
 
 //------------------------------------------------------------------
 //Valid Mim Types
@@ -102,94 +141,69 @@ const filesValidMimTypes_OnlyCOMPRESSED = [
 //[img, vedio, file, pdf, word, powerpoint, excel, compressed]
 const validForm_DataParamNames_With_Mimtypes = [
   ['img', imageVaildMimTypes],
-  ['vedio', vedioVaildMimTypes],
+  ['img1', imageVaildMimTypes],
+  ['vedio0', vedioVaildMimTypes],
   ['file', fileValidMinTypes_all],
+  ['file1', fileValidMinTypes_all],
   ['pdf', filesVaildMimTypes_OnlyPDF],
+  ['pdf1', filesVaildMimTypes_OnlyPDF],
   ['word', filesVaildMimTypes_OnlyWORD],
   ['powerpoint', filesVaildMimTypes_OnlyPOWERPOINT],
   ['excel', filesVaildMimTypes_OnlyEXCEL],
   ['compressed', filesValidMimTypes_OnlyCOMPRESSED],
 ];
 
-//-----------------------------------------------------------------
-//Extract the valid params names
-validForm_DataParamNames = () => {
-  let valid = [];
-  validForm_DataParamNames_With_Mimtypes.forEach((type) => {
-    valid.push(type[0]);
-  });
-  return valid;
-};
-
-//------------------------------------------------------------------
-//NOTE: Parameter Name in (form-data) MUST be 1 of these names:-
-//[img, vedio, file, pdf, word, powerpoint, excel, compressed]
-//Upload Multi Fields and Return Paths to be stored in DB
-uploadMultiFields_With_MultiFiles = (req, res, next) => {
-  try {
-    console.log(req.files);
-    console.log(req.files);
-
-    validForm_DataParamNames_With_Mimtypes.forEach((type, index) => {
-      if (req.files[type[0]]) {
-        validateFieldMimTypes(req, res, type[0], type[1]);
-      }
-    });
-
-    //Create Path String to Store to DB
-    //let attachmentLocations = req.files.map((file) => {});
-    //console.log(attachmentLocations);
-    next();
-    return;
-  } catch (error) {
-    if (error instanceof multer.MulterError) {
-      console.log('ERRRRRRRR');
-    }
-    next();
-    return;
-  }
-};
-
 //----------------------------------------------------------
 //Validate ONE Field against it Mim Types
-validateFieldMimTypes = (req, res, validParamName, VaildMimTypes) => {
+function validateFieldMimTypesAndCreatePaths(
+  req,
+  res,
+  validParamName,
+  VaildMimTypes
+) {
+  let fieldUrls = [];
   if (req.files[validParamName].length > 0) {
     req.files[validParamName].forEach((file, index) => {
-      if (file.fieldname === validParamName) {
-        if (VaildMimTypes.indexOf(file.mimetype) === -1) {
-          //Delete the file
-          unlinkAsync(file.path);
+      if (VaildMimTypes.indexOf(file.mimetype) === -1) {
+        //Delete the file
+        unlinkAsync(file.path);
 
-          return ValidateResponse(
-            res,
-            'File Extension Not Valid, Only Accept: ' + VaildMimTypes,
-            { file }
-          );
-        }
+        return ValidateResponse(
+          res,
+          'File Extension Not Valid, Only Accept: ' + VaildMimTypes,
+          { file }
+        );
+      } else {
+        let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
+        fieldUrls.push(fileUrl);
       }
     });
+
+    return fieldUrls;
   }
-};
+}
 
 //----------------------------------------------------------
-onErrorDeleteFiles = (req, Uploader) => {
-  Uploader.validForm_DataParamNames_With_Mimtypes.forEach((type, index) => {
+//Delete the files uploaded if error happend -> Called in Validation Files if Validation Error Happend
+function onErrorDeleteFiles(req) {
+  exports.validForm_DataParamNames_With_Mimtypes.forEach((type, index) => {
     const validParamName = type[0];
     if (req.files[validParamName]) {
       req.files[validParamName].forEach((file) => {
         //Delete the file
-        unlinkAsync(file.path);
+        if (file.buffer) {
+          unlinkAsync(file.buffer);
+        }
+
+        if (file.path) {
+          unlinkAsync(file.path);
+        }
       });
     }
   });
-};
-//----------------------------------------------------------
-const uploader = {
-  upload: upload,
-  validForm_DataParamNames_With_Mimtypes: validForm_DataParamNames_With_Mimtypes,
-  uploadMultiFields_With_MultiFiles: uploadMultiFields_With_MultiFiles,
-  validForm_DataParamNames: validForm_DataParamNames(),
-  onValidationErrorDelete: onErrorDeleteFiles
-};
+}
 
-module.exports = uploader;
+module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
+module.exports.validForm_DataParamNames_With_Mimtypes = validForm_DataParamNames_With_Mimtypes;
+module.exports.validForm_DataParamNames = validForm_DataParamNames;
+module.exports.onErrorDeleteFiles = onErrorDeleteFiles;

@@ -11,47 +11,47 @@ module.exports = function (app, Uploader) {
     next();
   });
 
-  app.post(
-    '/api/addInstructor',
-    Uploader.upload.none(),
-    [
-      InstructorValidation.addInstructorValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    InstructorController.addInstructor
-  );
+//   app.post(
+//     '/api/addInstructor',
+//     Uploader.upload.none(),
+//     [
+//       InstructorValidation.addInstructorValidation,
+//       AuthJwt.VerifyToken,
+//       AuthJwt.isAdmin,
+//     ],
+//     InstructorController.addInstructor
+//   );
 
-  app.put(
-    '/api/updateInstructor/:id',
-    Uploader.upload.none(),
-    [
-      InstructorValidation.updateInstructorValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    InstructorController.updateInstructor
-  );
+//   app.put(
+//     '/api/updateInstructor/:id',
+//     Uploader.upload.none(),
+//     [
+//       InstructorValidation.updateInstructorValidation,
+//       AuthJwt.VerifyToken,
+//       AuthJwt.isAdmin,
+//     ],
+//     InstructorController.updateInstructor
+//   );
 
-  app.get(
-    '/api/listInstructor',
-    Uploader.upload.none(),
-    [
-      InstructorValidation.listInstructorValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
-    ],
-    InstructorController.listInstructor
-  );
+//   app.get(
+//     '/api/listInstructor',
+//     Uploader.upload.none(),
+//     [
+//       InstructorValidation.listInstructorValidation,
+//       AuthJwt.VerifyToken,
+//       AuthJwt.isInstructorOrAdmin,
+//     ],
+//     InstructorController.listInstructor
+//   );
 
-  app.post(
-    '/api/deleteInstructor/:id',
-    Uploader.upload.none(),
-    [
-      InstructorValidation.deleteInstructorValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-    ],
-    InstructorController.deleteInstructor
-  );
+//   app.post(
+//     '/api/deleteInstructor/:id',
+//     Uploader.upload.none(),
+//     [
+//       InstructorValidation.deleteInstructorValidation,
+//       AuthJwt.VerifyToken,
+//       AuthJwt.isAdmin,
+//     ],
+//     InstructorController.deleteInstructor
+//   );
 };
