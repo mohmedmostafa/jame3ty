@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const Uploader = require('./app/common/uploader');
+const { upload } = require('./app/common/multerConfig');
 const { PORT, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
 
@@ -24,11 +24,11 @@ app.get('/', upload.none(), (req, res) => {
 });
 
 // routes
-require('./app/modules/user/auth.routes')(app, Uploader);
-require('./app/modules/user/user.routes')(app, Uploader);
-require('./app/modules/university/university.routes')(app, Uploader);
-require('./app/modules/faculty/faculty.routes')(app, Uploader);
-require('./app/modules/courses/courses.routes')(app, Uploader);
+require('./app/modules/user/auth.routes')(app);
+require('./app/modules/user/user.routes')(app);
+require('./app/modules/university/university.routes')(app);
+require('./app/modules/faculty/faculty.routes')(app);
+require('./app/modules/courses/courses.routes')(app);
 
 // set port, listen for requests
 app.listen(PORT, () => {
