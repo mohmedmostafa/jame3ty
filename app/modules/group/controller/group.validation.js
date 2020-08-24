@@ -35,7 +35,7 @@ addGroupValidation = (req, res, next) => {
   const { error } = schema.validate(req.body);
   if (error) {
     //onErrorDeleteFiles(req);
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();

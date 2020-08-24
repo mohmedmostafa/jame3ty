@@ -13,7 +13,7 @@ signinValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -35,7 +35,7 @@ signupValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();

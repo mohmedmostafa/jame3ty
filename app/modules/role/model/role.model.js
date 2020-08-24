@@ -18,15 +18,12 @@ module.exports = (connection, Sequelize) => {
         unique: 'roles_name_en_unique',
       },
       createdAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
-        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
     },
     { freezeTableName: true }

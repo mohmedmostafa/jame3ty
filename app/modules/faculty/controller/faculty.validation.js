@@ -13,7 +13,7 @@ addFacultyValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -29,7 +29,7 @@ updateFacultyValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {});
     }
   }
 
@@ -42,7 +42,7 @@ updateFacultyValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -60,7 +60,7 @@ listFacultyValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -76,7 +76,7 @@ deleteFacultyValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {});
     }
   }
 

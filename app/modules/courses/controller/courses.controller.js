@@ -30,7 +30,7 @@ exports.addCourse = async (req, res) => {
   if (req.files.img) {
     let field_1 = [];
     req.files['img'].forEach((file) => {
-      let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
+      let fileUrl = file.path.replace(/\\/g, '/');
       field_1.push(fileUrl);
     });
     req.body.img = field_1.join();
@@ -40,7 +40,7 @@ exports.addCourse = async (req, res) => {
   if (req.files.vedio) {
     let field_2 = [];
     req.files['vedio'].forEach((file) => {
-      let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
+      let fileUrl = file.path.replace(/\\/g, '/');
       field_2.push(fileUrl);
     });
     req.body.vedio = field_2.join();
@@ -49,7 +49,7 @@ exports.addCourse = async (req, res) => {
   console.log(req.body);
 
   //If the Course Methiod is 'Recorded Lessons'
-  if (req.body.method === '0') {
+  if (req.params.method === '0') {
     addRecordedLessonsCourse(req, res);
   } else {
     //If the Course Methiod is 'Live Streaming'
@@ -73,7 +73,7 @@ async function addRecordedLessonsCourse(req, res) {
       priceBeforeDiscount: req.body.priceBeforeDiscount,
       startDate: req.body.startDate,
       type: req.body.type,
-      method: req.body.method,
+      method: req.params.method,
       img: req.body.img ? req.body.img : '',
       vedio: req.body.vedio ? req.body.vedio : '',
       subjectId: parseInt(req.body.subjectId),
@@ -108,7 +108,7 @@ async function addLiveStreamingCourse(req, res) {
           priceBeforeDiscount: req.body.priceBeforeDiscount,
           startDate: req.body.startDate,
           type: req.body.type,
-          method: req.body.method,
+          method: req.params.method,
           img: req.body.img ? req.body.img : '',
           vedio: req.body.vedio ? req.body.vedio : '',
           subjectId: parseInt(req.body.subjectId),
@@ -136,11 +136,13 @@ async function addLiveStreamingCourse(req, res) {
       });
 
       //Save Multi Group Schedule to DB for the group
-      const groupSchedule = await db_GroupSchedule
-        .bulkCreate(req.body.groupSchedule, {
+      const groupSchedule = await db_GroupSchedule.bulkCreate(
+        req.body.groupSchedule,
+        {
           fields: ['day', 'time', 'groupId'],
           transaction: t,
-        });
+        }
+      );
 
       return { course, group, groupSchedule };
     });

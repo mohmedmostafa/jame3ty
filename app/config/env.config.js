@@ -4,6 +4,7 @@ dotenv.config();
 const dev = {
   ENV: process.env.NODE_ENV,
   PORT: process.env.DEV_PORT,
+  HOST: process.env.DEV_HOST,
   DB_HOST: process.env.DEV_DB_HOST,
   DB_PORT: process.env.DEV_DB_PORT,
   DB_USER: process.env.DEV_DB_USER,
@@ -14,6 +15,7 @@ const dev = {
 const production = {
   ENV: process.env.NODE_ENV,
   PORT: process.env.PRODUCTION_PORT,
+  HOST: process.env.DEV_HOST,
   DB_HOST: process.env.DEV_DB_HOST,
   DB_PORT: process.env.DEV_DB_PORT,
   DB_USER: process.env.DEV_DB_USER,

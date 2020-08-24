@@ -3,15 +3,15 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const { upload } = require('./app/common/multerConfig');
-const { PORT, ENV } = require('./app/config/env.config');
+const { PORT, HOST, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
 
 const app = express();
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 var corsOptions = {
-  origin: 'http://localhost:' + `${PORT}`,
+  origin: `${HOST}` + `${PORT}`,
 };
 app.use(cors(corsOptions));
 
@@ -61,25 +61,65 @@ if (0) {
 
 //Initialize tables with data such roles
 function initial() {
+  const db_Role = db.Role;
+  const db_University = db.University;
+  const db_Faculty = db.Faculty;
+  const db_Department = db.Department;
+  const db_AcademicYear = db.AcademicYear;
+  const db_Subject = db.Subject;
+  const db_Instructor = db.Instructor;
+
   //--------------------------------------------------
   /////////////////Role//////////////////////////////
   //--------------------------------------------------
   const ROLES_EN = ['student', 'admin', 'instructor'];
   const ROLES_AR = ['طالب', 'مدير', 'محاضر'];
-  const Role = db.Role;
-  Role.create({
+
+  db_Role.create({
     id: 1,
     name_ar: ROLES_AR[0],
     name_en: ROLES_EN[0],
   });
-  Role.create({
+  db_Role.create({
     id: 2,
     name_ar: ROLES_AR[1],
     name_en: ROLES_EN[1],
   });
-  Role.create({
+  db_Role.create({
     id: 3,
     name_ar: ROLES_AR[2],
     name_en: ROLES_EN[2],
+  });
+
+  //--------------------------------------------------
+  /////////////////University/////////////////////////
+  //--------------------------------------------------
+  let university = db_University.create({
+    name_ar: 'جامعه الكويت',
+    name_en: 'Kweit Universtiy',
+  });
+
+  let faculty = db_Faculty.create({
+    name_ar: 'الطب',
+    name_en: 'Medical',
+    universityId: university.id,
+  });
+
+  let department = db_Department.create({
+    name_ar: 'جراحه',
+    name_en: 'PalaPalaPalaPala',
+    facultyId: faculty.id,
+  });
+
+  let academicYear = db_AcademicYear.create({
+    name_ar: 'سنه أولى',
+    name_en: '1th',
+    departmentId: department.id,
+  });
+
+  let subject = db_Subject.create({
+    name_ar: 'ماده 1',
+    name_en: 'subject 1',
+    academicYearId: academicYear.id,
   });
 }

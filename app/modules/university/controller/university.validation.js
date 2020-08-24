@@ -12,7 +12,7 @@ addUniversityValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -28,7 +28,7 @@ updateUniversityValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {});
     }
   }
 
@@ -40,7 +40,7 @@ updateUniversityValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -58,7 +58,7 @@ listUniversityValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -74,7 +74,7 @@ deleteUniversityValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {});
     }
   }
 

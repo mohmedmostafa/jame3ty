@@ -29,13 +29,13 @@ module.exports = (connection, Sequelize) => {
       },
       createdAt: {
         type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
         type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
+        defaultValue: Sequelize.fn('NOW'),
+        onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
       },
     },
