@@ -14,19 +14,21 @@ module.exports = function (app) {
     next();
   });
 
+  //name: FileUploader.validForm_DataParamNames()[2], //vedio0
+
   const upload_addCourse = FileUploader.upload.fields([
     {
-      name: FileUploader.validForm_DataParamNames()[0],
+      name: 'img',
       maxCount: 2,
     },
     {
-      name: FileUploader.validForm_DataParamNames()[9],
+      name: 'vedio',
       maxCount: 1,
     },
   ]);
 
   app.post(
-    '/api/addCourse',
+    '/api/addCourse/:method',
     (req, res, next) => {
       upload_addCourse(req, res, (err) => {
         if (req.fileVaildMimTypesError) {
@@ -58,7 +60,7 @@ module.exports = function (app) {
     [
       CourseValidation.addCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructor,
     ],
     CourseController.addCourse
   );

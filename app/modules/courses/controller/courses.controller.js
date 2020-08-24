@@ -1,35 +1,156 @@
 const db = require('../..');
 const { Response } = require('../../../common/response.handler');
+const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const moment = require('moment');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_Course = db.Course;
+const db_Group = db.Group;
+const db_GroupSchedule = db.GroupSchedule;
 const db_AcademicYear = db.AcademicYear;
 const db_Department = db.Department;
+const db_Subject = db.Subject;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
 exports.addCourse = async (req, res) => {
+  //Check if the Subject ID is already exsits
+  const subject = await db_Subject.findByPk(parseInt(req.body.subjectId));
+
+  if (!subject) {
+    onErrorDeleteFiles(req);
+    return Response(res, 400, 'Subject Not Found!', {});
+  }
+
   console.log(req.files);
 
-  // let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
-  // req.body[
-  //   `${exports.validForm_DataParamNames_With_Mimtypes[index][0]}`
-  // ] = fileUrl;
+  //Create Attachment String
+  if (req.files.img) {
+    let field_1 = [];
+    req.files['img'].forEach((file) => {
+      let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
+      field_1.push(fileUrl);
+    });
+    req.body.img = field_1.join();
+  }
+
+  //Create Attachment String
+  if (req.files.vedio) {
+    let field_2 = [];
+    req.files['vedio'].forEach((file) => {
+      let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
+      field_2.push(fileUrl);
+    });
+    req.body.vedio = field_2.join();
+  }
+
+  console.log(req.body);
+
   //If the Course Methiod is 'Recorded Lessons'
   if (req.body.method === '0') {
-    addRecordedLessonsCourse(req);
-  } else if (res.body.method === '1') {
+    addRecordedLessonsCourse(req, res);
+  } else {
     //If the Course Methiod is 'Live Streaming'
-    addLiveStreamingCourse(req);
+    addLiveStreamingCourse(req, res);
   }
 };
 
 //Add Course with 'Recorded Lessons' as a Method
-function addRecordedLessonsCourse(req) {}
+async function addRecordedLessonsCourse(req, res) {
+  try {
+    //Save to DB
+    const course = await db_Course.create({
+      name_ar: req.body.name_ar,
+      name_en: req.body.name_en,
+      code: req.body.code,
+      desc: req.body.desc,
+      prerequisiteText: req.body.prerequisiteText,
+      whatYouWillLearn: req.body.whatYouWillLearn,
+      numOfLessons: req.body.numOfLessons,
+      price: req.body.price,
+      priceBeforeDiscount: req.body.priceBeforeDiscount,
+      startDate: req.body.startDate,
+      type: req.body.type,
+      method: req.body.method,
+      img: req.body.img ? req.body.img : '',
+      vedio: req.body.vedio ? req.body.vedio : '',
+      subjectId: parseInt(req.body.subjectId),
+      instructorId: req.userId,
+    });
+
+    //Success
+    return Response(res, 200, 'Success!', { course });
+  } catch (error) {
+    console.log(error);
+    onErrorDeleteFiles(req);
+    return Response(res, 500, 'Fail to Add', { error });
+  }
+}
 
 //Add Course with 'Live Streaming' as a Method
-function addLiveStreamingCourse(req) {}
+async function addLiveStreamingCourse(req, res) {
+  try {
+    //Start "Managed" Transaction
+    const course = await db_connection.transaction(async (t) => {
+      //Save Course to DB
+      const course = await db_Course.create(
+        {
+          name_ar: req.body.name_ar,
+          name_en: req.body.name_en,
+          code: req.body.code,
+          desc: req.body.desc,
+          prerequisiteText: req.body.prerequisiteText,
+          whatYouWillLearn: req.body.whatYouWillLearn,
+          numOfLessons: req.body.numOfLessons,
+          price: req.body.price,
+          priceBeforeDiscount: req.body.priceBeforeDiscount,
+          startDate: req.body.startDate,
+          type: req.body.type,
+          method: req.body.method,
+          img: req.body.img ? req.body.img : '',
+          vedio: req.body.vedio ? req.body.vedio : '',
+          subjectId: parseInt(req.body.subjectId),
+          instructorId: req.userId,
+        },
+        { transaction: t }
+      );
+
+      //Save Group to DB for the course
+      const group = await db_Group.create(
+        {
+          name: req.body.nameGroup,
+          maxNumOfStudents: req.body.maxNumOfStudentsGroup,
+          startDate: req.body.startDateGroup,
+          endDate: req.body.endDateGroup,
+          courseId: course.id,
+          instructorId: req.userId,
+        },
+        { transaction: t }
+      );
+
+      //Inject Group Id To Group Schedules Objects
+      req.body.groupSchedule.forEach((sch) => {
+        sch.groupId = group.id;
+      });
+
+      //Save Multi Group Schedule to DB for the group
+      const groupSchedule = await db_GroupSchedule
+        .bulkCreate(req.body.groupSchedule, {
+          fields: ['day', 'time', 'groupId'],
+          transaction: t,
+        });
+
+      return { course, group, groupSchedule };
+    });
+
+    //Success
+    return Response(res, 200, 'Success!', { course });
+  } catch (error) {
+    return Response(res, 500, 'Fail to add', { error });
+  }
+}
 
 //---------------------------------------------------------------
 exports.updateFaculty = async (req, res) => {

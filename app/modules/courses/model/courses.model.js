@@ -51,6 +51,14 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
         comment: '0:Recorded Lessons | 1:Live Streaming',
       },
+      img: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      vedio: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       subjectId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',

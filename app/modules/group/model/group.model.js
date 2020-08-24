@@ -1,6 +1,6 @@
 module.exports = (connection, Sequelize) => {
   const Group = connection.define(
-    'group',
+    'groups',
     {
       id: {
         type: Sequelize.INTEGER,

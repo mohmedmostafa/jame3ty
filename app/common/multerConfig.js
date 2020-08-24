@@ -142,7 +142,7 @@ const filesValidMimTypes_OnlyCOMPRESSED = [
 const validForm_DataParamNames_With_Mimtypes = [
   ['img', imageVaildMimTypes],
   ['img1', imageVaildMimTypes],
-  ['vedio0', vedioVaildMimTypes],
+  ['vedio', vedioVaildMimTypes],
   ['file', fileValidMinTypes_all],
   ['file1', fileValidMinTypes_all],
   ['pdf', filesVaildMimTypes_OnlyPDF],

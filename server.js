@@ -1,11 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 const { upload } = require('./app/common/multerConfig');
 const { PORT, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
 
 const app = express();
+
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 var corsOptions = {
   origin: 'http://localhost:' + `${PORT}`,
