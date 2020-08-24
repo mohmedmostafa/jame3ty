@@ -19,6 +19,8 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.static('public'));
+
 // check route
 app.get('/', upload.none(), (req, res) => {
   res.json({ message: 'Welcome to jame3ty application.' });

@@ -11,7 +11,7 @@ const db_connection = db.connection;
 //---------------------------------------------------------------
 exports.addCourse = async (req, res) => {
   console.log(req.files);
-
+  return Response(res, 200, 'Success!', {  });
   // let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
   // req.body[
   //   `${exports.validForm_DataParamNames_With_Mimtypes[index][0]}`

@@ -31,11 +31,15 @@ module.exports = (connection, Sequelize) => {
       },
       img: {
         type: Sequelize.STRING(255),
+        get(){
+          const storedValue = this.getDataValue('img');
+          return "https://localhost:3001/"+storedValue;
+        }
       },
       userId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
         references: {
           model: 'users',
           key: 'id',

@@ -23,6 +23,7 @@ verifyToken = (req, res, next) => {
         return Response(res, 401, 'Unauthorized!', {});
       }
       req.userId = decoded.id;
+      console.log("m7");
       next();
       return;
     });
