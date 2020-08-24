@@ -32,6 +32,7 @@ require('./app/modules/user/user.routes')(app);
 require('./app/modules/university/university.routes')(app);
 require('./app/modules/faculty/faculty.routes')(app);
 require('./app/modules/courses/courses.routes')(app);
+require('./app/modules/group/group.routes')(app);
 
 // set port, listen for requests
 app.listen(PORT, () => {
