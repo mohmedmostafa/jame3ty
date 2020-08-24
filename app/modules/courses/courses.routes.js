@@ -64,4 +64,15 @@ module.exports = function (app) {
     ],
     CourseController.addCourse
   );
+
+  app.post(
+    '/api/deleteCourse/:id',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.deleteCourseValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructor,
+    ],
+    CourseController.deleteCourse
+  );
 };

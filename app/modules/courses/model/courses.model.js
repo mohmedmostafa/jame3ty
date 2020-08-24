@@ -55,28 +55,32 @@ module.exports = (connection, Sequelize) => {
       },
       img: {
         type: Sequelize.STRING,
-        allowNull: true,
+        defaultValue: '',
         get() {
           let fieldFilesPaths = this.getDataValue('img');
-          fieldFilesPaths = fieldFilesPaths.split(',');
-          fieldFilesPaths.forEach((location, index) => {
-            fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
-          });
-          fieldFilesPaths = fieldFilesPaths.join();
-          return fieldFilesPaths ? fieldFilesPaths : null;
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
         },
       },
       vedio: {
         type: Sequelize.STRING,
-        allowNull: true,
+        defaultValue: '',
         get() {
           let fieldFilesPaths = this.getDataValue('vedio');
-          fieldFilesPaths = fieldFilesPaths.split();
-          fieldFilesPaths.forEach((location, index) => {
-            fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
-          });
-          fieldFilesPaths = fieldFilesPaths.join();
-          return fieldFilesPaths ? fieldFilesPaths : null;
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
         },
       },
       subjectId: {

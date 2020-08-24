@@ -23,9 +23,11 @@ module.exports = (connection, Sequelize) => {
       },
       youtubeLink: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
       },
       attachments: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
       },
       isLiveStreaming: {
         type: Sequelize.BOOLEAN,
@@ -53,7 +55,7 @@ module.exports = (connection, Sequelize) => {
       courseId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
         references: {
           model: 'courses',
           key: 'id',

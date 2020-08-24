@@ -80,8 +80,25 @@ addCourseValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+deleteCourseValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
+  }
+
+  return next();
+};
+//----------------------------------------------------------
 const CourseValidation = {
   addCourseValidation: addCourseValidation,
+  deleteCourseValidation: deleteCourseValidation,
 };
 
 module.exports = CourseValidation;

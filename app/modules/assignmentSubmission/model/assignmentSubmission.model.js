@@ -13,7 +13,7 @@ module.exports = (connection, Sequelize) => {
       },
       attachments: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        defaultValue: '',
       },
       studentId: {
         type: Sequelize.INTEGER,

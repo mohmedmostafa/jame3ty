@@ -22,6 +22,7 @@ module.exports = (connection, Sequelize) => {
       },
       img: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
       },
       userId: {
         type: Sequelize.INTEGER,

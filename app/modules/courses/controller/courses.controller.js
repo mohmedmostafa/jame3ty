@@ -1,6 +1,9 @@
 const db = require('../..');
 const { Response } = require('../../../common/response.handler');
-const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const {
+  onErrorDeleteFiles,
+  deleteFile,
+} = require('../../../common/multerConfig');
 const moment = require('moment');
 
 const Op = db.Sequelize.Op;
@@ -155,6 +158,58 @@ async function addLiveStreamingCourse(req, res) {
 }
 
 //---------------------------------------------------------------
+exports.deleteCourse = async (req, res) => {
+  try {
+    //Check if the Course is already exsits
+    let course = await db_Course.findOne({
+      where: { id: req.params.id },
+    });
+
+    if (!course) {
+      return Response(res, 400, 'Course Not Found!', {});
+    }
+
+    //course = course.get({ plain: true });
+
+    console.log(course);
+
+    //Delete
+    let deletedCourse = await db_Course.destroy({
+      where: { id: req.params.id },
+    });
+
+    //If the record Deleted then delete files in img and vedio
+    if (deletedCourse) {
+      //
+      let imgStr = course.getDataValue('img');
+      if (imgStr.length > 0) {
+        let locations = imgStr.split(',');
+        console.log(locations);
+        locations.forEach((loc) => {
+          deleteFile(loc);
+        });
+      }
+
+      //
+      let vedioStr = course.getDataValue('vedio');
+      if (vedioStr.length > 0) {
+        let locations = vedioStr.split(',');
+        console.log(locations);
+        locations.forEach((loc) => {
+          deleteFile(loc);
+        });
+      }
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { course });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Delete!', { error });
+  }
+};
+
+//---------------------------------------------------------------
 exports.updateFaculty = async (req, res) => {
   try {
     //Check if the faculty is already exsits
@@ -188,48 +243,6 @@ exports.updateFaculty = async (req, res) => {
       },
       { where: { id: req.params.id } }
     );
-
-    //Success
-    return Response(res, 200, 'Success!', { faculty });
-  } catch (error) {
-    console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
-  }
-};
-
-//---------------------------------------------------------------
-exports.deleteFaculty = async (req, res) => {
-  try {
-    //Check if the faculty is already exsits
-    let faculty = await db_Faculty.findOne({
-      where: { id: req.params.id },
-      include: [
-        {
-          model: db_AcademicYear,
-        },
-        {
-          model: db_Department,
-        },
-      ],
-    });
-
-    if (!faculty) {
-      return Response(res, 400, 'Faculty Not Found!', {});
-    }
-
-    faculty = faculty.get({ plain: true });
-
-    //Check if the Universtiy has Faculty
-    if (faculty.academicYears.length > 0 || faculty.departments.length > 0) {
-      return Response(res, 400, "Can't Delete. Has Childs", {
-        faculty,
-      });
-    }
-
-    //Delete
-    faculty = await db_Faculty.destroy({
-      where: { id: req.params.id },
-    });
 
     //Success
     return Response(res, 200, 'Success!', { faculty });

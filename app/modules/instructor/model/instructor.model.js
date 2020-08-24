@@ -28,9 +28,11 @@ module.exports = (connection, Sequelize) => {
       },
       cv: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
       },
       img: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
       },
       userId: {
         type: Sequelize.INTEGER,

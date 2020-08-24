@@ -12,10 +12,11 @@ const maxSize = 500 * 1024 * 1024;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let ext = path.extname(file.originalname);
+    ext = ext.toLowerCase();
     //Images
     if (ext === '.jpg' || ext === '.png' || ext === '.jpeg') {
       cb(null, './public/images/');
-    } else if (ext === 'mp4') {
+    } else if (ext === '.mp4') {
       //Vedio
       cb(null, './public/vedio/');
     } else if (ext === '.rar' || ext === '.zip' || ext === '.7z') {
@@ -203,7 +204,15 @@ function onErrorDeleteFiles(req) {
   });
 }
 
+function deleteFile(path) {
+  console.log(path);
+  unlinkAsync(path).catch((err) => {
+    console.log(err);
+  });
+}
+
 module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
 module.exports.validForm_DataParamNames_With_Mimtypes = validForm_DataParamNames_With_Mimtypes;
 module.exports.validForm_DataParamNames = validForm_DataParamNames;
 module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
+module.exports.deleteFile = deleteFile;
