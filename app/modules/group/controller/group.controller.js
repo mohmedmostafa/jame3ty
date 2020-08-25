@@ -8,6 +8,10 @@ const db_Course = db.Course;
 const db_Group = db.Group;
 const db_GroupSchedule = db.GroupSchedule;
 const db_connection = db.connection;
+const db_CourseSubscribe = db.CourseSubscribe;
+const db_Student = db.Student;
+const db_Lesson = db.Lesson;
+const db_Instructor = db.Instructor;
 
 //---------------------------------------------------------------
 exports.addGroup = async (req, res) => {
@@ -64,3 +68,94 @@ exports.addGroup = async (req, res) => {
   }
 };
 
+//---------------------------------------------------------------
+exports.deleteGroup = async (req, res) => {
+  try {
+    //Check if the Group is already exsits
+    let group = await db_Group.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_CourseSubscribe,
+          include: [{ model: db_Student }],
+        },
+        {
+          model: db_GroupSchedule,
+        },
+      ],
+    });
+
+    if (!group) {
+      return Response(res, 400, 'Group Not Found!', {});
+    }
+    //course = course.get({ plain: true });
+
+    console.log(group);
+
+    //If Students Subscribe the course then can not delete it
+    if (group.coursesSubscribes.length > 0) {
+      return Response(
+        res,
+        400,
+        "Can't delete the group, The Course Group has subscription!",
+        { group }
+      );
+    }
+
+    // //Delete
+    let deletedGroup = await db_Group.destroy({
+      where: { id: req.params.id },
+    });
+
+    //Success
+    return Response(res, 200, 'Success!', { group });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Delete!', { error });
+  }
+};
+
+//--------------------------------------------------------------
+exports.listGroupById = async (req, res) => {
+  try {
+    let group = await db_Group.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_Instructor,
+        },
+        {
+          model: db_Course,
+        },
+        {
+          model: db_Lesson,
+        },
+        {
+          model: db_GroupSchedule,
+        },
+        {
+          model: db_CourseSubscribe,
+          include: [
+            {
+              model: db_Student,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!group) {
+      return Response(res, 400, 'Group Not Found!', {});
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { group });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Delete!', { error });
+  }
+};

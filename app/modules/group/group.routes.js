@@ -24,4 +24,26 @@ module.exports = function (app) {
     ],
     GroupController.addGroup
   );
+
+  app.post(
+    '/api/deleteGroup/:id',
+    FileUploader.upload.none(),
+    [
+      GroupValidation.deleteGroupValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructor,
+    ],
+    GroupController.deleteGroup
+  );
+
+  app.get(
+    '/api/listGroupById/:id',
+    FileUploader.upload.none(),
+    [
+      GroupValidation.listGroupByIdValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    GroupController.listGroupById
+  );
 };

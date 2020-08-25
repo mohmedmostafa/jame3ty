@@ -75,4 +75,26 @@ module.exports = function (app) {
     ],
     CourseController.deleteCourse
   );
+
+  app.get(
+    '/api/listCourse',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    CourseController.listCourse
+  );
+
+  app.get(
+    '/api/listCourseById/:id',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseByIdValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    CourseController.listCourseById
+  );
 };

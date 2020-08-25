@@ -42,8 +42,44 @@ addGroupValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+deleteGroupValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+listGroupByIdValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 const GroupValidation = {
   addGroupValidation: addGroupValidation,
+  deleteGroupValidation: deleteGroupValidation,
+  listGroupByIdValidation: listGroupByIdValidation,
 };
 
 module.exports = GroupValidation;

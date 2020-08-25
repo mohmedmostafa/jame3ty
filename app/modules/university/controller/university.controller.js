@@ -113,41 +113,14 @@ exports.listUniversity = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await db_University.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-            {
-              name_en: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-          ],
-        },
-        offset: skip,
-        limit: _limit,
-      });
+      data = await listUniversity_DoPagination(
+        req,
+        db_University,
+        skip,
+        _limit
+      );
     } else {
-      data = await db_University.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-            {
-              name_en: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-          ],
-        },
-      });
+      data = await listUniversity_NOPagination(req, db_University);
     }
 
     let result = {
@@ -164,3 +137,61 @@ exports.listUniversity = async (req, res) => {
     return Response(res, 500, 'Fail To Find!', { error });
   }
 };
+
+function listUniversity_DoPagination(req, db_University, skip, _limit) {
+  return new Promise(async (resolve, reject) => {
+    await db_University
+      .findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+            {
+              name_en: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+          ],
+        },
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listUniversity_NOPagination(req, db_University) {
+  return new Promise(async (resolve, reject) => {
+    await db_University
+      .findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+            {
+              name_en: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+          ],
+        },
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}

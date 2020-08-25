@@ -139,7 +139,42 @@ exports.listFaculty = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await db_Faculty.findAll({
+      data = await listFaculty_DoPagination(
+        req,
+        db_Faculty,
+        db_Department,
+        skip,
+        _limit
+      );
+    } else {
+      data = await listFaculty_NOPagination(req, db_Faculty, db_Department);
+    }
+
+    let result = {
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    //Success
+    return Response(res, 200, 'Success!', { result });
+  } catch (error) {
+    return Response(res, 500, 'Fail To Find!', { error });
+  }
+};
+
+function listFaculty_DoPagination(
+  req,
+  db_Faculty,
+  db_Department,
+  skip,
+  _limit
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_Faculty
+      .findAll({
         where: {
           [Op.or]: [
             {
@@ -161,9 +196,20 @@ exports.listFaculty = async (req, res) => {
         ],
         offset: skip,
         limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-    } else {
-      data = await db_Faculty.findAll({
+  });
+}
+
+function listFaculty_NOPagination(req, db_Faculty, db_Department) {
+  return new Promise(async (resolve, reject) => {
+    await db_Faculty
+      .findAll({
         where: {
           [Op.or]: [
             {
@@ -183,20 +229,12 @@ exports.listFaculty = async (req, res) => {
             model: db_Department,
           },
         ],
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-    }
-
-    let result = {
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    //Success
-    return Response(res, 200, 'Success!', { result });
-  } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
-  }
-};
+  });
+}

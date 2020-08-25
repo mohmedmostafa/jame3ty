@@ -16,6 +16,10 @@ const db_AcademicYear = db.AcademicYear;
 const db_Department = db.Department;
 const db_Subject = db.Subject;
 const db_connection = db.connection;
+const db_CourseSubscribe = db.CourseSubscribe;
+const db_Student = db.Student;
+const db_Lesson = db.Lesson;
+const db_Instructor = db.Instructor;
 
 //---------------------------------------------------------------
 exports.addCourse = async (req, res) => {
@@ -162,16 +166,33 @@ exports.deleteCourse = async (req, res) => {
   try {
     //Check if the Course is already exsits
     let course = await db_Course.findOne({
-      where: { id: req.params.id },
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_CourseSubscribe,
+          include: [{ model: db_Student }],
+        },
+      ],
     });
 
     if (!course) {
       return Response(res, 400, 'Course Not Found!', {});
     }
-
     //course = course.get({ plain: true });
 
     console.log(course);
+
+    //If Students Subscribe the course then can not delete it
+    if (course.coursesSubscribes.length > 0) {
+      return Response(
+        res,
+        400,
+        "Can't delete the course, The Course has subscription!",
+        { course }
+      );
+    }
 
     //Delete
     let deletedCourse = await db_Course.destroy({
@@ -209,57 +230,83 @@ exports.deleteCourse = async (req, res) => {
   }
 };
 
-//---------------------------------------------------------------
-exports.updateFaculty = async (req, res) => {
+//--------------------------------------------------------------
+exports.listCourseById = async (req, res) => {
   try {
-    //Check if the faculty is already exsits
-    let faculty = await db_Faculty.findByPk(req.params.id);
-    faculty = faculty.get({ plain: true });
-
-    if (!faculty) {
-      return Response(res, 400, 'Faculty Not Found!', {});
-    }
-
-    //Check the universityId is changed
-    if (req.body.universityId != faculty.universityId) {
-      //Check if the University is already exsits
-      const university = await db_University.findByPk(
-        parseInt(req.body.universityId)
-      );
-
-      if (!university) {
-        return Response(res, 400, 'University Not Found!', {});
-      }
-    }
-
-    //Do Update
-    faculty = await db_Faculty.update(
-      {
-        name_ar: req.body.name_ar ? req.body.name_ar : faculty.name_ar,
-        name_en: req.body.name_en ? req.body.name_en : faculty.name_en,
-        universityId: req.body.universityId
-          ? req.body.universityId
-          : faculty.universityId,
+    let course = await db_Course.findOne({
+      where: {
+        id: req.params.id,
       },
-      { where: { id: req.params.id } }
-    );
+      include: [
+        {
+          model: db_Instructor,
+        },
+        {
+          model: db_Subject,
+        },
+        {
+          model: db_Group,
+          include: [
+            {
+              model: db_Lesson,
+            },
+            {
+              model: db_GroupSchedule,
+            },
+            {
+              model: db_CourseSubscribe,
+              include: [
+                {
+                  model: db_Student,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: db_Lesson,
+          include: [
+            {
+              model: db_Group,
+              include: [
+                {
+                  model: db_GroupSchedule,
+                },
+                {
+                  model: db_CourseSubscribe,
+                  include: [
+                    {
+                      model: db_Student,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!course) {
+      return Response(res, 400, 'Course Not Found!', {});
+    }
 
     //Success
-    return Response(res, 200, 'Success!', { faculty });
+    return Response(res, 200, 'Success!', { course });
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(res, 500, 'Fail to Delete!', { error });
   }
 };
 
 //---------------------------------------------------------------
-exports.listFaculty = async (req, res) => {
+exports.listCourse = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_Faculty.count({}).catch((error) => {
+  let numRows = await db_Course.count({}).catch((error) => {
     return Response(res, 500, 'Fail to Count!', { error });
   });
   numRows = parseInt(numRows);
@@ -272,63 +319,48 @@ exports.listFaculty = async (req, res) => {
   let _limit = numPerPage;
 
   //Query
-  let name_ar = req.query.name_ar ? req.query.name_ar : '';
-  let name_en = req.query.name_en ? req.query.name_en : '';
-
   try {
     let data;
     if (doPagination) {
-      data = await db_Faculty.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: name_ar,
-              },
-            },
-            {
-              name_en: {
-                [Op.substring]: name_en,
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_AcademicYear,
-          },
-          {
-            model: db_Department,
-          },
-        ],
-        offset: skip,
-        limit: _limit,
-      });
+      if (req.query.method != 'both') {
+        //Do Pagination & Method 1 or 0
+        data = await listCourse_DoPagination_Method_1_or_0(
+          req,
+          db_Course,
+          db_Group,
+          db_GroupSchedule,
+          skip,
+          _limit
+        );
+      } else {
+        //Do Pagination & Both
+        data = await listCourse_DoPagination_Method_Both(
+          req,
+          db_Course,
+          db_Group,
+          db_GroupSchedule,
+          skip,
+          _limit
+        );
+      }
     } else {
-      data = await db_Faculty.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: name_ar,
-              },
-            },
-            {
-              name_en: {
-                [Op.substring]: name_en,
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_AcademicYear,
-          },
-          {
-            model: db_Department,
-          },
-        ],
-      });
+      if (req.query.method != 'both') {
+        //NO Pagination & Method 1 or 0
+        data = await listCourse_NOPagination_Method_1_or_0(
+          req,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      } else {
+        //NO Pagination & Method Both
+        data = await listCourse_NOPagination_Method_Both(
+          req,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      }
     }
 
     let result = {
@@ -345,3 +377,196 @@ exports.listFaculty = async (req, res) => {
     return Response(res, 500, 'Fail To Find!', { error });
   }
 };
+
+function listCourse_DoPagination_Method_Both(
+  req,
+  db_Course,
+  db_Group,
+  db_GroupSchedule,
+  skip,
+  _limit
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listCourse_DoPagination_Method_1_or_0(
+  req,
+  db_Course,
+  db_Group,
+  db_GroupSchedule,
+  skip,
+  _limit
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listCourse_NOPagination_Method_Both(
+  req,
+  db_Course,
+  db_Group,
+  db_GroupSchedule
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_Course
+      .findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+            {
+              name_en: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listCourse_NOPagination_Method_1_or_0(
+  req,
+  db_Course,
+  db_Group,
+  db_GroupSchedule
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+            // {
+            //   startDate: {
+            //     [Op.gte]: req.query.startDate,
+            //     [Op.lte]: req.query.endDate,
+            //   },
+            // },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
