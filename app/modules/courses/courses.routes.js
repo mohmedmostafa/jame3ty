@@ -76,6 +76,55 @@ module.exports = function (app) {
     CourseController.deleteCourse
   );
 
+  const upload_updateCourse = FileUploader.upload.fields([
+    {
+      name: 'img',
+      maxCount: 2,
+    },
+    {
+      name: 'vedio',
+      maxCount: 1,
+    },
+  ]);
+
+  app.post(
+    '/api/updateCourse/:id',
+    (req, res, next) => {
+      upload_updateCourse(req, res, (err) => {
+        if (req.fileVaildMimTypesError) {
+          return ValidateResponse(res, err, req.fileVaildMimTypesError);
+        }
+
+        //If Unexpected field ERROR
+        if (
+          err instanceof multer.MulterError &&
+          err.message === 'Unexpected field'
+        ) {
+          FileUploader.onErrorDeleteFiles(req);
+          return ValidateResponse(
+            res,
+            err,
+            FileUploader.validForm_DataParamNames()
+          );
+        }
+
+        //Other Errors
+        if (err) {
+          FileUploader.onErrorDeleteFiles(req);
+          return ValidateResponse(res, err, {});
+        }
+
+        return next();
+      });
+    },
+    [
+      CourseValidation.updateCourseValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructor,
+    ],
+    CourseController.updateCourse
+  );
+
   app.get(
     '/api/listCourse',
     FileUploader.upload.none(),

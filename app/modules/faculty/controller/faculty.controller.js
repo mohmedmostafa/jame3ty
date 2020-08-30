@@ -116,6 +116,31 @@ exports.deleteFaculty = async (req, res) => {
   }
 };
 
+//--------------------------------------------------------------
+exports.listFacultyById = async (req, res) => {
+  try {
+    //Check if found
+    const faculty = await db_Faculty.findOne({
+      where: { id: parseInt(req.params.id) },
+      include: [
+        {
+          model: db_Department,
+        },
+      ],
+    });
+
+    if (!faculty) {
+      return Response(res, 400, 'Faculty Not Found!', {});
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { faculty });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Find!', { error });
+  }
+};
+
 //---------------------------------------------------------------
 exports.listFaculty = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);

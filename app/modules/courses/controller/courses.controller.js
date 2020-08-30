@@ -5,6 +5,7 @@ const {
   deleteFile,
 } = require('../../../common/multerConfig');
 const moment = require('moment');
+const { Sequelize } = require('../..');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;
@@ -300,6 +301,129 @@ exports.listCourseById = async (req, res) => {
 };
 
 //---------------------------------------------------------------
+exports.updateCourse = async (req, res) => {
+  try {
+    //Check if the Course is already exsits
+    let course = await db_Course.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_Group,
+        },
+      ],
+    });
+
+    if (!course) {
+      onErrorDeleteFiles(req);
+      return Response(res, 400, 'Course Not Found!', {});
+    }
+
+    //If the course is live streaming course -> then check the new start date of the course to be
+    //before the start date of its groups
+    if (course.method === 1 && course.groups.length > 0) {
+      let minStartDateGroup = await db_Group.findOne({
+        where: {
+          courseId: req.params.id,
+        },
+        attributes: [
+          [Sequelize.fn('min', Sequelize.col('startDate')), 'minStartDate'],
+        ],
+      });
+      minStartDateGroup = minStartDateGroup.get({ plain: true });
+
+      if (moment(req.body.startDate).isAfter(minStartDateGroup.minStartDate)) {
+        return Response(
+          res,
+          400,
+          "Startdate isn't valid, it must be before all start dates of all groups",
+          { minStartDateGroup }
+        );
+      }
+    }
+
+    //Create Attachment String
+    if (req.files.img) {
+      let field_1 = [];
+      req.files['img'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.img = field_1.join();
+    }
+
+    //Create Attachment String
+    if (req.files.vedio) {
+      let field_2 = [];
+      req.files['vedio'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_2.push(fileUrl);
+      });
+      req.body.vedio = field_2.join();
+    }
+
+    //Do Update
+    let updatedCourse = await db_Course.update(
+      {
+        name_ar: req.body.name_ar ? req.body.name_ar : course.name_ar,
+        name_en: req.body.name_en ? req.body.name_en : course.name_en,
+        code: req.body.code ? req.body.code : course.code,
+        desc: req.body.desc ? req.body.desc : course.desc,
+        prerequisiteText: req.body.prerequisiteText
+          ? req.body.prerequisiteText
+          : course.prerequisiteText,
+        whatYouWillLearn: req.body.whatYouWillLearn
+          ? req.body.whatYouWillLearn
+          : course.whatYouWillLearn,
+        numOfLessons: req.body.numOfLessons
+          ? req.body.numOfLessons
+          : course.numOfLessons,
+        price: req.body.price ? req.body.price : course.price,
+        priceBeforeDiscount: req.body.priceBeforeDiscount
+          ? req.body.priceBeforeDiscount
+          : course.priceBeforeDiscount,
+        startDate: req.body.startDate ? req.body.startDate : course.startDate,
+        type: req.body.type ? req.body.type : course.type,
+        subjectId: req.body.subjectId ? req.body.subjectId : course.subjectId,
+        img: req.body.img ? req.body.img : course.getDataValue('img'),
+        vedio: req.body.vedio ? req.body.vedio : course.getDataValue('vedio'),
+      },
+      { where: { id: req.params.id } }
+    );
+
+    //If the record Updated then delete files in img and vedio
+    if (updatedCourse && req.body.img) {
+      let imgStr = course.getDataValue('img');
+      if (imgStr.length > 0) {
+        let locations = imgStr.split(',');
+        console.log(locations);
+        locations.forEach((loc) => {
+          deleteFile(loc);
+        });
+      }
+    }
+
+    if (updatedCourse && req.body.vedio) {
+      let vedioStr = course.getDataValue('vedio');
+      if (vedioStr.length > 0) {
+        let locations = vedioStr.split(',');
+        console.log(locations);
+        locations.forEach((loc) => {
+          deleteFile(loc);
+        });
+      }
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', {});
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Udpate!', { error });
+  }
+};
+
+//---------------------------------------------------------------
 exports.listCourse = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
@@ -410,6 +534,11 @@ function listCourse_DoPagination_Method_Both(
                 [Op.in]: ['0', '1'],
               },
             },
+            {
+              startDate: {
+                [Op.between]: [req.query.startFrom, req.query.startTo],
+              },
+            },
           ],
         },
         include: [
@@ -460,6 +589,11 @@ function listCourse_DoPagination_Method_1_or_0(
             {
               method: req.query.method,
             },
+            {
+              startDate: {
+                [Op.between]: [req.query.startFrom, req.query.startTo],
+              },
+            },
           ],
         },
         include: [
@@ -490,15 +624,24 @@ function listCourse_NOPagination_Method_Both(
     await db_Course
       .findAll({
         where: {
-          [Op.or]: [
+          [Op.and]: [
             {
-              name_ar: {
-                [Op.substring]: req.query.searchKey,
-              },
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
             },
             {
-              name_en: {
-                [Op.substring]: req.query.searchKey,
+              startDate: {
+                [Op.between]: [req.query.startFrom, req.query.startTo],
               },
             },
           ],
@@ -547,12 +690,11 @@ function listCourse_NOPagination_Method_1_or_0(
             {
               method: req.query.method,
             },
-            // {
-            //   startDate: {
-            //     [Op.gte]: req.query.startDate,
-            //     [Op.lte]: req.query.endDate,
-            //   },
-            // },
+            {
+              startDate: {
+                [Op.between]: [req.query.startFrom, req.query.startTo],
+              },
+            },
           ],
         },
         include: [

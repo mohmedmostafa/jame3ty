@@ -80,6 +80,49 @@ addCourseValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+updateCourseValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
+  }
+
+  //Body Validation
+
+  //Course Body Validation
+  let schema = Joi.object({
+    name_ar: Joi.string().min(3).max(30).required(),
+    name_en: Joi.string().min(3).max(30).required(),
+    code: Joi.string().allow('', null),
+    desc: Joi.string().min(5).required(),
+    prerequisiteText: Joi.string().min(5).required(),
+    whatYouWillLearn: Joi.string().min(5).required(),
+    numOfLessons: Joi.number().integer().positive().min(1).required(),
+    price: Joi.number().positive().required(),
+    priceBeforeDiscount: Joi.number()
+      .positive()
+      .min(Joi.ref('price'))
+      .required(),
+    startDate: Joi.date().iso().required(),
+    type: Joi.number().integer().min(0).max(1).required(),
+    subjectId: Joi.number().integer().required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 deleteCourseValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
@@ -105,8 +148,8 @@ listCourseValidation = (req, res, next) => {
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),
     method: Joi.string().valid('1', '0', 'both').required(),
-    // startDate: Joi.date().iso().allow('').required(),
-    // endDate: Joi.date().iso().allow('').required(),
+    startFrom: Joi.date().iso().required(),
+    startTo: Joi.date().iso().greater(Joi.ref('startFrom')).required(),
   });
 
   const { error } = schema.validate(req.query);
@@ -140,6 +183,7 @@ const CourseValidation = {
   deleteCourseValidation: deleteCourseValidation,
   listCourseValidation: listCourseValidation,
   listCourseByIdValidation: listCourseByIdValidation,
+  updateCourseValidation: updateCourseValidation,
 };
 
 module.exports = CourseValidation;

@@ -1,15 +1,18 @@
 const Joi = require('joi');
 const { ValidateResponse } = require('../../../common/response.handler');
-const db = require('../../');
+const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const db = require('../..');
 
 //----------------------------------------------------------
-addFacultyValidation = (req, res, next) => {
+addSubjectValidation = (req, res, next) => {
   //Body Validation
-  const schema = Joi.object({
+  let schema = Joi.object({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
-    universityId: Joi.number().integer().required(),
+    academicYearId: Joi.number().integer().required(),
   });
+
+  console.log(req.body);
 
   const { error } = schema.validate(req.body);
   if (error) {
@@ -20,7 +23,7 @@ addFacultyValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-updateFacultyValidation = (req, res, next) => {
+updateSubjectValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -34,10 +37,9 @@ updateFacultyValidation = (req, res, next) => {
   }
 
   //Body Validation
-  const schema = Joi.object({
+  let schema = Joi.object({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
-    universityId: Joi.number().integer().required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -49,7 +51,24 @@ updateFacultyValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-listFacultyValidation = (req, res, next) => {
+deleteSubjectValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+listSubjectValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     doPagination: Joi.number().integer().valid(1, 0).default(1),
@@ -67,7 +86,7 @@ listFacultyValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-listFacultyByIdValidation = (req, res, next) => {
+listSubjectByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -84,29 +103,12 @@ listFacultyByIdValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-deleteFacultyValidation = (req, res, next) => {
-  //URL Params Validation
-  if (req.params) {
-    const schemaParam = Joi.object({
-      id: Joi.number().integer().required(),
-    });
-
-    const { error } = schemaParam.validate(req.params);
-    if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
-    }
-  }
-
-  return next();
+const SubjectValidation = {
+  addSubjectValidation: addSubjectValidation,
+  deleteSubjectValidation: deleteSubjectValidation,
+  listSubjectValidation: listSubjectValidation,
+  listSubjectByIdValidation: listSubjectByIdValidation,
+  updateSubjectValidation: updateSubjectValidation,
 };
 
-//----------------------------------------------------------
-const FacultyValidation = {
-  addFacultyValidation: addFacultyValidation,
-  updateFacultyValidation: updateFacultyValidation,
-  listFacultyValidation: listFacultyValidation,
-  deleteFacultyValidation: deleteFacultyValidation,
-  listFacultyByIdValidation: listFacultyByIdValidation,
-};
-
-module.exports = FacultyValidation;
+module.exports = SubjectValidation;

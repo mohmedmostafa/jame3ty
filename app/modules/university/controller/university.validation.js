@@ -4,11 +4,26 @@ const db = require('../..');
 
 //----------------------------------------------------------
 addUniversityValidation = (req, res, next) => {
-  //Body Validation
-  const schema = Joi.object({
+  if (req.body.faculties) {
+    //Parse faculties from the body
+    var faculties = JSON.parse(req.body.faculties);
+    req.body.faculties = faculties;
+  }
+
+  //One faculty Schema
+  let facultySchema = Joi.object().keys({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
   });
+
+  //AcademicYear Body Validation
+  let schema = Joi.object({
+    name_ar: Joi.string().min(3).max(30).required(),
+    name_en: Joi.string().min(3).max(30).required(),
+    faculties: Joi.array().items(facultySchema),
+  });
+
+  console.log(req.body);
 
   const { error } = schema.validate(req.body);
   if (error) {
@@ -41,6 +56,23 @@ updateUniversityValidation = (req, res, next) => {
   const { error } = schema.validate(req.body);
   if (error) {
     return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+listUniversityByIdValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
   }
 
   return next();
@@ -87,6 +119,7 @@ const UniversityValidation = {
   updateUniversityValidation: updateUniversityValidation,
   listUniversityValidation: listUniversityValidation,
   deleteUniversityValidation: deleteUniversityValidation,
+  listUniversityByIdValidation: listUniversityByIdValidation,
 };
 
 module.exports = UniversityValidation;

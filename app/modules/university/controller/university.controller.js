@@ -4,21 +4,41 @@ const { Response } = require('../../../common/response.handler');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_connection = db.connection;
 
 //---------------------------------------------------------------
 exports.addUniversity = async (req, res) => {
   try {
-    //Save TO DB
-    const uni = await db_University.create({
-      name_ar: req.body.name_ar,
-      name_en: req.body.name_en,
+    //Start "Managed" Transaction
+    const result = await db_connection.transaction(async (t) => {
+      //Add University to DB
+      const university = await db_University.create(
+        {
+          name_ar: req.body.name_ar,
+          name_en: req.body.name_en,
+        },
+        { transaction: t }
+      );
+
+      //Inject universityId into each Faculty belongs to the university
+      req.body.faculties.forEach((faculty) => {
+        faculty.universityId = university.id;
+      });
+
+      //Save Faculties to DB for the university
+      var faculty = await db_Faculty.bulkCreate(req.body.faculties, {
+        fields: ['name_ar', 'name_en', 'universityId'],
+        transaction: t,
+      });
+
+      return { university };
     });
 
     //Success
-    return Response(res, 200, 'Success!', { uni });
+    return Response(res, 200, 'Success!', { result });
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Add', { error });
+    return Response(res, 500, 'Fail to Add!', { error });
   }
 };
 
@@ -87,6 +107,31 @@ exports.deleteUniversity = async (req, res) => {
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
+  }
+};
+
+//--------------------------------------------------------------
+exports.listUniversityById = async (req, res) => {
+  try {
+    //Check if found
+    const university = await db_University.findOne({
+      where: { id: parseInt(req.params.id) },
+      include: [
+        {
+          model: db_Faculty,
+        },
+      ],
+    });
+
+    if (!university) {
+      return Response(res, 400, 'University Not Found!', {});
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { university });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Find!', { error });
   }
 };
 

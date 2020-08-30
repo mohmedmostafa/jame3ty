@@ -1,8 +1,8 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
 const { ValidateResponse } = require('../../common/response.handler');
-const GroupValidation = require('./controller/group.validation');
-const GroupController = require('./controller/group.controller');
+const AcademicYearValidation = require('./controller/academicYear.validation');
+const AcademicYearController = require('./controller/academicYear.controller');
 const FileUploader = require('../../common/multerConfig');
 
 module.exports = function (app) {
@@ -15,57 +15,57 @@ module.exports = function (app) {
   });
 
   app.post(
-    '/api/addGroup',
+    '/api/addAcademicYear',
     FileUploader.upload.none(),
     [
-      GroupValidation.addGroupValidation,
+      AcademicYearValidation.addAcademicYearValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.addGroup
+    AcademicYearController.addAcademicYear
   );
 
   app.post(
-    '/api/deleteGroup/:id',
+    '/api/deleteAcademicYear/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.deleteGroupValidation,
+      AcademicYearValidation.deleteAcademicYearValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.deleteGroup
+    AcademicYearController.deleteAcademicYear
   );
 
   app.post(
-    '/api/updateGroup/:id',
+    '/api/updateAcademicYear/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.updateGroupValidation,
+      AcademicYearValidation.updateAcademicYearValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.updateGroup
+    AcademicYearController.updateAcademicYear
   );
 
   app.get(
-    '/api/listGroupByCourseId/:courseId',
+    '/api/listAcademicYearById/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.listGroupByCourseIdValidation,
+      AcademicYearValidation.listAcademicYearByIdValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    GroupController.listGroupByCourseId
+    AcademicYearController.listAcademicYearById
   );
 
   app.get(
-    '/api/listGroupById/:id',
+    '/api/listAcademicYear',
     FileUploader.upload.none(),
     [
-      GroupValidation.listGroupByIdValidation,
+      AcademicYearValidation.listAcademicYearValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    GroupController.listGroupById
+    AcademicYearController.listAcademicYear
   );
 };

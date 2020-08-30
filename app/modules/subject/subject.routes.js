@@ -1,8 +1,8 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
 const { ValidateResponse } = require('../../common/response.handler');
-const GroupValidation = require('./controller/group.validation');
-const GroupController = require('./controller/group.controller');
+const SubjectValidation = require('./controller/subject.validation');
+const SubjectController = require('./controller/subject.controller');
 const FileUploader = require('../../common/multerConfig');
 
 module.exports = function (app) {
@@ -15,57 +15,57 @@ module.exports = function (app) {
   });
 
   app.post(
-    '/api/addGroup',
+    '/api/addSubject',
     FileUploader.upload.none(),
     [
-      GroupValidation.addGroupValidation,
+      SubjectValidation.addSubjectValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.addGroup
+    SubjectController.addSubject
   );
 
   app.post(
-    '/api/deleteGroup/:id',
+    '/api/deleteSubject/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.deleteGroupValidation,
+      SubjectValidation.deleteSubjectValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.deleteGroup
+    SubjectController.deleteSubject
   );
 
   app.post(
-    '/api/updateGroup/:id',
+    '/api/updateSubject/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.updateGroupValidation,
+      SubjectValidation.updateSubjectValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.updateGroup
+    SubjectController.updateSubject
   );
 
   app.get(
-    '/api/listGroupByCourseId/:courseId',
+    '/api/listSubjectById/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.listGroupByCourseIdValidation,
+      SubjectValidation.listSubjectByIdValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    GroupController.listGroupByCourseId
+    SubjectController.listSubjectById
   );
 
   app.get(
-    '/api/listGroupById/:id',
+    '/api/listSubject',
     FileUploader.upload.none(),
     [
-      GroupValidation.listGroupByIdValidation,
+      SubjectValidation.listSubjectValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    GroupController.listGroupById
+    SubjectController.listSubject
   );
 };

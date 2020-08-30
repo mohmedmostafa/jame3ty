@@ -1,8 +1,8 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
 const { ValidateResponse } = require('../../common/response.handler');
-const GroupValidation = require('./controller/group.validation');
-const GroupController = require('./controller/group.controller');
+const DepartmentValidation = require('./controller/department.validation');
+const DepartmentController = require('./controller/department.controller');
 const FileUploader = require('../../common/multerConfig');
 
 module.exports = function (app) {
@@ -15,57 +15,57 @@ module.exports = function (app) {
   });
 
   app.post(
-    '/api/addGroup',
+    '/api/addDepartment',
     FileUploader.upload.none(),
     [
-      GroupValidation.addGroupValidation,
+      DepartmentValidation.addDepartmentValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.addGroup
+    DepartmentController.addDepartment
   );
 
   app.post(
-    '/api/deleteGroup/:id',
+    '/api/deleteDepartment/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.deleteGroupValidation,
+      DepartmentValidation.deleteDepartmentValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.deleteGroup
+    DepartmentController.deleteDepartment
   );
 
   app.post(
-    '/api/updateGroup/:id',
+    '/api/updateDepartment/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.updateGroupValidation,
+      DepartmentValidation.updateDepartmentValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    GroupController.updateGroup
+    DepartmentController.updateDepartment
   );
 
   app.get(
-    '/api/listGroupByCourseId/:courseId',
+    '/api/listDepartmentById/:id',
     FileUploader.upload.none(),
     [
-      GroupValidation.listGroupByCourseIdValidation,
+      DepartmentValidation.listDepartmentByIdValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    GroupController.listGroupByCourseId
+    DepartmentController.listDepartmentById
   );
 
   app.get(
-    '/api/listGroupById/:id',
+    '/api/listDepartment',
     FileUploader.upload.none(),
     [
-      GroupValidation.listGroupByIdValidation,
+      DepartmentValidation.listDepartmentValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    GroupController.listGroupById
+    DepartmentController.listDepartment
   );
 };
