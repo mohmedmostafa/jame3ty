@@ -12,10 +12,11 @@ const maxSize = 500 * 1024 * 1024;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let ext = path.extname(file.originalname);
+    ext = ext.toLowerCase();
     //Images
     if (ext === '.jpg' || ext === '.png' || ext === '.jpeg') {
       cb(null, './public/images/');
-    } else if (ext === 'mp4') {
+    } else if (ext === '.mp4') {
       //Vedio
       cb(null, './public/vedio/');
     } else if (ext === '.rar' || ext === '.zip' || ext === '.7z') {
@@ -101,6 +102,10 @@ const imageVaildMimTypes = ['image/jpg', 'image/png', 'image/jpeg'];
 const vedioVaildMimTypes = ['video/mp4'];
 
 const fileValidMinTypes_all = [
+  'image/jpg',
+  'image/png',
+  'image/jpeg',
+  'video/mp4',
   'application/pdf',
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -143,7 +148,7 @@ const filesValidMimTypes_OnlyCOMPRESSED = [
 const validForm_DataParamNames_With_Mimtypes = [
   ['img', imageVaildMimTypes],
   ['img1', imageVaildMimTypes],
-  ['vedio0', vedioVaildMimTypes],
+  ['vedio', vedioVaildMimTypes],
   ['file', fileValidMinTypes_all],
   ['file1', fileValidMinTypes_all],
   ['pdf', filesVaildMimTypes_OnlyPDF],
@@ -152,6 +157,7 @@ const validForm_DataParamNames_With_Mimtypes = [
   ['powerpoint', filesVaildMimTypes_OnlyPOWERPOINT],
   ['excel', filesVaildMimTypes_OnlyEXCEL],
   ['compressed', filesValidMimTypes_OnlyCOMPRESSED],
+  ['attachments', fileValidMinTypes_all],
 ];
 
 //----------------------------------------------------------
@@ -204,7 +210,6 @@ function onErrorDeleteFiles(req) {
   });
 }
 
-
 function validateFileAfterUpdate_(req,res,next,upload_addInstructor){
   console.log("m1");
     upload_addInstructor(req, res, (err) => {
@@ -235,9 +240,16 @@ function validateFileAfterUpdate_(req,res,next,upload_addInstructor){
         return next();
       });
 };
+function deleteFile(path) {
+  console.log(path);
+  unlinkAsync(path).catch((err) => {
+    console.log(err);
+  });
+}
 
 module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
 module.exports.validForm_DataParamNames_With_Mimtypes = validForm_DataParamNames_With_Mimtypes;
 module.exports.validForm_DataParamNames = validForm_DataParamNames;
 module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
 module.exports.validateFileAfterUpdate=validateFileAfterUpdate_;
+module.exports.deleteFile = deleteFile;

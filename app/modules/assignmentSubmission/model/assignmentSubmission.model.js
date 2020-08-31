@@ -8,12 +8,12 @@ module.exports = (connection, Sequelize) => {
         autoIncrement: true,
       },
       submissionDate: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         allowNull: false,
       },
       attachments: {
         type: Sequelize.STRING(255),
-        allowNull: false,
+        defaultValue: '',
       },
       studentId: {
         type: Sequelize.INTEGER,
@@ -27,21 +27,21 @@ module.exports = (connection, Sequelize) => {
       lessonId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
         references: {
           model: 'lessons',
           key: 'id',
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+        onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
       },
     },

@@ -29,21 +29,21 @@ module.exports = (connection, Sequelize) => {
       courseId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
         references: {
           model: 'courses',
           key: 'id',
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+        onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
       },
     },

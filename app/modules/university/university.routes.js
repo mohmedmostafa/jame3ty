@@ -45,6 +45,17 @@ module.exports = function (app) {
     UniversityController.listUniversity
   );
 
+  app.get(
+    '/api/listUniversityById/:id',
+    upload.none(),
+    [
+      UniversityValidation.listUniversityByIdValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    UniversityController.listUniversityById
+  );
+
   app.post(
     '/api/deleteUniversity/:id',
     upload.none(),

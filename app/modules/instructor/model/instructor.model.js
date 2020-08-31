@@ -1,3 +1,5 @@
+const { PORT, HOST } = require('../../../config/env.config');
+
 module.exports = (connection, Sequelize) => {
   const Instructor = connection.define(
     'instructors',
@@ -28,15 +30,24 @@ module.exports = (connection, Sequelize) => {
       },
       cv: {
         type: Sequelize.STRING(255),
+        get(){
+          const storedValue = this.getDataValue('cv');
+          if(storedValue){
+            let path= `${HOST}` + `${PORT}` + '/' +storedValue;
+            return path;
+          }else
+          return null;
+        }
       },
       img: {
         type: Sequelize.STRING(255),
         get(){
           const storedValue = this.getDataValue('img');
-          if(storedValue)
-          return "https://localhost:3001/"+storedValue;
-          else
-          return null;
+          if(storedValue){
+            let path= `${HOST}` + `${PORT}` + '/' +storedValue;
+            return path;
+          }else
+            return null;
         }
       },
       userId: {
@@ -49,14 +60,14 @@ module.exports = (connection, Sequelize) => {
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+        onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
       },
     },

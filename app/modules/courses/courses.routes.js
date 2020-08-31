@@ -14,19 +14,21 @@ module.exports = function (app) {
     next();
   });
 
+  //name: FileUploader.validForm_DataParamNames()[2], //vedio0
+
   const upload_addCourse = FileUploader.upload.fields([
     {
-      name: FileUploader.validForm_DataParamNames()[0],
+      name: 'img',
       maxCount: 2,
     },
     {
-      name: FileUploader.validForm_DataParamNames()[9],
+      name: 'vedio',
       maxCount: 1,
     },
   ]);
 
   app.post(
-    '/api/addCourse',
+    '/api/addCourse/:method',
     (req, res, next) => {
       upload_addCourse(req, res, (err) => {
         if (req.fileVaildMimTypesError) {
@@ -58,8 +60,90 @@ module.exports = function (app) {
     [
       CourseValidation.addCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructor,
     ],
     CourseController.addCourse
+  );
+
+  app.post(
+    '/api/deleteCourse/:id',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.deleteCourseValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructor,
+    ],
+    CourseController.deleteCourse
+  );
+
+  const upload_updateCourse = FileUploader.upload.fields([
+    {
+      name: 'img',
+      maxCount: 2,
+    },
+    {
+      name: 'vedio',
+      maxCount: 1,
+    },
+  ]);
+
+  app.post(
+    '/api/updateCourse/:id',
+    (req, res, next) => {
+      upload_updateCourse(req, res, (err) => {
+        if (req.fileVaildMimTypesError) {
+          return ValidateResponse(res, err, req.fileVaildMimTypesError);
+        }
+
+        //If Unexpected field ERROR
+        if (
+          err instanceof multer.MulterError &&
+          err.message === 'Unexpected field'
+        ) {
+          FileUploader.onErrorDeleteFiles(req);
+          return ValidateResponse(
+            res,
+            err,
+            FileUploader.validForm_DataParamNames()
+          );
+        }
+
+        //Other Errors
+        if (err) {
+          FileUploader.onErrorDeleteFiles(req);
+          return ValidateResponse(res, err, {});
+        }
+
+        return next();
+      });
+    },
+    [
+      CourseValidation.updateCourseValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructor,
+    ],
+    CourseController.updateCourse
+  );
+
+  app.get(
+    '/api/listCourse',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    CourseController.listCourse
+  );
+
+  app.get(
+    '/api/listCourseById/:id',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseByIdValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    CourseController.listCourseById
   );
 };

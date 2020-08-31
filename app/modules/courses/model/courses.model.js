@@ -1,3 +1,5 @@
+const { PORT, HOST } = require('../../../config/env.config');
+
 module.exports = (connection, Sequelize) => {
   const Course = connection.define(
     'courses',
@@ -38,7 +40,7 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.DOUBLE,
       },
       startDate: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         allowNull: false,
       },
       type: {
@@ -50,6 +52,36 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false,
         comment: '0:Recorded Lessons | 1:Live Streaming',
+      },
+      img: {
+        type: Sequelize.STRING,
+        defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('img');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
+      },
+      vedio: {
+        type: Sequelize.STRING,
+        defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('vedio');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
       },
       subjectId: {
         type: Sequelize.INTEGER,
@@ -70,14 +102,14 @@ module.exports = (connection, Sequelize) => {
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+        onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
       },
     },

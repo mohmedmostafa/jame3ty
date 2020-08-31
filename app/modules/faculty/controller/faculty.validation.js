@@ -13,7 +13,7 @@ addFacultyValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -29,7 +29,7 @@ updateFacultyValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {});
     }
   }
 
@@ -42,7 +42,7 @@ updateFacultyValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -60,7 +60,24 @@ listFacultyValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+listFacultyByIdValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {});
+    }
   }
 
   return next();
@@ -76,7 +93,7 @@ deleteFacultyValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {});
     }
   }
 
@@ -89,6 +106,7 @@ const FacultyValidation = {
   updateFacultyValidation: updateFacultyValidation,
   listFacultyValidation: listFacultyValidation,
   deleteFacultyValidation: deleteFacultyValidation,
+  listFacultyByIdValidation: listFacultyByIdValidation,
 };
 
 module.exports = FacultyValidation;

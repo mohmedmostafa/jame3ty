@@ -5,6 +5,7 @@ const { number } = require('joi');
 const helper = require('../../../common/helper');
 
 const request = require('request');
+const { PORT, HOST } = require('../../../config/env.config');
 
 const fs = require('fs');
 const { promisify } = require('util');
@@ -115,11 +116,11 @@ exports.updateInstructor = async (req, res) => {
       console.log(Instructor.get());
       //delete file
       if (Instructor.img) {
-        unlinkAsync(Instructor.img.replace("https://localhost:3001/",""));
+        unlinkAsync(Instructor.img.replace("https://"+`${HOST}` + `${PORT}` +"/",""));
       }
   
       if (Instructor.cv) {
-        unlinkAsync(Instructor.cv.replace("https://localhost:3001/",""));
+        unlinkAsync(Instructor.cv.replace("https://"+`${HOST}` + `${PORT}` +"/",""));
       }
   
 
@@ -185,11 +186,11 @@ exports.deleteInstructor = async (req, res) => {
     { transaction: t });
     //delete images
     if (Instructor.img) {
-      unlinkAsync(Instructor.img.replace("https://localhost:3001/",""));
+      unlinkAsync(Instructor.img.replace("https://"+`${HOST}` + `${PORT}` +"/",""));
     }
 
     if (Instructor.cv) {
-      unlinkAsync(Instructor.cv.replace("https://localhost:3001/",""));
+      unlinkAsync(Instructor.cv.replace("https://"+`${HOST}` + `${PORT}` +"/",""));
     }
 
     role =await db_User_Role.destroy({where:{userId:user_id}},

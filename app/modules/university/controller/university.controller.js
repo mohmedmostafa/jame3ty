@@ -4,21 +4,41 @@ const { Response } = require('../../../common/response.handler');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_connection = db.connection;
 
 //---------------------------------------------------------------
 exports.addUniversity = async (req, res) => {
   try {
-    //Save TO DB
-    const uni = await db_University.create({
-      name_ar: req.body.name_ar,
-      name_en: req.body.name_en,
+    //Start "Managed" Transaction
+    const result = await db_connection.transaction(async (t) => {
+      //Add University to DB
+      const university = await db_University.create(
+        {
+          name_ar: req.body.name_ar,
+          name_en: req.body.name_en,
+        },
+        { transaction: t }
+      );
+
+      //Inject universityId into each Faculty belongs to the university
+      req.body.faculties.forEach((faculty) => {
+        faculty.universityId = university.id;
+      });
+
+      //Save Faculties to DB for the university
+      var faculty = await db_Faculty.bulkCreate(req.body.faculties, {
+        fields: ['name_ar', 'name_en', 'universityId'],
+        transaction: t,
+      });
+
+      return { university };
     });
 
     //Success
-    return Response(res, 200, 'Success!', { uni });
+    return Response(res, 200, 'Success!', { result });
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Add', { error });
+    return Response(res, 500, 'Fail to Add!', { error });
   }
 };
 
@@ -90,6 +110,31 @@ exports.deleteUniversity = async (req, res) => {
   }
 };
 
+//--------------------------------------------------------------
+exports.listUniversityById = async (req, res) => {
+  try {
+    //Check if found
+    const university = await db_University.findOne({
+      where: { id: parseInt(req.params.id) },
+      include: [
+        {
+          model: db_Faculty,
+        },
+      ],
+    });
+
+    if (!university) {
+      return Response(res, 400, 'University Not Found!', {});
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { university });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Find!', { error });
+  }
+};
+
 //---------------------------------------------------------------
 exports.listUniversity = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
@@ -113,41 +158,14 @@ exports.listUniversity = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await db_University.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-            {
-              name_en: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-          ],
-        },
-        offset: skip,
-        limit: _limit,
-      });
+      data = await listUniversity_DoPagination(
+        req,
+        db_University,
+        skip,
+        _limit
+      );
     } else {
-      data = await db_University.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-            {
-              name_en: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-          ],
-        },
-      });
+      data = await listUniversity_NOPagination(req, db_University);
     }
 
     let result = {
@@ -164,3 +182,61 @@ exports.listUniversity = async (req, res) => {
     return Response(res, 500, 'Fail To Find!', { error });
   }
 };
+
+function listUniversity_DoPagination(req, db_University, skip, _limit) {
+  return new Promise(async (resolve, reject) => {
+    await db_University
+      .findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+            {
+              name_en: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+          ],
+        },
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listUniversity_NOPagination(req, db_University) {
+  return new Promise(async (resolve, reject) => {
+    await db_University
+      .findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+            {
+              name_en: {
+                [Op.substring]: req.query.searchKey,
+              },
+            },
+          ],
+        },
+      })
+      .catch((err) => {
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}

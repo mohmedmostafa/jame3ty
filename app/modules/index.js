@@ -80,7 +80,7 @@ db.RatingAndReview = require('../modules/ratingAndReview/model/ratingAndReview.m
   connection,
   Sequelize
 );
-db.GroupSchedule = require('../modules/groupSchedule/model/groupSchedule.model')(
+db.GroupSchedule = require('./group/model/groupSchedule.model')(
   connection,
   Sequelize
 );

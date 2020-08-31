@@ -1,3 +1,5 @@
+const { PORT, HOST } = require('../../../config/env.config');
+
 module.exports = (connection, Sequelize) => {
   const Lesson = connection.define(
     'lessons',
@@ -18,14 +20,28 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING(255),
       },
       type: {
-        type: Sequelize.ENUM('Assignment', 'Visual Lesson'),
+        type: Sequelize.INTEGER,
         allowNull: true,
+        comment: '0:Assignment | 1:Visual Lesson',
       },
       youtubeLink: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
       },
       attachments: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('attachments');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
       },
       isLiveStreaming: {
         type: Sequelize.BOOLEAN,
@@ -53,21 +69,21 @@ module.exports = (connection, Sequelize) => {
       courseId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
+        onDelete: 'CASCADE',
         references: {
           model: 'courses',
           key: 'id',
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
-        defaultValue: Sequelize.NOW,
-        onUpdate: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+        onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
       },
     },
