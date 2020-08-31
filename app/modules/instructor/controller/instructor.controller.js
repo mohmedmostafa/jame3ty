@@ -2,6 +2,14 @@ const db = require('../../../modules');
 const { Response } = require('../../../common/response.handler');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
+const helper = require('../../../common/helper');
+
+const request = require('request');
+
+const fs = require('fs');
+const { promisify } = require('util');
+const unlinkAsync = promisify(fs.unlink);
+
 const Op = db.Sequelize.Op;
 const db_connection = db.connection;
 const db_Instructor = db.Instructor;
@@ -10,12 +18,31 @@ const db_Role = db.Role;
 const db_User_Role = db.UserRole;
 const db_Course = db.Course;
 const db_Group = db.Group;
+const db_GroupSchedule = db.GroupSchedule;
 
 //---------------------------------------------------------------
 exports.addInstructor = async (req, res) => {
   try {
+    //check captch 
+    // if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null)
+    // {
+    //    return Response(res, 400, 'Fail to validate recaptcha',  {"responseError" : "something goes to wrong" });
+
+    // }
+    // console.log(req.body['g-recaptcha-response']);
+    // const secretKey = "6Lc82cIZAAAAAG0yX5SrfKAbOPw2J1XVgq4UDkJ1";
+  
+    // const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
+  
+    // request(verificationURL,function(error,response,body) {
+    //   body = JSON.parse(body);
+  
+    //   if(body.success !== undefined && !body.success) {
+    //     return Response(res, 400, 'Fail to validate recaptcha',  {"responseError" : "Failed captcha verification" });
+    //   }
+    //   // res.json({"responseSuccess" : "Sucess"});
+    // });
     //Save TO DB
-    console.log(req.files);
     const instructor = await db_connection.transaction(async (t) => {
       const inst = await db_Instructor.create({
       name_ar: req.body.name_ar,
@@ -23,11 +50,12 @@ exports.addInstructor = async (req, res) => {
       bio: req.body.bio,
       mobile: req.body.mobile,
       email: req.body.email,
-      img: req.files['img']?req.files['img'][0].path.replace("public/",""):null,
-      cv: req.files['file']?req.files['file'][0].path.replace("public/",""):null,
+      img: req.files['img']?req.files['img'][0].path:null,
+      cv: req.files['file']?req.files['file'][0].path:null,
       },
       { transaction: t }
     );
+
       const user = await db_User.create({
         email: req.body.email,
         username: req.body.username,
@@ -78,13 +106,22 @@ exports.updateInstructor = async (req, res) => {
           bio: req.body.bio ? req.body.name_en : Instructor.bio,
           mobile: req.body.mobile ? req.body.name_en : Instructor.mobile,
           email: req.body.email ? req.body.email : Instructor.email,
-          img: req.files['img']?req.files['img'][0].path.replace("public/",""):Instructor.img,
-          cv: req.files['file']?req.files['file'][0].path.replace("public/",""):Instructor.cv,
+          img: req.files['img']?req.files['img'][0].path:Instructor.img,
+          cv: req.files['file']?req.files['file'][0].path:Instructor.cv,
         },
         { where: { id: req.params.id } },
         { transaction: t }
       );
       console.log(Instructor.get());
+      //delete file
+      if (Instructor.img) {
+        unlinkAsync(Instructor.img.replace("https://localhost:3001/",""));
+      }
+  
+      if (Instructor.cv) {
+        unlinkAsync(Instructor.cv.replace("https://localhost:3001/",""));
+      }
+  
 
       let User = await db_Instructor.findByPk(Instructor.userId);
 
@@ -146,6 +183,15 @@ exports.deleteInstructor = async (req, res) => {
       where: { id: req.params.id }, 
     },
     { transaction: t });
+    //delete images
+    if (Instructor.img) {
+      unlinkAsync(Instructor.img.replace("https://localhost:3001/",""));
+    }
+
+    if (Instructor.cv) {
+      unlinkAsync(Instructor.cv.replace("https://localhost:3001/",""));
+    }
+
     role =await db_User_Role.destroy({where:{userId:user_id}},
       { transaction: t });
     user =await db_User.destroy({where:{id:instructorUserId}},
@@ -165,14 +211,7 @@ exports.listInstructor = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_Instructor.count({}).catch((error) => {
-    return Response(res, 500, 'Fail to Count!', { error });
-  });
-  numRows = parseInt(numRows);
 
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
 
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
@@ -181,10 +220,23 @@ exports.listInstructor = async (req, res) => {
   //Query
   let name_ar = req.query.name_ar ? req.query.name_ar : '';
   let name_en = req.query.name_en ? req.query.name_en : '';
-
+  let mobile = req.query.mobile ? req.query.mobile : '';
+  
+  const userData=await helper.getUserdata(req,res).catch(err=>{
+    console.log(err);
+    return Response(res, 400, "Error in Retrieve some data", {
+      err,
+    });
+  });
+  console.log(userData);
+  //if there no user data returned
+  if(userData.type=="instructor" && (userData.data==null || userData.data.id !=req.params.id)){
+    return Response(res, 400, 'You have no permission to open this page', {});
+  }
+   
   try {
     let data;
-    if (doPagination) {
+    // if (doPagination) {
       data = await db_Instructor.findAll({
         where: {
           [Op.or]: [
@@ -198,13 +250,23 @@ exports.listInstructor = async (req, res) => {
                 [Op.substring]: name_en,
               },
             },
-          ],
+            {
+              mobile: {
+                [Op.substring]: mobile,
+              },
+            },
+          ],[Op.and]:{id:{ [Op.like]:userData.type=="instructor"?userData.data.id:'%%'}}
         },
+        include: [
+          {model: db_User},
+          {model: db_Course},
+          {model: db_Group,include:{model:db_GroupSchedule}}
+        ],
         offset: skip,
         limit: _limit,
       });
-    } else {
-      data = await db_Instructor.findAll({
+    // } else {
+      let data_all = await db_Instructor.findAll({
         where: {
           [Op.or]: [
             {
@@ -217,10 +279,26 @@ exports.listInstructor = async (req, res) => {
                 [Op.substring]: name_en,
               },
             },
-          ],
+            {
+              mobile: {
+                [Op.substring]: mobile,
+              },
+            },
+          ],[Op.and]:{id:{ [Op.like]:userData.type=="instructor"?userData.data.id:'%%'}}
         },
+        include: [ {model: db_User},
+          {model: db_Course},
+          {model: db_Group,include:{model:db_GroupSchedule}}
+        ],
       });
-    }
+    // }
+
+    let numRows = parseInt(data.length);
+
+  // //Total num of valid pages
+  let numPages = Math.ceil(numRows / numPerPage);
+
+  data=(doPagination ? data:data_all);
 
     let result = {
       numRows,
@@ -233,6 +311,41 @@ exports.listInstructor = async (req, res) => {
     //Success
     return Response(res, 200, 'Success!', { result });
   } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail To Find!', { error });
+  }
+};
+//---------------------------------------------------------------
+exports.listInstructorById = async (req, res) => {
+  try {
+  let Instructor = await db_Instructor.findOne({where: { id:req.params.id},
+    include: [
+      {
+        model: db_User
+      },{ model: db_Course},{ model: db_Group}]});
+
+
+  if (!Instructor) {
+    return Response(res, 400, 'Instructor Not Found!', {});
+  }
+
+  const userData=await helper.getUserdata(req,res).catch(err=>{
+    console.log(err);
+    return Response(res, 400, "Error in Retrieve some data", {
+      err,
+    });
+  });
+
+
+  if(userData.type=="instructor" && (userData.data==null || userData.data.id !=req.params.id)){
+    return Response(res, 400, 'You have no permission to open this page', {});
+  }
+ 
+
+    //Success
+    return Response(res, 200, 'Success!', { Instructor });
+  } catch (error) {
+    console.log(error);
     return Response(res, 500, 'Fail To Find!', { error });
   }
 };

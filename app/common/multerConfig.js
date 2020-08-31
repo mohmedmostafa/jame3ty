@@ -111,6 +111,7 @@ const fileValidMinTypes_all = [
   'application/vnd.rar',
   'application/zip',
   'application/x-7z-compressed',
+  'image/jpg', 'image/png', 'image/jpeg'
 ];
 
 const filesVaildMimTypes_OnlyPDF = ['application/pdf'];
@@ -211,24 +212,23 @@ function validateFileAfterUpdate_(req,res,next,upload_addInstructor){
         if (req.fileVaildMimTypesError) {
           return ValidateResponse(res, err, req.fileVaildMimTypesError);
         }
-
-        //If Unexpected field ERROR
+         //If Unexpected field ERROR
         if (
           err instanceof multer.MulterError &&
           err.message === 'Unexpected field'
         ) {
-          FileUploader.onErrorDeleteFiles(req);
+          this.onErrorDeleteFiles(req);
           return ValidateResponse(
             res,
             err,
-            FileUploader.validForm_DataParamNames()
+            this.validForm_DataParamNames()
           );
         }
 
         //Other Errors
         if (err) {
-          console.log("m4");
-          FileUploader.onErrorDeleteFiles(req);
+          console.log("m4",err);
+          //this.onErrorDeleteFiles(req);
           return ValidateResponse(res, err, {});
         }
         console.log("m3");

@@ -19,11 +19,12 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
-
+app.use('/public',express.static('public'));
+app.set('view engine', 'ejs');
 // check route
 app.get('/', upload.none(), (req, res) => {
-  res.json({ message: 'Welcome to jame3ty application.' });
+  // res.json({ message: 'Welcome to jame3ty application.' });
+  res.render('index');
 });
 
 // routes
@@ -33,6 +34,7 @@ require('./app/modules/university/university.routes')(app);
 require('./app/modules/faculty/faculty.routes')(app);
 require('./app/modules/instructor/instructor.routes')(app)
 require('./app/modules/courses/courses.routes')(app);
+require('./app/modules/lessonDiscussionComments/lessonDiscussionComments.routes')(app);
  
 // set port, listen for requests
 app.listen(PORT, () => {

@@ -84,7 +84,7 @@ db.GroupSchedule = require('../modules/groupSchedule/model/groupSchedule.model')
   connection,
   Sequelize
 );
-db.LessonDiscussion = require('../modules/lessonDiscussion/model/lessonDiscussion.model')(
+db.LessonDiscussion = require('../modules/lessonDiscussionComments/model/lessonDiscussion.model')(
   connection,
   Sequelize
 );

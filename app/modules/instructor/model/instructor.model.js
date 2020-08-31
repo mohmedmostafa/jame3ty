@@ -33,7 +33,10 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING(255),
         get(){
           const storedValue = this.getDataValue('img');
+          if(storedValue)
           return "https://localhost:3001/"+storedValue;
+          else
+          return null;
         }
       },
       userId: {

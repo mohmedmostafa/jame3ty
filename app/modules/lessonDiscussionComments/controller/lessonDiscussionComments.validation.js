@@ -3,31 +3,28 @@ const { ValidateResponse } = require('../../../common/response.handler');
 const db = require('../..');
 
 //----------------------------------------------------------
-addInstructorValidation = (req, res, next) => {
+addlessonDiscussionCommentsValidation = (req, res, next) => {
   //Body Validation
+
+  
   const schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30),
-    bio: Joi.string().min(5).max(30),
-    mobile: Joi.string().alphanum().required(),
-    email: Joi.string().email().required(),
-    username: Joi.string().min(3).max(30).required(),
-    password: Joi.string().min(5).max(30).required(),
-    "g-recaptcha-response": Joi.any(),
-    img: Joi.any(),
-    cv: Joi.any(),
-  });
-  console.log("m5");
+    text: Joi.string().required(),
+    userId: Joi.number().integer().required(),
+    lessonId: Joi.any(),
+    lessonDiscussionId: Joi.any(),
+     
+  }) .xor('lessonId', 'lessonDiscussionId');
+
   const { error } = schema.validate(req.body);
   if (error) {
     return ValidateResponse(res, error.details, {});
   }
-  console.log("m6");
+
   return next();
 };
 
 //----------------------------------------------------------
-updateInstructorValidation = (req, res, next) => {
+updatelessonDiscussionCommentsValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -42,35 +39,30 @@ updateInstructorValidation = (req, res, next) => {
 
   //Body Validation
   const schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30),
-    bio: Joi.string().min(5).max(30),
-    mobile: Joi.string().alphanum().required(),
-    email: Joi.string().email().required(),
-    username: Joi.string().min(3).max(30).required(),
-    password: Joi.string().min(5).max(30).required(),
-  });
+    text: Joi.string().required(),
+    userId: Joi.number().integer().required(),
+    lessonId: Joi.number().integer(),
+    lessonDiscussionId: Joi.number().integer(),
+     
+  }) .xor('lessonId', 'lessonDiscussionId');
 
   const { error } = schema.validate(req.body);
   if (error) {
     return ValidateResponse(res, error.details, {});
   }
-  console.log("m6");
+
   return next();
 };
 
 //----------------------------------------------------------
-listInstructorValidation = (req, res, next) => {
+listlessonDiscussionCommentsValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     doPagination: Joi.number().integer().valid(1, 0).default(1),
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
-    name_ar: Joi.string().min(3).max(30),
-    name_en: Joi.string().min(3).max(30),
-    mobile: Joi.string().alphanum(),
-     
-  });
+    lessonId: Joi.number().integer(),
+   });
 
   const { error } = schema.validate(req.query);
   if (error) {
@@ -79,8 +71,9 @@ listInstructorValidation = (req, res, next) => {
 
   return next();
 };
+
 //----------------------------------------------------------
-listInstructorIdValidation = (req, res, next) => {
+listlessonDiscussionCommentsValidationById = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -94,9 +87,8 @@ listInstructorIdValidation = (req, res, next) => {
   }
   return next();
 };
-
 //----------------------------------------------------------
-deleteInstructorValidation = (req, res, next) => {
+deletelessonDiscussionCommentsValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -113,12 +105,12 @@ deleteInstructorValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-const InstructorValidation = {
-  addInstructorValidation: addInstructorValidation,
-  updateInstructorValidation: updateInstructorValidation,
-  listInstructorValidation: listInstructorValidation,
-  listInstructorIdValidation: listInstructorIdValidation,
-  deleteInstructorValidation: deleteInstructorValidation,
+const lessonDiscussionCommentsValidation = {
+  addlessonDiscussionCommentsValidation: addlessonDiscussionCommentsValidation,
+  updatelessonDiscussionCommentsValidation: updatelessonDiscussionCommentsValidation,
+  listlessonDiscussionCommentsValidation: listlessonDiscussionCommentsValidation,
+  listlessonDiscussionCommentsValidationById: listlessonDiscussionCommentsValidationById,
+  deletelessonDiscussionCommentsValidation: deletelessonDiscussionCommentsValidation,
 };
 
-module.exports = InstructorValidation;
+module.exports = lessonDiscussionCommentsValidation;
