@@ -11,10 +11,10 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      time: {
-        type: Sequelize.DATE(3),
-        allowNull: false,
-      },
+      // time: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      // },
       userId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
@@ -34,12 +34,12 @@ module.exports = (connection, Sequelize) => {
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         onUpdate: Sequelize.fn('NOW'),
         allowNull: false,

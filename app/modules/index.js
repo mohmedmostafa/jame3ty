@@ -84,7 +84,7 @@ db.GroupSchedule = require('./group/model/groupSchedule.model')(
   connection,
   Sequelize
 );
-db.LessonDiscussion = require('../modules/lessonDiscussion/model/lessonDiscussion.model')(
+db.LessonDiscussion = require('../modules/lessonDiscussionComments/model/lessonDiscussion.model')(
   connection,
   Sequelize
 );
@@ -171,10 +171,11 @@ db.Instructor.hasMany(db.Group, {
 db.Group.belongsTo(db.Instructor);
 //
 //
-db.Instructor.belongsTo(db.User);
-db.User.hasOne(db.Instructor, {
-  foreignKey: 'userId',
+db.Instructor.belongsTo(db.User,{onDelete:'CASCADE', hooks: true 
 });
+db.User.hasOne(db.Instructor, {
+  foreignKey: 'userId',}
+  );
 //
 //
 db.Student.belongsTo(db.User);

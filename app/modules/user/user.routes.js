@@ -1,6 +1,8 @@
 const { AuthJwt } = require('../../middleware');
 const UserController = require('../../modules/user/controller/user.controller');
-const { upload } = require('../../common/multerConfig');
+const UserValidation = require('./controller/user.validation');
+
+const FileUploader = require('../../common/multerConfig');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -11,26 +13,71 @@ module.exports = function (app) {
     next();
   });
 
-  app.get('/api/test/all', upload.none(), UserController.allAccess);
-
-  app.get(
-    '/api/test/user',
-    upload.none(),
-    [AuthJwt.VerifyToken],
-    UserController.userBoard
+  app.put(
+    '/api/updateUser/:id',
+    FileUploader.upload.none(),
+    [ AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+      UserValidation.updateUserValidation,
+     
+    ],
+    UserController.updateUser
   );
 
   app.get(
-    '/api/test/instructor',
-    upload.none(),
-    [AuthJwt.VerifyToken, AuthJwt.isInstructor],
-    UserController.instructorBoard
+    '/api/listUser',
+    FileUploader.upload.none(),
+    [AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+      UserValidation.listUserValidation,
+      
+    ],
+    UserController.listUser
   );
 
   app.get(
-    '/api/test/admin',
-    upload.none(),
-    [AuthJwt.VerifyToken, AuthJwt.isAdmin],
-    UserController.adminBoard
+    '/api/listUserById/:id',
+    FileUploader.upload.none(),
+    [
+      AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+      UserValidation.listUserIdValidation,
+    ],
+    UserController.listUserById
   );
+
+  app.post(
+    '/api/deleteUser/:id',
+    FileUploader.upload.none(),
+    [AuthJwt.VerifyToken,
+      AuthJwt.isAdmin,
+      UserValidation.deleteUserValidation,
+      
+    ],
+    UserController.deleteUser
+  );
+
+
+  // app.get('/api/test/all', upload.none(), UserController.allAccess);
+
+  // app.get(
+  //   '/api/test/user',
+  //   FileUploader.upload.none(),
+  //   [AuthJwt.VerifyToken],
+  //   UserController.userBoard
+  // );
+
+  // app.get(
+  //   '/api/test/User',
+  //   upload.none(),
+  //   [AuthJwt.VerifyToken, AuthJwt.isUser],
+  //   UserController.UserBoard
+  // );
+
+  // app.get(
+  //   '/api/test/admin',
+  //   upload.none(),
+  //   [AuthJwt.VerifyToken, AuthJwt.isAdmin],
+  //   UserController.adminBoard
+  // );
 };

@@ -116,6 +116,7 @@ const fileValidMinTypes_all = [
   'application/vnd.rar',
   'application/zip',
   'application/x-7z-compressed',
+  'image/jpg', 'image/png', 'image/jpeg'
 ];
 
 const filesVaildMimTypes_OnlyPDF = ['application/pdf'];
@@ -209,6 +210,36 @@ function onErrorDeleteFiles(req) {
   });
 }
 
+function validateFileAfterUpdate_(req,res,next,upload_addInstructor){
+  console.log("m1");
+    upload_addInstructor(req, res, (err) => {
+      console.log("m2");
+        if (req.fileVaildMimTypesError) {
+          return ValidateResponse(res, err, req.fileVaildMimTypesError);
+        }
+         //If Unexpected field ERROR
+        if (
+          err instanceof multer.MulterError &&
+          err.message === 'Unexpected field'
+        ) {
+          this.onErrorDeleteFiles(req);
+          return ValidateResponse(
+            res,
+            err,
+            this.validForm_DataParamNames()
+          );
+        }
+
+        //Other Errors
+        if (err) {
+          console.log("m4",err);
+          //this.onErrorDeleteFiles(req);
+          return ValidateResponse(res, err, {});
+        }
+        console.log("m3");
+        return next();
+      });
+};
 function deleteFile(path) {
   console.log(path);
   unlinkAsync(path).catch((err) => {
@@ -220,4 +251,5 @@ module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
 module.exports.validForm_DataParamNames_With_Mimtypes = validForm_DataParamNames_With_Mimtypes;
 module.exports.validForm_DataParamNames = validForm_DataParamNames;
 module.exports.onErrorDeleteFiles = onErrorDeleteFiles;
+module.exports.validateFileAfterUpdate=validateFileAfterUpdate_;
 module.exports.deleteFile = deleteFile;

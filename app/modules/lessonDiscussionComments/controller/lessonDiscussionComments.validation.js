@@ -3,46 +3,28 @@ const { ValidateResponse } = require('../../../common/response.handler');
 const db = require('../..');
 
 //----------------------------------------------------------
-signinValidation = (req, res, next) => {
+addlessonDiscussionCommentsValidation = (req, res, next) => {
+  //Body Validation
+
+  
   const schema = Joi.object({
-    username: Joi.string().alphanum().min(3).max(30).required(),
-    password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-      .required(),
-  });
+    text: Joi.string().required(),
+    userId: Joi.number().integer().required(),
+    lessonId: Joi.any(),
+    lessonDiscussionId: Joi.any(),
+     
+  }) .xor('lessonId', 'lessonDiscussionId');
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details, {});
   }
 
   return next();
 };
 
 //----------------------------------------------------------
-signupValidation = (req, res, next) => {
-  const schema = Joi.object({
-    username: Joi.string().alphanum().min(3).max(30).required(),
-    email: Joi.string().email({
-      minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] },
-    }),
-    password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-      .required(),
-    roles: Joi.string().min(1).required(),
-  });
-
-  const { error } = schema.validate(req.body);
-  if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
-  }
-
-  return next();
-};
-
-//----------------------------------------------------------
-updateUserValidation = (req, res, next) => {
+updatelessonDiscussionCommentsValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -57,33 +39,30 @@ updateUserValidation = (req, res, next) => {
 
   //Body Validation
   const schema = Joi.object({
-    username: Joi.string().alphanum().min(3).max(30).required(),
-    email: Joi.string().email({
-      minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] },
-    }),
-    password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-      .required(),
-    roles: Joi.string().min(1).required(),
-  });
+    text: Joi.string().required(),
+    userId: Joi.number().integer().required(),
+    lessonId: Joi.number().integer(),
+    lessonDiscussionId: Joi.number().integer(),
+     
+  }) .xor('lessonId', 'lessonDiscussionId');
 
   const { error } = schema.validate(req.body);
   if (error) {
     return ValidateResponse(res, error.details, {});
   }
-  console.log("m6");
+
   return next();
 };
 
 //----------------------------------------------------------
-listUserValidation = (req, res, next) => {
+listlessonDiscussionCommentsValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
-     
-    
-     
-  });
+    doPagination: Joi.number().integer().valid(1, 0).default(1),
+    numPerPage: Joi.number().integer().greater(0).required(),
+    page: Joi.number().integer().greater(0).required(),
+    lessonId: Joi.number().integer(),
+   });
 
   const { error } = schema.validate(req.query);
   if (error) {
@@ -92,8 +71,9 @@ listUserValidation = (req, res, next) => {
 
   return next();
 };
+
 //----------------------------------------------------------
-listUserIdValidation = (req, res, next) => {
+listlessonDiscussionCommentsValidationById = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -107,9 +87,8 @@ listUserIdValidation = (req, res, next) => {
   }
   return next();
 };
-
 //----------------------------------------------------------
-deleteUserValidation = (req, res, next) => {
+deletelessonDiscussionCommentsValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -125,16 +104,13 @@ deleteUserValidation = (req, res, next) => {
   return next();
 };
 
-
-
 //----------------------------------------------------------
-const UserValidation = {
-  signinValidation: signinValidation,
-  signupValidation: signupValidation,
- updateUserValidation: updateUserValidation,
-  listUserValidation: listUserValidation,
-  listUserIdValidation: listUserIdValidation,
-  deleteUserValidation: deleteUserValidation,
+const lessonDiscussionCommentsValidation = {
+  addlessonDiscussionCommentsValidation: addlessonDiscussionCommentsValidation,
+  updatelessonDiscussionCommentsValidation: updatelessonDiscussionCommentsValidation,
+  listlessonDiscussionCommentsValidation: listlessonDiscussionCommentsValidation,
+  listlessonDiscussionCommentsValidationById: listlessonDiscussionCommentsValidationById,
+  deletelessonDiscussionCommentsValidation: deletelessonDiscussionCommentsValidation,
 };
 
-module.exports = UserValidation;
+module.exports = lessonDiscussionCommentsValidation;

@@ -1,0 +1,102 @@
+const { AuthJwt } = require('../../middleware');
+const FileUploader = require('../../common/multerConfig');
+const lessonDiscussionCommentsValidation = require('./controller/lessonDiscussionComments.validation');
+const lessonDiscussionCommentsController = require('./controller/lessonDiscussionComments.controller');
+
+module.exports = function (app) {
+  app.use(function (req, res, next) {
+    res.header(
+      'Access-Control-Allow-Headers',
+      'x-access-token, Origin, Content-Type, Accept'
+    );
+    next();
+  });
+
+  app.post(
+    '/api/addlessonDiscussionComments',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.addlessonDiscussionCommentsValidation,
+      AuthJwt.VerifyToken,
+      
+    ],
+    lessonDiscussionCommentsController.addlessonDiscussionComments
+  );
+
+  app.put(
+    '/api/updatelessonDiscussionComments/:id',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.updatelessonDiscussionCommentsValidation,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.updatelessonDiscussionComments
+  );
+
+  app.put(
+    '/api/updatelessonDiscussion/:id',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.updatelessonDiscussionCommentsValidation,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.updatelessonDiscussion
+  );
+
+  app.get(
+    '/api/listlessonDiscussionComments',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.listlessonDiscussionCommentsValidation,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.listlessonDiscussionComments
+  );
+
+  app.get(
+    '/api/listlessonDiscussionById/:id',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.listlessonDiscussionCommentsValidationById,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.listlessonDiscussionById
+  );
+  app.get(
+    '/api/listlessonDiscussionCommentsById/:id',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.listlessonDiscussionCommentsValidationById,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.listlessonDiscussionCommentsById
+  );
+
+
+  app.post(
+    '/api/deletelessonDiscussionComments/:id',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.deletelessonDiscussionCommentsValidation,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.deletelessonDiscussionComments
+  );
+
+  app.post(
+    '/api/deletelessonDiscussion/:id',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.deletelessonDiscussionCommentsValidation,
+      AuthJwt.VerifyToken,
+       
+    ],
+    lessonDiscussionCommentsController.deletelessonDiscussion
+  );
+};

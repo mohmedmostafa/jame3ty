@@ -22,12 +22,12 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
       },
       createdAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         onUpdate: Sequelize.fn('NOW'),
         allowNull: false,

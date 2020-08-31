@@ -40,7 +40,7 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.DOUBLE,
       },
       startDate: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         allowNull: false,
       },
       type: {
@@ -102,12 +102,12 @@ module.exports = (connection, Sequelize) => {
         },
       },
       createdAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         onUpdate: Sequelize.fn('NOW'),
         allowNull: false,

@@ -16,12 +16,12 @@ module.exports = (connection, Sequelize) => {
         unique: 'universities_name_en_unique',
       },
       createdAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE(3),
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
         onUpdate: Sequelize.fn('NOW'),
         allowNull: false,
