@@ -183,14 +183,16 @@ db.User.hasOne(db.Student, {
 });
 //
 //
-db.Student.belongsToMany(db.AssignmentSubmission, {
-  through: 'assignmentsSubmission',
+db.Student.hasMany(db.AssignmentSubmission, {
   foreignKey: 'studentId',
 });
-db.Lesson.belongsToMany(db.AssignmentSubmission, {
-  through: 'assignmentsSubmission',
+db.AssignmentSubmission.belongsTo(db.Student);
+//
+//
+db.Lesson.hasMany(db.AssignmentSubmission, {
   foreignKey: 'lessonId',
 });
+db.AssignmentSubmission.belongsTo(db.Lesson);
 //
 //
 db.AcademicYear.hasMany(db.Student, {
@@ -229,12 +231,6 @@ db.Student.hasMany(db.CourseSubscribe, {
 db.CourseSubscribe.belongsTo(db.Student);
 //
 //
-db.CourseSubscribe.hasMany(db.RatingAndReview, {
-  foreignKey: 'courseSubscribeId',
-});
-db.RatingAndReview.belongsTo(db.CourseSubscribe);
-//
-//
 db.Course.hasMany(db.CourseSubscribe, {
   foreignKey: 'courseId',
 });
@@ -245,6 +241,12 @@ db.Group.hasMany(db.CourseSubscribe, {
   foreignKey: 'groupId',
 });
 db.CourseSubscribe.belongsTo(db.Group);
+//
+//
+db.CourseSubscribe.hasMany(db.RatingAndReview, {
+  foreignKey: 'courseSubscribeId',
+});
+db.RatingAndReview.belongsTo(db.CourseSubscribe);
 //
 //
 

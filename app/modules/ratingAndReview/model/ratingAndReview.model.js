@@ -23,7 +23,7 @@ module.exports = (connection, Sequelize) => {
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT',
         references: {
-          model: 'coursesSubscribes',
+          model: 'courseSubscribes',
           key: 'id',
         },
       },
