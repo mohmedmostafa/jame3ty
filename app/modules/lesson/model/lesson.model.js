@@ -1,3 +1,5 @@
+const { PORT, HOST } = require('../../../config/env.config');
+
 module.exports = (connection, Sequelize) => {
   const Lesson = connection.define(
     'lessons',
@@ -18,8 +20,9 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING(255),
       },
       type: {
-        type: Sequelize.ENUM('Assignment', 'Visual Lesson'),
+        type: Sequelize.INTEGER,
         allowNull: true,
+        comment: '0:Assignment | 1:Visual Lesson',
       },
       youtubeLink: {
         type: Sequelize.STRING(255),
@@ -28,6 +31,17 @@ module.exports = (connection, Sequelize) => {
       attachments: {
         type: Sequelize.STRING(255),
         defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('attachments');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
       },
       isLiveStreaming: {
         type: Sequelize.BOOLEAN,

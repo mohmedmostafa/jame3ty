@@ -158,6 +158,7 @@ async function addLiveStreamingCourse(req, res) {
     //Success
     return Response(res, 200, 'Success!', { course });
   } catch (error) {
+    onErrorDeleteFiles(req);
     return Response(res, 500, 'Fail to add', { error });
   }
 }

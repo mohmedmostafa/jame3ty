@@ -102,6 +102,10 @@ const imageVaildMimTypes = ['image/jpg', 'image/png', 'image/jpeg'];
 const vedioVaildMimTypes = ['video/mp4'];
 
 const fileValidMinTypes_all = [
+  'image/jpg',
+  'image/png',
+  'image/jpeg',
+  'video/mp4',
   'application/pdf',
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -152,6 +156,7 @@ const validForm_DataParamNames_With_Mimtypes = [
   ['powerpoint', filesVaildMimTypes_OnlyPOWERPOINT],
   ['excel', filesVaildMimTypes_OnlyEXCEL],
   ['compressed', filesValidMimTypes_OnlyCOMPRESSED],
+  ['attachments', fileValidMinTypes_all],
 ];
 
 //----------------------------------------------------------
