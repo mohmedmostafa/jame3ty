@@ -248,14 +248,32 @@ exports.deleteGroup = async (req, res) => {
 
 //---------------------------------------------------------------
 exports.listGroupByCourseId = async (req, res) => {
+  //Check if the Course ID is already exsits & method = 1 which means 1:Live Streaming
+  const course = await db_Course.findOne({
+    where: {
+      id: parseInt(req.params.courseId),
+    },
+  });
+
+  if (!course) {
+    return Response(res, 400, 'Course Not Found!', {});
+  }
+
+  //
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_Course.count({}).catch((error) => {
-    return Response(res, 500, 'Fail to Count!', { error });
-  });
+  let numRows = await db_Group
+    .count({
+      where: {
+        courseId: req.params.courseId,
+      },
+    })
+    .catch((error) => {
+      return Response(res, 500, 'Fail to Count!', { error });
+    });
   numRows = parseInt(numRows);
 
   //Total num of valid pages
@@ -295,6 +313,7 @@ exports.listGroupByCourseId = async (req, res) => {
     }
 
     let result = {
+      doPagination,
       numRows,
       numPerPage,
       numPages,

@@ -253,9 +253,26 @@ exports.listStudent = async (req, res) => {
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_Course.count({}).catch((error) => {
-    return Response(res, 500, 'Fail to Count!', { error });
-  });
+  let numRows = await db_Student
+    .count({
+      where: {
+        [Op.or]: [
+          {
+            name: {
+              [Op.substring]: req.query.searchKey,
+            },
+          },
+          {
+            email: {
+              [Op.substring]: req.query.searchKey,
+            },
+          },
+        ],
+      },
+    })
+    .catch((error) => {
+      return Response(res, 500, 'Fail to Count!', { error });
+    });
   numRows = parseInt(numRows);
 
   //Total num of valid pages
@@ -287,6 +304,7 @@ exports.listStudent = async (req, res) => {
     }
 
     let result = {
+      doPagination,
       numRows,
       numPerPage,
       numPages,

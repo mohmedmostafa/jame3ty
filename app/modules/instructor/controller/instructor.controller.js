@@ -254,6 +254,7 @@ exports.listInstructor = async (req, res) => {
     });
   });
   console.log(userData);
+  
   //if there no user data returned
   if (
     userData.type == 'instructor' &&
@@ -340,6 +341,7 @@ exports.listInstructor = async (req, res) => {
     data = doPagination ? data : data_all;
 
     let result = {
+      doPagination,
       numRows,
       numPerPage,
       numPages,

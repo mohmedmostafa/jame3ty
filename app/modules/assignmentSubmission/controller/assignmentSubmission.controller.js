@@ -21,6 +21,7 @@ const db_CourseSubscribe = db.CourseSubscribe;
 const db_Student = db.Student;
 const db_Lesson = db.Lesson;
 const db_Instructor = db.Instructor;
+const db_AssignmentSubmission = db.AssignmentSubmission;
 
 //---------------------------------------------------------------
 exports.addAssignmentSubmission = async (req, res) => {
@@ -348,7 +349,7 @@ exports.listAssignmentSubmission = async (req, res) => {
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_Course.count({}).catch((error) => {
+  let numRows = await db_AssignmentSubmission.count({}).catch((error) => {
     return Response(res, 500, 'Fail to Count!', { error });
   });
   numRows = parseInt(numRows);

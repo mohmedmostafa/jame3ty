@@ -1,0 +1,3309 @@
+{
+	"info": {
+		"_postman_id": "88bc10db-e45f-43af-818d-2398076e87f8",
+		"name": "jam3ty",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "{{url}}api/auth/signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Sara",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Sara@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "roles",
+									"value": "student",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/auth/signup",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"auth",
+								"signup"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/auth/signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Farag",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/auth/signin",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/test/instructor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk3Mjc2NjI0LCJleHAiOjE1OTczNjMwMjR9.dMRU0fh7aIG62CrSKJHa1FeovnNDosz-vS10HCEDWDg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/test/instructor",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"test",
+								"instructor"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "universities",
+			"item": [
+				{
+					"name": "{{url}}api/addUniversity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "جامعه fffالكويتddddddd",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "Kiweiffft dddUniversityddddd",
+									"type": "text"
+								},
+								{
+									"key": "faculties",
+									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addUniversity",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addUniversity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateUniversity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk3OTQ4NTY4LCJleHAiOjE1OTgwMzQ5Njh9._FecSN51MDhlKMBJryWNolha1xPM1KlDe5wJX2mzD04"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "جامعه الكويت الحديثه",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "Modern Kewiet Uni",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateUniversity/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateUniversity",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listUniversity",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listUniversity?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listUniversity"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteUniversity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MDIwNzg4LCJleHAiOjE1OTgxMDcxODh9.-9Ro8VbiA1jzJLijq0BwRGvFY3vv3K8wxToa-pRNgW4"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteUniversity/2",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteUniversity",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listUniversityById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listUniversityById/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listUniversityById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "faculties",
+			"item": [
+				{
+					"name": "{{url}}api/addFaculty",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MDIwNzg4LCJleHAiOjE1OTgxMDcxODh9.-9Ro8VbiA1jzJLijq0BwRGvFY3vv3K8wxToa-pRNgW4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "الحقوق",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "law",
+									"type": "text"
+								},
+								{
+									"key": "universityId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addFaculty",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addFaculty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateFaculty",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MDE1MTAyLCJleHAiOjE1OTgxMDE1MDJ9.Ks-CyQZwgt9P9gJSkJZJ7IC_OVGPuKwSj4dZ8Y4k65M"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "جامعه الكويت الحديثه",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "Lawwwwww",
+									"type": "text"
+								},
+								{
+									"key": "universityId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateFaculty/2",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateFaculty",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listFaculty",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listFaculty?doPagination=1&numPerPage=10&page=1&searchKey=",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listFaculty"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteFaculty",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MDIwNzg4LCJleHAiOjE1OTgxMDcxODh9.-9Ro8VbiA1jzJLijq0BwRGvFY3vv3K8wxToa-pRNgW4"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteFaculty/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteFaculty",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listFacultyById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listFacultyById/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listFacultyById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "instructor",
+			"item": [
+				{
+					"name": "addInstructor",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODc4MDI0LCJleHAiOjE1OTg5NjQ0MjR9.U-ayj1irRPTcoiTLAZRPyx0d5majt2iOS4gWdm9eAqo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "محمد مصطفي",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "mohamed mostafa",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "very quit man",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "011244732207622",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ms211q2236@smm.mm",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "img",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "username",
+									"value": "moh",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/addInstructor",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addInstructor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_instructor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MTg2NzIzLCJleHAiOjE1OTgyNzMxMjN9.qgJ8wQqj7IBnkG5cFJk-7Z7YKrhQdGe6LCrLpb-A5AA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteInstructor/10",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteInstructor",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update_instructor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mjg1MjMzLCJleHAiOjE1OTgzNzE2MzN9.7gHurUTAaBLW-0DHse5eM-793iz2tc7A8gR2QZf1DgU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "محمد مصطفي 12",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "mohamed mostafa12",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "very quit man12",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "011241147207612",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "mm1212@mm.mm",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "mm1234512",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345612",
+									"type": "text"
+								},
+								{
+									"key": "img",
+									"type": "file",
+									"src": "/Users/aboaysel/Downloads/_logo.png/tlogo-01.png"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/aboaysel/Downloads/Zeplin.app.zip"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/updateInstructor/10",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateInstructor",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODc4MDI0LCJleHAiOjE1OTg5NjQ0MjR9.U-ayj1irRPTcoiTLAZRPyx0d5majt2iOS4gWdm9eAqo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "doPagination",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "searchKey",
+									"value": "",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listInstructor?doPagination=0&numPerPage=10&page=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listInstructor"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listInstructorById/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listInstructorById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "courses",
+			"item": [
+				{
+					"name": "{{url}}api/addCourse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTA1MDA4LCJleHAiOjE1OTg5OTE0MDh9.BrnnLGq0IwOefqoKgKfIBD3cykKZDVjuiSWxjU319bg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "الحnn",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "lawnn",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "ssssss",
+									"type": "text"
+								},
+								{
+									"key": "prerequisiteText",
+									"value": "ssssss",
+									"type": "text"
+								},
+								{
+									"key": "whatYouWillLearn",
+									"value": "ssssss",
+									"type": "text"
+								},
+								{
+									"key": "numOfLessons",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "19.9",
+									"type": "text"
+								},
+								{
+									"key": "priceBeforeDiscount",
+									"value": "99",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "1994-11-05",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "subjectId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "img",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "vedio",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "nameGroup",
+									"value": "ggggg",
+									"type": "text"
+								},
+								{
+									"key": "maxNumOfStudentsGroup",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "startDateGroup",
+									"value": "1994-11-06",
+									"type": "text"
+								},
+								{
+									"key": "endDateGroup",
+									"value": "1994-11-07",
+									"type": "text"
+								},
+								{
+									"key": "groupSchedule",
+									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1998-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1984-11-05T08:15:30-05:00\"}]",
+									"description": "Array of JSON Objects => As String",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addCourse/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addCourse",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteCourse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODI2NTc2LCJleHAiOjE1OTg5MTI5NzZ9.X2upY95ax2zygeDPOpUgf_Zha-pWOZTC7q69EmwDUuY"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteCourse/11",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteCourse",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listCourse",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listCourse?doPagination=1&numPerPage=1&page=1&searchKey=&method=both&startFrom=1992-11-05 00:00:00.000&startTo=2000-11-05 23:59:59.000",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listCourse"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								},
+								{
+									"key": "method",
+									"value": "both",
+									"description": "1 or 0 or both"
+								},
+								{
+									"key": "startFrom",
+									"value": "1992-11-05 00:00:00.000"
+								},
+								{
+									"key": "startTo",
+									"value": "2000-11-05 23:59:59.000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listCourseById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mjg3MzAyLCJleHAiOjE1OTgzNzM3MDJ9.o7elI5GbWFS4MkPoHTMAwpJpHIgog86MTgmsth2cU9M"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listCourseById/13",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listCourseById",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateCourse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4NzMzODEwLCJleHAiOjE1OTg4MjAyMTB9.Y68P8vFqeysgRkZIHfQJ9iZBnqxGoDCRdbvLvDrwg6k",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "صصصص",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "dddd",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "wwwww",
+									"type": "text"
+								},
+								{
+									"key": "prerequisiteText",
+									"value": "ssssssww",
+									"type": "text"
+								},
+								{
+									"key": "whatYouWillLearn",
+									"value": "ssssssww",
+									"type": "text"
+								},
+								{
+									"key": "numOfLessons",
+									"value": "22",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "19.9",
+									"type": "text"
+								},
+								{
+									"key": "priceBeforeDiscount",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "1990-11-05",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "subjectId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "img",
+									"type": "file",
+									"src": "/C:/Users/Farag/Pictures/ssssssss.png"
+								},
+								{
+									"key": "vedio",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateCourse/14",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateCourse",
+								"14"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "groupAndGroupSchedule",
+			"item": [
+				{
+					"name": "{{url}}api/addGroup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4NjM4MTgxLCJleHAiOjE1OTg3MjQ1ODF9.zRa__hFUQ_RcUCrTWEJCzDcKcYFaJbrMmU4mhAvrwv8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nameGroup",
+									"value": "gggggfffff",
+									"type": "text"
+								},
+								{
+									"key": "maxNumOfStudentsGroup",
+									"value": "122",
+									"type": "text"
+								},
+								{
+									"key": "startDateGroup",
+									"value": "1995-11-06 00:00:00.000",
+									"type": "text"
+								},
+								{
+									"key": "endDateGroup",
+									"value": "1995-11-07",
+									"type": "text"
+								},
+								{
+									"key": "groupSchedule",
+									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1998-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1984-11-05T08:15:30-05:00\"}]",
+									"description": "Array of JSON Objects => As String",
+									"type": "text"
+								},
+								{
+									"key": "courseId",
+									"value": "13",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addGroup",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteGroup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mjg3MzAyLCJleHAiOjE1OTgzNzM3MDJ9.o7elI5GbWFS4MkPoHTMAwpJpHIgog86MTgmsth2cU9M"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteGroup/9",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteGroup",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listGroupByCourseId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listGroupByCourseId/2?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listGroupByCourseId",
+								"2"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listGroupById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mjg3MzAyLCJleHAiOjE1OTgzNzM3MDJ9.o7elI5GbWFS4MkPoHTMAwpJpHIgog86MTgmsth2cU9M"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listGroupById/10",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listGroupById",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateGroup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4NjM4MTgxLCJleHAiOjE1OTg3MjQ1ODF9.zRa__hFUQ_RcUCrTWEJCzDcKcYFaJbrMmU4mhAvrwv8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nameGroup",
+									"value": "gggggfffff",
+									"type": "text"
+								},
+								{
+									"key": "maxNumOfStudentsGroup",
+									"value": "44",
+									"type": "text"
+								},
+								{
+									"key": "startDateGroup",
+									"value": "1999-11-06",
+									"type": "text"
+								},
+								{
+									"key": "endDateGroup",
+									"value": "2000-11-07",
+									"type": "text"
+								},
+								{
+									"key": "groupSchedule",
+									"value": "[{\"day\":\"Sunday\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Sunday\",\"time\":\"1998-11-05T08:15:30-05:00\"},{\"day\":\"Sunday\",\"time\":\"1984-11-05T08:15:30-05:00\"}]",
+									"description": "Array of JSON Objects => As String",
+									"type": "text"
+								},
+								{
+									"key": "courseId",
+									"value": "13",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateGroup/13",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateGroup",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Farag",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Farag@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "roles",
+									"value": "admin,instructor",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listUser",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Farag",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Farag@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "text"
+								},
+								{
+									"key": "roles",
+									"value": "admin,instructor",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/updateUser/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateUser",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listUserById/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listUserById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteUser/19",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteUser",
+								"19"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "lessonDiscussionComments",
+			"item": [
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4NTE5MzY0LCJleHAiOjE1OTg2MDU3NjR9.1-G5zNwafkGQJ2m8FjRrDfDUKHpmSHC4NyZRlDkyuuw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Farag",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Farag@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "roles",
+									"value": "admin,instructor",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=1&doPagination=1&numPerPage=3&page=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listlessonDiscussionComments"
+							],
+							"query": [
+								{
+									"key": "lessonId",
+									"value": "1"
+								},
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "3"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listlessonDiscussionCommentsById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listlessonDiscussionCommentsById/4",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listlessonDiscussionCommentsById",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listlessonDiscussionById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listlessonDiscussionById/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listlessonDiscussionById",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatelessonDiscussionComments",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "text1234ww3",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "lessonId",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "lessonDiscussionId",
+									"value": "5",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/updatelessonDiscussionComments/2",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updatelessonDiscussionComments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatelessonDiscussion",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "text2221",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "lessonId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "lessonDiscussionId",
+									"value": "5",
+									"type": "text",
+									"disabled": true
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/updatelessonDiscussion/5",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updatelessonDiscussion",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletelessonDiscussionComments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deletelessonDiscussionComments/3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deletelessonDiscussionComments",
+								"3"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletelessonDiscussion",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deletelessonDiscussion/5",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deletelessonDiscussion",
+								"5"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Mzk1NDgwLCJleHAiOjE1OTg0ODE4ODB9.kgowF8cEH6cRTzUKMKKrcvmhtOSptKwc218r35FFg4E",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "text222",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "lessonId",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "lessonDiscussionId",
+									"value": "7",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/addlessonDiscussionComments",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addlessonDiscussionComments"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Department",
+			"item": [
+				{
+					"name": "{{url}}api/addDepartment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "www",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "www",
+									"type": "text"
+								},
+								{
+									"key": "facultyId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "academicyears",
+									"value": "[{\"name_ar\":\"1th\",\"name_en\":\"1th\",\"subjects\":[{\"name_ar\":\"math1\",\"name_en\":\"math1\"},{\"name_ar\":\"phsyics1\", \"name_en\":\"phsyics1\"}]},{\"name_ar\":\"2th\",\"name_en\":\"2th\",\"subjects\":[{\"name_ar\":\"math2\",\"name_en\":\"math2\"},{\"name_ar\":\"phsyics2\",\"name_en\":\"phsyics2\"}]}]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addDepartment",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addDepartment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteDepartment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteDepartment/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteDepartment",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateDepartment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "wwwdd",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "wwwss",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateDepartment/17",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateDepartment",
+								"17"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listDepartmentById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listDepartmentById/17",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listDepartmentById",
+								"17"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listDepartment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listDepartment?doPagination=1&numPerPage=10&page=1&searchKey",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listDepartment"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Academicyears",
+			"item": [
+				{
+					"name": "{{url}}api/addAcademicyear",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "3th",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "3th",
+									"type": "text"
+								},
+								{
+									"key": "departmentId",
+									"value": "18",
+									"type": "text"
+								},
+								{
+									"key": "subjects",
+									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addAcademicYear",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addAcademicYear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteAcademicYear",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteAcademicYear/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteAcademicYear",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateAcademicYear",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "wwwdd",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "wwwss",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateAcademicYear/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateAcademicYear",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listAcademicYearById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listAcademicYearById/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listAcademicYearById",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listAcademicYear",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listAcademicYear?doPagination=0&numPerPage=2&page=1&searchKey=",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listAcademicYear"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Subject",
+			"item": [
+				{
+					"name": "{{url}}api/addSubject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "4th",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "4th",
+									"type": "text"
+								},
+								{
+									"key": "academicYearId",
+									"value": "8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addSubject",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addSubject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteSubject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteSubject/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteSubject",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateSubject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "wwwdd",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "wwwss",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateSubject/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateSubject",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listSubjectById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4Nzg1NTgzLCJleHAiOjE1OTg4NzE5ODN9.Zuq7iE5QLoAMCZR-YszdRM2jB1rXJf1jdAmyahvu4-c"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listSubjectById/8",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listSubjectById",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listSubject",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listSubject?doPagination=1&numPerPage=5&page=2&searchKey=s",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listSubject"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "5"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "searchKey",
+									"value": "s"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "lesson",
+			"item": [
+				{
+					"name": "{{url}}api/addLesson",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODI2NTc2LCJleHAiOjE1OTg5MTI5NzZ9.X2upY95ax2zygeDPOpUgf_Zha-pWOZTC7q69EmwDUuY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "sss",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "sss",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "dssss",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"description": "0:Assignment | 1:Visual Lesson",
+									"type": "text"
+								},
+								{
+									"key": "isLiveStreaming",
+									"value": "1",
+									"description": "0 or 1",
+									"type": "text"
+								},
+								{
+									"key": "liveStreamingInfo",
+									"value": "www",
+									"type": "text"
+								},
+								{
+									"key": "isAssostatedWithGroup",
+									"value": "1",
+									"description": "0 or 1",
+									"type": "text"
+								},
+								{
+									"key": "groupId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "courseId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "youtubeLink",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "attachments",
+									"type": "file",
+									"src": [
+										"/C:/Users/Farag/Pictures/1.PNG",
+										"/C:/Users/Farag/Pictures/2.jpeg",
+										"/C:/Users/Farag/Pictures/2.PNG",
+										"/C:/Users/Farag/Pictures/3.PNG"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addLesson",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addLesson"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteLesson",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODI2NTc2LCJleHAiOjE1OTg5MTI5NzZ9.X2upY95ax2zygeDPOpUgf_Zha-pWOZTC7q69EmwDUuY"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteLesson/9",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteLesson",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listLessonById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODI2NTc2LCJleHAiOjE1OTg5MTI5NzZ9.X2upY95ax2zygeDPOpUgf_Zha-pWOZTC7q69EmwDUuY"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listLessonById/13",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listLessonById",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listLesson",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listLesson?doPagination=1&numPerPage=1&page=1&searchKey=&type=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listLesson"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": "1",
+									"description": "1 or 0 or both"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateLesson",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODI2NTc2LCJleHAiOjE1OTg5MTI5NzZ9.X2upY95ax2zygeDPOpUgf_Zha-pWOZTC7q69EmwDUuY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name_ar",
+									"value": "sssrr",
+									"type": "text"
+								},
+								{
+									"key": "name_en",
+									"value": "sssrr",
+									"type": "text"
+								},
+								{
+									"key": "desc",
+									"value": "dssss",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"description": "0:Assignment | 1:Visual Lesson",
+									"type": "text"
+								},
+								{
+									"key": "isLiveStreaming",
+									"value": "1",
+									"description": "0 or 1",
+									"type": "text"
+								},
+								{
+									"key": "liveStreamingInfo",
+									"value": "www",
+									"type": "text"
+								},
+								{
+									"key": "isAssostatedWithGroup",
+									"value": "1",
+									"description": "0 or 1",
+									"type": "text"
+								},
+								{
+									"key": "groupId",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "courseId",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "youtubeLink",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "attachments",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateLesson/13",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateLesson",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteAttachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODI2NTc2LCJleHAiOjE1OTg5MTI5NzZ9.X2upY95ax2zygeDPOpUgf_Zha-pWOZTC7q69EmwDUuY"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachmentPath",
+									"value": "public/files/compressed/ic_account_circle_black_48dp-1598834764024-.zip",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/deleteAttachment/13",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteAttachment",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "student",
+			"item": [
+				{
+					"name": "{{url}}api/addStudent",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTk4OTE2OTc5LCJleHAiOjE1OTkwMDMzNzl9.VIDXw4Eypbq8VpMbnPkl-eHscTWKB6tDkdDPdyrJPnM"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Hoda",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "01062947517",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Hoda@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "img",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "academicYearId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "Hoda",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/addStudent",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addStudent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteStudent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTA1MDA4LCJleHAiOjE1OTg5OTE0MDh9.BrnnLGq0IwOefqoKgKfIBD3cykKZDVjuiSWxjU319bg"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteStudent/2",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteStudent",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateStudent",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODc4MDI0LCJleHAiOjE1OTg5NjQ0MjR9.U-ayj1irRPTcoiTLAZRPyx0d5majt2iOS4gWdm9eAqo"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Eman",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "01061947517",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "Eman@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "img",
+									"type": "file",
+									"src": "/C:/Users/Farag/Pictures/3.PNG"
+								},
+								{
+									"key": "academicYearId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/updateStudent/3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateStudent",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listStudentById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4ODc4MDI0LCJleHAiOjE1OTg5NjQ0MjR9.U-ayj1irRPTcoiTLAZRPyx0d5majt2iOS4gWdm9eAqo"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listStudentById/3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listStudentById",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listStudent",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listStudent?doPagination=1&numPerPage=10&page=1&searchKey=sa",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listStudent"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": "sa"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ratingAndReview",
+			"item": [
+				{
+					"name": "{{url}}api/addRatingAndReview",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTk4OTE2OTc5LCJleHAiOjE1OTkwMDMzNzl9.VIDXw4Eypbq8VpMbnPkl-eHscTWKB6tDkdDPdyrJPnM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "date",
+									"value": "1993-11-23",
+									"type": "text"
+								},
+								{
+									"key": "reviewText",
+									"value": "dddddd",
+									"type": "text"
+								},
+								{
+									"key": "rate",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "courseSubscribeId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addRatingAndReview",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addRatingAndReview"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateRatingAndReview",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTk4OTE2OTc5LCJleHAiOjE1OTkwMDMzNzl9.VIDXw4Eypbq8VpMbnPkl-eHscTWKB6tDkdDPdyrJPnM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reviewText",
+									"value": "eeeeee",
+									"type": "text"
+								},
+								{
+									"key": "rate",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateRatingAndReview/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateRatingAndReview",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listRatingAndReviewByCourseId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTk4OTE2OTc5LCJleHAiOjE1OTkwMDMzNzl9.VIDXw4Eypbq8VpMbnPkl-eHscTWKB6tDkdDPdyrJPnM"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listRatingAndReviewByCourseId/1?doPagination=0&numPerPage=10&page=1&searchKey=3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listRatingAndReviewByCourseId",
+								"1"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": "3",
+									"description": "search by rate equal"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listRatingAndReviewById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTk4OTE2OTc5LCJleHAiOjE1OTkwMDMzNzl9.VIDXw4Eypbq8VpMbnPkl-eHscTWKB6tDkdDPdyrJPnM"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listRatingAndReviewById/3",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listRatingAndReviewById",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteRatingAndReview",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTk4OTE2OTc5LCJleHAiOjE1OTkwMDMzNzl9.VIDXw4Eypbq8VpMbnPkl-eHscTWKB6tDkdDPdyrJPnM"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteRatingAndReview/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteRatingAndReview",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listRatingAndReview",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4OTk0MjM3LCJleHAiOjE1OTkwODA2Mzd9.2k76arePNtMZbM1YOHQFQlWx6lLqmPzfxCZQJuj75yA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listRatingAndReview?doPagination=1&numPerPage=10&page=1&searchKey=5",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listRatingAndReview"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": "5",
+									"description": "search by rate equal"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2c041464-2f14-43f6-925e-11a8c29696d5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "088d5050-2bb5-493b-93ce-b1ccb37446e6",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "f1818b58-00a0-48bf-ba50-468f36e6f7ea",
+			"key": "url",
+			"value": "http://localhost:3001/"
+		},
+		{
+			"id": "b5eb5b08-3d74-40dc-8aa0-470d329d4a3f",
+			"key": "auth",
+			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MTg2NzIzLCJleHAiOjE1OTgyNzMxMjN9.qgJ8wQqj7IBnkG5cFJk-7Z7YKrhQdGe6LCrLpb-A5AA"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

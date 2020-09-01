@@ -142,9 +142,26 @@ exports.listUniversity = async (req, res) => {
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_University.count({}).catch((error) => {
-    return Response(res, 500, 'Fail to Count!', { error });
-  });
+  let numRows = await db_University
+    .count({
+      where: {
+        [Op.or]: [
+          {
+            name_ar: {
+              [Op.substring]: req.query.searchKey,
+            },
+          },
+          {
+            name_en: {
+              [Op.substring]: req.query.searchKey,
+            },
+          },
+        ],
+      },
+    })
+    .catch((error) => {
+      return Response(res, 500, 'Fail to Count!', { error });
+    });
   numRows = parseInt(numRows);
 
   //Total num of valid pages
@@ -169,6 +186,7 @@ exports.listUniversity = async (req, res) => {
     }
 
     let result = {
+      doPagination,
       numRows,
       numPerPage,
       numPages,

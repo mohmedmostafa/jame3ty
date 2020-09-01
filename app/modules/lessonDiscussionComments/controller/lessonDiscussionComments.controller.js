@@ -12,89 +12,94 @@ const db_User = db.User;
 
 //---------------------------------------------------------------
 exports.addlessonDiscussionComments = async (req, res) => {
-  
+  const user = await db_User.findByPk(req.body.userId);
+  console.log('test', user);
+  if (!user) return Response(res, 400, 'User Not Found!', {});
 
-    const user=await db_User.findByPk(req.body.userId);
-    console.log("test",user);
-    if(!user)
-      return Response(res, 400, 'User Not Found!', {});
-    
-      //add post
-    if(req.body.lessonId){
-      const lesson=await db_lesson.findByPk(req.body.lessonId);
+  //add post
+  if (req.body.lessonId) {
+    const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-      if(!lesson)
-      return Response(res, 400, 'lesson Not Found!', {});
+    if (!lesson) return Response(res, 400, 'lesson Not Found!', {});
 
-      const post=await addPost(req,user,lesson).catch((err)=>{
-        console.log(err);
-        return Response(res, 500, 'Fail to Insert!', { err });
-      });
-       return Response(res, 200, 'Success!', { post });
+    const post = await addPost(req, user, lesson).catch((err) => {
+      console.log(err);
+      return Response(res, 500, 'Fail to Insert!', { err });
+    });
+    return Response(res, 200, 'Success!', { post });
 
-      //add comment
-    }else{
-      const lessonDiscussion=await db_lessonDiscussion.findByPk(req.body.lessonDiscussionId);
+    //add comment
+  } else {
+    const lessonDiscussion = await db_lessonDiscussion.findByPk(
+      req.body.lessonDiscussionId
+    );
 
-      if(!lessonDiscussion)
+    if (!lessonDiscussion)
       return Response(res, 400, 'lessonDiscussion Not Found!', {});
 
-      const comment=await addComment(req,user,lessonDiscussion).catch((err)=>{
+    const comment = await addComment(req, user, lessonDiscussion).catch(
+      (err) => {
         console.log(err);
         return Response(res, 500, 'Fail to Insert!', { err });
-      });
-       return Response(res, 200, 'Success!', { comment });
-    }
-   
+      }
+    );
+    return Response(res, 200, 'Success!', { comment });
+  }
 };
 
-function addPost(req,user,lesson) {
-  const response= new Promise(async(res, rej) => {
-  try {
-   const post = await db_connection.transaction(async (t) => {  
-    //Save TO DB
-    const uni = await db_lessonDiscussion.create({
-      text:req.body.text,
-    }, { transaction: t });
-
-    await uni.setUser(user, { transaction: t });
-    await uni.setLesson(lesson, { transaction: t });
-    
-    return uni;
-  });
-     //Success
-    return res({ post});
-  } catch (error) {
-    console.log(error);
-    return rej({ error });
-  }
-});
-console.log( response);
-return response;
-}
-
-function addComment(req,user,lessonDiscussion) {
-  const response= new Promise(async(res, rej) => {
+function addPost(req, user, lesson) {
+  const response = new Promise(async (res, rej) => {
     try {
-     const comment = await db_connection.transaction(async (t) => {  
-      //Save TO DB
-      const comment = await db_lessonDiscussionComments.create({
-        text:req.body.text,
-      }, { transaction: t });
-  
-      await comment.setUser(user, { transaction: t });
-      await comment.setLessonDiscussion(lessonDiscussion, { transaction: t });
-      
-      return comment;
-    });
-       //Success
-       return res({ comment});
+      const post = await db_connection.transaction(async (t) => {
+        //Save TO DB
+        const uni = await db_lessonDiscussion.create(
+          {
+            text: req.body.text,
+          },
+          { transaction: t }
+        );
+
+        await uni.setUser(user, { transaction: t });
+        await uni.setLesson(lesson, { transaction: t });
+
+        return uni;
+      });
+      //Success
+      return res({ post });
     } catch (error) {
       console.log(error);
       return rej({ error });
     }
   });
-  console.log("test",response);
+  console.log(response);
+  return response;
+}
+
+function addComment(req, user, lessonDiscussion) {
+  const response = new Promise(async (res, rej) => {
+    try {
+      const comment = await db_connection.transaction(async (t) => {
+        //Save TO DB
+        const comment = await db_lessonDiscussionComments.create(
+          {
+            text: req.body.text,
+          },
+          { transaction: t }
+        );
+
+        await comment.setUser(user, { transaction: t });
+        await comment.setLessonDiscussion(lessonDiscussion, { transaction: t });
+
+        return comment;
+      });
+      //Success
+      return res({ comment });
+    } catch (error) {
+      console.log(error);
+      return rej({ error });
+    }
+  });
+  console.log('test', response);
   return response;
 }
 
@@ -102,46 +107,49 @@ function addComment(req,user,lessonDiscussion) {
 exports.updatelessonDiscussionComments = async (req, res) => {
   try {
     //Check if the lessonDiscussionComments is already exsits
-    let lessonDiscussionComments = await db_lessonDiscussionComments.findByPk(req.params.id);
+    let lessonDiscussionComments = await db_lessonDiscussionComments.findByPk(
+      req.params.id
+    );
 
     if (!lessonDiscussionComments) {
       return Response(res, 400, 'lessonDiscussionComments Not Found!', {});
     }
-     
-      
-      //get user model
-      const user=await db_User.findByPk(req.body.userId);
-      
-        if(!user)
-          return Response(res, 400, 'User Not Found!', {});
-      
-        //get lesson model    
-        const lessonDiscussion=await db_lessonDiscussion.findByPk(req.body.lessonDiscussionId);
-  
-        if(!lessonDiscussion)
-          return Response(res, 400, 'lessonDiscussion Not Found!', {});
-  
-  
-        const comment = await db_connection.transaction(async (t) => {  
+
+    //get user model
+    const user = await db_User.findByPk(req.body.userId);
+
+    if (!user) return Response(res, 400, 'User Not Found!', {});
+
+    //get lesson model
+    const lessonDiscussion = await db_lessonDiscussion.findByPk(
+      req.body.lessonDiscussionId
+    );
+
+    if (!lessonDiscussion)
+      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+
+    const comment = await db_connection.transaction(async (t) => {
       //Do Update
       _lessonDiscussionComments = await db_lessonDiscussionComments.update(
         {
           text: req.body.text ? req.body.text : lessonDiscussionComments.text,
         },
-        { where: { id: req.params.id } }, { transaction: t }
+        { where: { id: req.params.id } },
+        { transaction: t }
       );
-  
-      await lessonDiscussionComments.setUser(user, { transaction: t });
-      await lessonDiscussionComments.setLessonDiscussion(lessonDiscussion, { transaction: t });
-      });
-      //Success
-      return Response(res, 200, 'Success!', { _lessonDiscussionComments });
-    } catch (error) {
-      console.log(error);
-      return Response(res, 500, 'Fail to Udpate!', { error });
-    }
-  };
 
+      await lessonDiscussionComments.setUser(user, { transaction: t });
+      await lessonDiscussionComments.setLessonDiscussion(lessonDiscussion, {
+        transaction: t,
+      });
+    });
+    //Success
+    return Response(res, 200, 'Success!', { _lessonDiscussionComments });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Udpate!', { error });
+  }
+};
 
 exports.updatelessonDiscussion = async (req, res) => {
   try {
@@ -151,31 +159,29 @@ exports.updatelessonDiscussion = async (req, res) => {
     if (!lessonDiscussion) {
       return Response(res, 400, 'lessonDiscussion Not Found!', {});
     }
-    
+
     //get user model
-    const user=await db_User.findByPk(req.body.userId);
-    console.log("test",user);
-      if(!user)
-        return Response(res, 400, 'User Not Found!', {});
-    
-      //get lesson model    
-      const lesson=await db_lesson.findByPk(req.body.lessonId);
+    const user = await db_User.findByPk(req.body.userId);
+    console.log('test', user);
+    if (!user) return Response(res, 400, 'User Not Found!', {});
 
-      if(!lesson)
-        return Response(res, 400, 'lesson Not Found!', {});
+    //get lesson model
+    const lesson = await db_lesson.findByPk(req.body.lessonId);
 
+    if (!lesson) return Response(res, 400, 'lesson Not Found!', {});
 
-      const post = await db_connection.transaction(async (t) => {  
-    //Do Update
-    _lessonDiscussion = await db_lessonDiscussion.update(
-      {
-        text: req.body.text ? req.body.text : lessonDiscussion.text,
-      },
-      { where: { id: req.params.id } }, { transaction: t }
-    );
+    const post = await db_connection.transaction(async (t) => {
+      //Do Update
+      _lessonDiscussion = await db_lessonDiscussion.update(
+        {
+          text: req.body.text ? req.body.text : lessonDiscussion.text,
+        },
+        { where: { id: req.params.id } },
+        { transaction: t }
+      );
 
-    await lessonDiscussion.setUser(user, { transaction: t });
-    await lessonDiscussion.setLesson(lesson, { transaction: t });
+      await lessonDiscussion.setUser(user, { transaction: t });
+      await lessonDiscussion.setLesson(lesson, { transaction: t });
     });
     //Success
     return Response(res, 200, 'Success!', { _lessonDiscussion });
@@ -196,7 +202,6 @@ exports.deletelessonDiscussionComments = async (req, res) => {
     if (!lessonDiscussionComments) {
       return Response(res, 400, 'lessonDiscussionComments Not Found!', {});
     }
-
 
     //Delete
     lessonDiscussionComments = await db_lessonDiscussionComments.destroy({
@@ -223,19 +228,21 @@ exports.deletelessonDiscussion = async (req, res) => {
       return Response(res, 400, 'lessonDiscussion Not Found!', {});
     }
 
-   
-    const comment = await db_connection.transaction(async (t) => {  
+    const comment = await db_connection.transaction(async (t) => {
+      _lessonDiscussionComments = await db_lessonDiscussionComments.destroy(
+        {
+          where: { lessonDiscussionId: req.params.id },
+        },
+        { transaction: t }
+      );
 
-      _lessonDiscussionComments = await db_lessonDiscussionComments.destroy({
-        where: { lessonDiscussionId: req.params.id },
-      }, { transaction: t });
-
-      _lessonDiscussion = await lessonDiscussion.destroy({
-        where: { id: req.params.id },
-      }, { transaction: t });
-  
-
-  });
+      _lessonDiscussion = await lessonDiscussion.destroy(
+        {
+          where: { id: req.params.id },
+        },
+        { transaction: t }
+      );
+    });
     //Success
     return Response(res, 200, 'Success!', { _lessonDiscussion });
   } catch (error) {
@@ -256,49 +263,45 @@ exports.listlessonDiscussionComments = async (req, res) => {
 
   //Query
   let lessonId = req.query.lessonId ? parseInt(req.query.lessonId) : '';
-    
 
   try {
-   
     let data = await db_lessonDiscussion.findAll({
-        where: {
-          lessonId:{ [Op.eq]:lessonId}
-        },
-        include: 
-          {
-            model: db_lessonDiscussionComments
-          },
-        offset: skip,
-        order: db.Sequelize.literal('updatedAt DESC'),
-        limit: _limit,
-      });
-    
-     let data_all = await db_lessonDiscussion.findAll({
-        where: {
-          lessonId:{ [Op.eq]:lessonId}
-        },
-        include: 
-          {
-            model: db_lessonDiscussionComments
-          },
-          order: db.Sequelize.literal('updatedAt DESC'),
+      where: {
+        lessonId: { [Op.eq]: lessonId },
+      },
+      include: {
+        model: db_lessonDiscussionComments,
+      },
+      offset: skip,
+      order: db.Sequelize.literal('updatedAt DESC'),
+      limit: _limit,
+    });
 
-      });
-   
+    let data_all = await db_lessonDiscussion.findAll({
+      where: {
+        lessonId: { [Op.eq]: lessonId },
+      },
+      include: {
+        model: db_lessonDiscussionComments,
+      },
+      order: db.Sequelize.literal('updatedAt DESC'),
+    });
 
     let numRows = parseInt(data_all.length);
 
-    console.log(numRows,data.length,numPerPage);
+    console.log(numRows, data.length, numPerPage);
 
-  // //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-  data=(doPagination?data:data_all);
+    // //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    data = doPagination ? data : data_all;
     let result = {
+      doPagination,
       numRows,
       numPerPage,
       numPages,
       page,
-      data
+      data,
     };
 
     //Success
@@ -309,21 +312,19 @@ exports.listlessonDiscussionComments = async (req, res) => {
   }
 };
 
-
 //---------------------------------listlessonDiscussionById------------------------------
 exports.listlessonDiscussionById = async (req, res) => {
   try {
-  let lessonDiscussion = await db_lessonDiscussion.findOne({where: { id:req.params.id},
-    include: 
-      {
-        model: db_lessonDiscussionComments
-      }
+    let lessonDiscussion = await db_lessonDiscussion.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: db_lessonDiscussionComments,
+      },
     });
 
-
-  if (!lessonDiscussion) {
-    return Response(res, 400, 'lessonDiscussion Not Found!', {});
-  }
+    if (!lessonDiscussion) {
+      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+    }
 
     //Success
     return Response(res, 200, 'Success!', { lessonDiscussion });
@@ -334,14 +335,13 @@ exports.listlessonDiscussionById = async (req, res) => {
 
 exports.listlessonDiscussionCommentsById = async (req, res) => {
   try {
-  let lessonDiscussionComments = await db_lessonDiscussionComments.findOne({where: { id:req.params.id},
-    
+    let lessonDiscussionComments = await db_lessonDiscussionComments.findOne({
+      where: { id: req.params.id },
     });
 
-
-  if (!lessonDiscussionComments) {
-    return Response(res, 400, 'lessonDiscussionComment Not Found!', {});
-  }
+    if (!lessonDiscussionComments) {
+      return Response(res, 400, 'lessonDiscussionComment Not Found!', {});
+    }
 
     //Success
     return Response(res, 200, 'Success!', { lessonDiscussionComments });
