@@ -23,7 +23,7 @@ verifyToken = (req, res, next) => {
         return Response(res, 401, 'Unauthorized!', {});
       }
       req.userId = decoded.id;
-      console.log("m7");
+      console.log('m7');
       next();
       return;
     });
@@ -84,10 +84,77 @@ isInstructorOrAdmin = (req, res, next) => {
 };
 
 //---------------------------------------
+isStudent = (req, res, next) => {
+  db.User.findByPk(req.userId).then((user) => {
+    user.getRoles().then((roles) => {
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name_en === 'student') {
+          next();
+          return;
+        }
+      }
+
+      return Response(res, 403, 'Require Student Role!', {});
+    });
+  });
+};
+
+//---------------------------------------
+isStudentorOrAdmin = (req, res, next) => {
+  db.User.findByPk(req.userId).then((user) => {
+    user.getRoles().then((roles) => {
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name_en === 'student') {
+          next();
+          return;
+        }
+
+        if (roles[i].name_en === 'admin') {
+          next();
+          return;
+        }
+      }
+
+      return Response(res, 403, 'Require Student or Admin Role!', {});
+    });
+  });
+};
+
+//---------------------------------------
+isInstructorOrStudentorOrAdmin = (req, res, next) => {
+  db.User.findByPk(req.userId).then((user) => {
+    user.getRoles().then((roles) => {
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name_en === 'student') {
+          next();
+          return;
+        }
+
+        if (roles[i].name_en === 'admin') {
+          next();
+          return;
+        }
+
+        if (roles[i].name_en === 'instructor') {
+          next();
+          return;
+        }
+      }
+
+      return Response(res, 403, 'Require Student or Admin Role!', {});
+    });
+  });
+};
+
+//---------------------------------------
 const authJwt = {
   VerifyToken: verifyToken,
   isAdmin: isAdmin,
   isInstructor: isInstructor,
   isInstructorOrAdmin: isInstructorOrAdmin,
+  isStudent: isStudent,
+  isStudentorOrAdmin: isStudentorOrAdmin,
+  isInstructorOrStudentorOrAdmin: isInstructorOrStudentorOrAdmin,
 };
+
 module.exports = authJwt;

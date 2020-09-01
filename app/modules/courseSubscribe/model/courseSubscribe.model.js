@@ -1,6 +1,6 @@
 module.exports = (connection, Sequelize) => {
   const CourseSubscribe = connection.define(
-    'coursesSubscribes',
+    'courseSubscribes',
     {
       id: {
         type: Sequelize.INTEGER,
