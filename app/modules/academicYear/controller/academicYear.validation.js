@@ -45,7 +45,7 @@ updateAcademicYearValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -73,7 +73,7 @@ deleteAcademicYearValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -108,7 +108,7 @@ listAcademicYearByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 

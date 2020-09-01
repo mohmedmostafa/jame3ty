@@ -51,7 +51,7 @@ updateUserValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -70,7 +70,7 @@ updateUserValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
   }
   console.log("m6");
   return next();
@@ -87,7 +87,7 @@ listUserValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
   }
 
   return next();
@@ -102,7 +102,7 @@ listUserIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
   return next();
@@ -118,7 +118,7 @@ deleteUserValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 

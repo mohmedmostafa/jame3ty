@@ -17,7 +17,7 @@ addlessonDiscussionCommentsValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
   }
 
   return next();
@@ -33,7 +33,7 @@ updatelessonDiscussionCommentsValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -48,7 +48,7 @@ updatelessonDiscussionCommentsValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
   }
 
   return next();
@@ -66,7 +66,7 @@ listlessonDiscussionCommentsValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
   }
 
   return next();
@@ -82,7 +82,7 @@ listlessonDiscussionCommentsValidationById = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
   return next();
@@ -97,7 +97,7 @@ deletelessonDiscussionCommentsValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+      return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
