@@ -187,7 +187,7 @@ exports.deleteCourse = async (req, res) => {
     console.log(course);
 
     //If Students Subscribe the course then can not delete it
-    if (course.coursesSubscribes.length > 0) {
+    if (course.courseSubscribes.length > 0) {
       return Response(
         res,
         400,
@@ -335,6 +335,7 @@ exports.updateCourse = async (req, res) => {
       minStartDateGroup = minStartDateGroup.get({ plain: true });
 
       if (moment(req.body.startDate).isAfter(minStartDateGroup.minStartDate)) {
+        onErrorDeleteFiles(req);
         return Response(
           res,
           400,
@@ -420,6 +421,7 @@ exports.updateCourse = async (req, res) => {
     return Response(res, 200, 'Success!', {});
   } catch (error) {
     console.log(error);
+    onErrorDeleteFiles(req);
     return Response(res, 500, 'Fail to Udpate!', { error });
   }
 };

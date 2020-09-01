@@ -4,8 +4,8 @@ const { onErrorDeleteFiles } = require('../../../common/multerConfig');
 const db = require('../..');
 
 //----------------------------------------------------------
-addLessonValidation = (req, res, next) => {
-  //Lesson Body Validation
+addAssignmentSubmissionValidation = (req, res, next) => {
+  //AssignmentSubmission Body Validation
   let schema = Joi.object({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
@@ -37,7 +37,7 @@ addLessonValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-updateLessonValidation = (req, res, next) => {
+updateAssignmentSubmissionValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -50,7 +50,7 @@ updateLessonValidation = (req, res, next) => {
     }
   }
 
-  //Lesson Body Validation
+  //AssignmentSubmission Body Validation
   let schema = Joi.object({
     name_ar: Joi.string().min(3).max(30).required(),
     name_en: Joi.string().min(3).max(30).required(),
@@ -81,7 +81,7 @@ updateLessonValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-deleteLessonValidation = (req, res, next) => {
+deleteAssignmentSubmissionValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -125,7 +125,7 @@ deleteAttachmentValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-listLessonValidation = (req, res, next) => {
+listAssignmentSubmissionValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     doPagination: Joi.number().integer().valid(1, 0).default(1),
@@ -144,7 +144,7 @@ listLessonValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-listLessonByIdValidation = (req, res, next) => {
+listAssignmentSubmissionByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -161,13 +161,13 @@ listLessonByIdValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-const LessonValidation = {
-  addLessonValidation: addLessonValidation,
-  deleteLessonValidation: deleteLessonValidation,
-  listLessonValidation: listLessonValidation,
-  listLessonByIdValidation: listLessonByIdValidation,
-  updateLessonValidation: updateLessonValidation,
+const AssignmentSubmissionValidation = {
+  addAssignmentSubmissionValidation: addAssignmentSubmissionValidation,
+  deleteAssignmentSubmissionValidation: deleteAssignmentSubmissionValidation,
+  listAssignmentSubmissionValidation: listAssignmentSubmissionValidation,
+  listAssignmentSubmissionByIdValidation: listAssignmentSubmissionByIdValidation,
+  updateAssignmentSubmissionValidation: updateAssignmentSubmissionValidation,
   deleteAttachmentValidation: deleteAttachmentValidation,
 };
 
-module.exports = LessonValidation;
+module.exports = AssignmentSubmissionValidation;

@@ -1,8 +1,8 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
 const { ValidateResponse } = require('../../common/response.handler');
-const LessonValidation = require('./controller/assignmentSubmission.validation');
-const LessonController = require('./controller/assignmentSubmission.controller');
+const AssignmentSubmissionValidation = require('./controller/assignmentSubmission.validation');
+const AssignmentSubmissionController = require('./controller/assignmentSubmission.controller');
 const FileUploader = require('../../common/multerConfig');
 
 module.exports = function (app) {
@@ -14,7 +14,7 @@ module.exports = function (app) {
     next();
   });
 
-  const upload_addLesson = FileUploader.upload.fields([
+  const upload_addAssignmentSubmission = FileUploader.upload.fields([
     {
       name: 'attachments',
       maxCount: 10,
@@ -22,9 +22,9 @@ module.exports = function (app) {
   ]);
 
   app.post(
-    '/api/addLesson',
+    '/api/addAssignmentSubmission',
     (req, res, next) => {
-      upload_addLesson(req, res, (err) => {
+      upload_addAssignmentSubmission(req, res, (err) => {
         if (req.fileVaildMimTypesError) {
           return ValidateResponse(res, err, req.fileVaildMimTypesError);
         }
@@ -52,58 +52,58 @@ module.exports = function (app) {
       });
     },
     [
-      LessonValidation.addLessonValidation,
+      AssignmentSubmissionValidation.addAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    LessonController.addLesson
+    AssignmentSubmissionController.addAssignmentSubmission
   );
 
   app.post(
-    '/api/deleteLesson/:id',
+    '/api/deleteAssignmentSubmission/:id',
     FileUploader.upload.none(),
     [
-      LessonValidation.deleteLessonValidation,
+      AssignmentSubmissionValidation.deleteAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    LessonController.deleteLesson
+    AssignmentSubmissionController.deleteAssignmentSubmission
   );
 
   app.post(
     '/api/deleteAttachment/:id',
     FileUploader.upload.none(),
     [
-      LessonValidation.deleteAttachmentValidation,
+      AssignmentSubmissionValidation.deleteAttachmentValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    LessonController.deleteAttachment
+    AssignmentSubmissionController.deleteAttachment
   );
 
   app.get(
-    '/api/listLessonById/:id',
+    '/api/listAssignmentSubmissionById/:id',
     FileUploader.upload.none(),
     [
-      LessonValidation.listLessonByIdValidation,
+      AssignmentSubmissionValidation.listAssignmentSubmissionByIdValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    LessonController.listLessonById
+    AssignmentSubmissionController.listAssignmentSubmissionById
   );
 
   app.get(
-    '/api/listLesson',
+    '/api/listAssignmentSubmission',
     FileUploader.upload.none(),
     [
-      LessonValidation.listLessonValidation,
+      AssignmentSubmissionValidation.listAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrAdmin,
     ],
-    LessonController.listLesson
+    AssignmentSubmissionController.listAssignmentSubmission
   );
 
-  const upload_updateLesson = FileUploader.upload.fields([
+  const upload_updateAssignmentSubmission = FileUploader.upload.fields([
     {
       name: 'attachments',
       maxCount: 10,
@@ -111,9 +111,9 @@ module.exports = function (app) {
   ]);
 
   app.post(
-    '/api/updateLesson/:id',
+    '/api/updateAssignmentSubmission/:id',
     (req, res, next) => {
-      upload_updateLesson(req, res, (err) => {
+      upload_updateAssignmentSubmission(req, res, (err) => {
         if (req.fileVaildMimTypesError) {
           return ValidateResponse(res, err, req.fileVaildMimTypesError);
         }
@@ -141,10 +141,10 @@ module.exports = function (app) {
       });
     },
     [
-      LessonValidation.updateLessonValidation,
+      AssignmentSubmissionValidation.updateAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructor,
     ],
-    LessonController.updateLesson
+    AssignmentSubmissionController.updateAssignmentSubmission
   );
 };

@@ -129,13 +129,13 @@ exports.updateGroup = async (req, res) => {
 
     //Check that maxNumOfStudentsGroup not less than the current course register in the group
     if (
-      req.body.maxNumOfStudentsGroup < course.groups[0].coursesSubscribes.length
+      req.body.maxNumOfStudentsGroup < course.groups[0].courseSubscribes.length
     ) {
       return Response(
         res,
         400,
         "The max number of students per group can't be less than the current number of student subsciptions for that group!, Count of registered students = " +
-          course.groups[0].coursesSubscribes.length,
+          course.groups[0].courseSubscribes.length,
         { course }
       );
     }
@@ -224,7 +224,7 @@ exports.deleteGroup = async (req, res) => {
     console.log(group);
 
     //If Students Subscribe the course then can not delete it
-    if (group.coursesSubscribes.length > 0) {
+    if (group.courseSubscribes.length > 0) {
       return Response(
         res,
         400,

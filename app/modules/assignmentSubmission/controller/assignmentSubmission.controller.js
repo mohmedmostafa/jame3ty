@@ -23,7 +23,7 @@ const db_Lesson = db.Lesson;
 const db_Instructor = db.Instructor;
 
 //---------------------------------------------------------------
-exports.addLesson = async (req, res) => {
+exports.addAssignmentSubmission = async (req, res) => {
   try {
     //Check if the Course is already exsits
     let course = await db_Course.findOne({
@@ -104,7 +104,7 @@ exports.addLesson = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-exports.deleteLesson = async (req, res) => {
+exports.deleteAssignmentSubmission = async (req, res) => {
   try {
     //Check if the Lesson is already exsits
     let lesson = await db_Lesson.findOne({
@@ -197,7 +197,7 @@ exports.deleteAttachment = async (req, res) => {
 };
 
 //--------------------------------------------------------------
-exports.listLessonById = async (req, res) => {
+exports.listAssignmentSubmissionById = async (req, res) => {
   try {
     let lesson = await db_Lesson.findOne({
       where: {
@@ -226,7 +226,7 @@ exports.listLessonById = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-exports.updateLesson = async (req, res) => {
+exports.updateAssignmentSubmission = async (req, res) => {
   try {
     //Check if the Lesson is found
     let lesson = await db_Lesson.findOne({
@@ -342,7 +342,7 @@ exports.updateLesson = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-exports.listLesson = async (req, res) => {
+exports.listAssignmentSubmission = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
@@ -366,7 +366,7 @@ exports.listLesson = async (req, res) => {
     if (doPagination) {
       if (req.query.method != 'both') {
         //Do Pagination & Type 1 or 0
-        data = await listLesson_DoPagination_Type_1_or_0(
+        data = await listAssignmentSubmission_DoPagination_Type_1_or_0(
           req,
           db_Lesson,
           db_Course,
@@ -376,7 +376,7 @@ exports.listLesson = async (req, res) => {
         );
       } else {
         //Do Pagination & Type Both
-        data = await listLesson_DoPagination_Type_Both(
+        data = await listAssignmentSubmission_DoPagination_Type_Both(
           req,
           db_Lesson,
           db_Course,
@@ -388,7 +388,7 @@ exports.listLesson = async (req, res) => {
     } else {
       if (req.query.method != 'both') {
         //NO Pagination & Type 1 or 0
-        data = await listLesson_NOPagination_Type_1_or_0(
+        data = await listAssignmentSubmission_NOPagination_Type_1_or_0(
           req,
           db_Lesson,
           db_Course,
@@ -396,7 +396,7 @@ exports.listLesson = async (req, res) => {
         );
       } else {
         //NO Pagination & Type Both
-        data = await listLesson_NOPagination_Type_Both(
+        data = await listAssignmentSubmission_NOPagination_Type_Both(
           req,
           db_Lesson,
           db_Course,
@@ -420,7 +420,7 @@ exports.listLesson = async (req, res) => {
   }
 };
 
-function listLesson_DoPagination_Type_Both(
+function listAssignmentSubmission_DoPagination_Type_Both(
   req,
   db_Lesson,
   db_Course,
@@ -474,7 +474,7 @@ function listLesson_DoPagination_Type_Both(
   });
 }
 
-function listLesson_DoPagination_Type_1_or_0(
+function listAssignmentSubmission_DoPagination_Type_1_or_0(
   req,
   db_Lesson,
   db_Course,
@@ -526,7 +526,7 @@ function listLesson_DoPagination_Type_1_or_0(
   });
 }
 
-function listLesson_NOPagination_Type_Both(
+function listAssignmentSubmission_NOPagination_Type_Both(
   req,
   db_Lesson,
   db_Course,
@@ -571,7 +571,7 @@ function listLesson_NOPagination_Type_Both(
   });
 }
 
-function listLesson_NOPagination_Type_1_or_0(
+function listAssignmentSubmission_NOPagination_Type_1_or_0(
   req,
   db_Lesson,
   db_Course,
