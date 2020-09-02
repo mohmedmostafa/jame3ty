@@ -54,7 +54,7 @@ module.exports = function (app) {
     [
       AssignmentSubmissionValidation.addAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isStudent,
     ],
     AssignmentSubmissionController.addAssignmentSubmission
   );
@@ -65,18 +65,18 @@ module.exports = function (app) {
     [
       AssignmentSubmissionValidation.deleteAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isStudent,
     ],
     AssignmentSubmissionController.deleteAssignmentSubmission
   );
 
   app.post(
-    '/api/deleteAttachment/:id',
+    '/api/deleteAssignmentSubmissionAttachment/:id',
     FileUploader.upload.none(),
     [
-      AssignmentSubmissionValidation.deleteAttachmentValidation,
+      AssignmentSubmissionValidation.deleteAssignmentSubmissionAttachmentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isStudent,
     ],
     AssignmentSubmissionController.deleteAttachment
   );
@@ -87,21 +87,22 @@ module.exports = function (app) {
     [
       AssignmentSubmissionValidation.listAssignmentSubmissionByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     AssignmentSubmissionController.listAssignmentSubmissionById
   );
 
+  /*
   app.get(
-    '/api/listAssignmentSubmission',
+    '/api/listAssignmentSubmissionBylessonIdStudentBased/:lessonId',
     FileUploader.upload.none(),
     [
-      AssignmentSubmissionValidation.listAssignmentSubmissionValidation,
+      AssignmentSubmissionValidation.listAssignmentSubmissionBylessonIdStudentBased,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isStudent,
     ],
     AssignmentSubmissionController.listAssignmentSubmission
-  );
+  );*/
 
   const upload_updateAssignmentSubmission = FileUploader.upload.fields([
     {
@@ -143,7 +144,7 @@ module.exports = function (app) {
     [
       AssignmentSubmissionValidation.updateAssignmentSubmissionValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isStudent,
     ],
     AssignmentSubmissionController.updateAssignmentSubmission
   );
