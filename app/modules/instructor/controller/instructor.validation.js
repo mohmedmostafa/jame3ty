@@ -20,7 +20,7 @@ addInstructorValidation = (req, res, next) => {
   console.log("m5");
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
   }
   console.log("m6");
   return next();
@@ -36,7 +36,7 @@ updateInstructorValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -53,7 +53,7 @@ updateInstructorValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
   console.log("m6");
   return next();
@@ -74,7 +74,7 @@ listInstructorValidation = (req, res, next) => {
 
   const { error } = schema.validate(req.query);
   if (error) {
-    return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {});
   }
 
   return next();
@@ -89,7 +89,7 @@ listInstructorIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
   return next();
@@ -105,7 +105,8 @@ deleteInstructorValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+
     }
   }
 

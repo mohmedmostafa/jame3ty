@@ -14,7 +14,7 @@ addCourseValidation = (req, res, next) => {
     const { error } = schemaParam.validate(req.params);
     if (error) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -89,7 +89,7 @@ updateCourseValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -132,7 +132,7 @@ deleteCourseValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -170,7 +170,7 @@ listCourseByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 

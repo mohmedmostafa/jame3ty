@@ -3,6 +3,10 @@ const { Response } = require('../../../common/response.handler');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
+const {
+  onErrorDeleteFiles,
+  deleteFile,
+} = require('../../../common/multerConfig');
 
 const request = require('request');
 const { PORT, HOST } = require('../../../config/env.config');
@@ -84,6 +88,7 @@ exports.addInstructor = async (req, res) => {
     return Response(res, 200, 'Success!', { instructor });
   } catch (error) {
     console.log(error);
+    onErrorDeleteFiles(req);
     return Response(res, 500, 'Fail to Add', { error });
   }
 };
@@ -96,6 +101,7 @@ exports.updateInstructor = async (req, res) => {
     let Instructor = await db_Instructor.findByPk(req.params.id);
 
     if (!Instructor) {
+      onErrorDeleteFiles(req);
       return Response(res, 400, 'Instructor Not Found!', {});
     }
 
@@ -114,18 +120,13 @@ exports.updateInstructor = async (req, res) => {
         { where: { id: req.params.id } },
         { transaction: t }
       );
-      console.log(Instructor.get());
-      //delete file
+       //delete file
       if (Instructor.img) {
-        unlinkAsync(
-          Instructor.img.replace('https://' + `${HOST}` + `${PORT}` + '/', '')
-        );
+        unlinkAsync(Instructor.getDataValue('img'));
       }
 
       if (Instructor.cv) {
-        unlinkAsync(
-          Instructor.cv.replace('https://' + `${HOST}` + `${PORT}` + '/', '')
-        );
+        unlinkAsync(Instructor.getDataValue('cv'));
       }
 
       let User = await db_Instructor.findByPk(Instructor.userId);
@@ -146,6 +147,7 @@ exports.updateInstructor = async (req, res) => {
     return Response(res, 200, 'Success!', [_Instructor, _User]);
   } catch (error) {
     console.log(error);
+    onErrorDeleteFiles(req);
     return Response(res, 500, 'Fail to Udpate!', { error });
   }
 };
@@ -182,38 +184,28 @@ exports.deleteInstructor = async (req, res) => {
     }
 
     if (Instructor.groups.length > 0) {
-      return Response(
-        res,
-        400,
-        "Can't Delete. The Instructor has group created",
-        {
-          Instructor,
-        }
-      );
+      
+      return Response(res, 400, "Can't Delete. The Instructor has group created", {
+        Instructor,
+      });
     }
 
     let instructorUserId = Instructor.userId;
     let user_id = Instructor.user.id;
     // //Delete
     const instructor = await db_connection.transaction(async (t) => {
-      Instructor = await db_Instructor.destroy(
-        {
-          where: { id: req.params.id },
-        },
-        { transaction: t }
-      );
-      //delete images
-      if (Instructor.img) {
-        unlinkAsync(
-          Instructor.img.replace('https://' + `${HOST}` + `${PORT}` + '/', '')
-        );
-      }
+    Instructor = await db_Instructor.destroy({
+      where: { id: req.params.id }, 
+    },
+    { transaction: t });
+    //delete images
+    if (Instructor.img) {
+      unlinkAsync(Instructor.getDataValue('img'));
+    }
 
-      if (Instructor.cv) {
-        unlinkAsync(
-          Instructor.cv.replace('https://' + `${HOST}` + `${PORT}` + '/', '')
-        );
-      }
+    if (Instructor.cv) {
+       unlinkAsync(Instructor.getDataValue('cv'));
+    }
 
       role = await db_User_Role.destroy(
         { where: { userId: user_id } },
@@ -228,6 +220,7 @@ exports.deleteInstructor = async (req, res) => {
     return Response(res, 200, 'Success!', [Instructor, role, user]);
   } catch (error) {
     console.log(error);
+    
     return Response(res, 500, 'Fail to Udpate!', { error });
   }
 };
@@ -246,10 +239,10 @@ exports.listInstructor = async (req, res) => {
   let name_ar = req.query.name_ar ? req.query.name_ar : '';
   let name_en = req.query.name_en ? req.query.name_en : '';
   let mobile = req.query.mobile ? req.query.mobile : '';
-
-  const userData = await helper.getUserdata(req, res).catch((err) => {
-    console.log(err);
-    return Response(res, 400, 'Error in Retrieve some data', {
+  
+  //check if 
+  const userData=await helper.getUserdata(req,res).catch(err=>{
+    return Response(res, 400, "Error in Retrieve some data", {
       err,
     });
   });
@@ -264,15 +257,16 @@ exports.listInstructor = async (req, res) => {
   }
 
   try {
-    let data;
-    // if (doPagination) {
-    data = await db_Instructor.findAll({
-      where: {
-        [Op.or]: [
-          {
-            name_ar: {
-              [Op.substring]: name_ar,
-            },
+    
+    
+    let data = await db_Instructor.findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: name_ar,
+              },
+           
           },
           {
             name_en: {
@@ -284,30 +278,20 @@ exports.listInstructor = async (req, res) => {
               [Op.substring]: mobile,
             },
           },
-        ],
-        [Op.and]: {
-          id: {
-            [Op.like]: userData.type == 'instructor' ? userData.data.id : '%%',
-          },
-        },
-      },
-      include: [
-        { model: db_User },
-        { model: db_Course },
-        { model: db_Group, include: { model: db_GroupSchedule } },
-      ],
-      offset: skip,
-      limit: _limit,
-    });
-    // } else {
-    let data_all = await db_Instructor.findAll({
-      where: {
-        [Op.or]: [
-          {
-            name_ar: {
-              [Op.substring]: name_ar,
+        ]},
+        offset: skip,
+        limit: _limit,
+      });
+    
+      let data_all = await db_Instructor.findAll({
+        where: {
+          [Op.or]: [
+            {
+              name_ar: {
+                [Op.substring]: name_ar,
+              },
             },
-          },
+         
           {
             name_en: {
               [Op.substring]: name_en,
@@ -318,27 +302,18 @@ exports.listInstructor = async (req, res) => {
               [Op.substring]: mobile,
             },
           },
-        ],
-        [Op.and]: {
-          id: {
-            [Op.like]: userData.type == 'instructor' ? userData.data.id : '%%',
-          },
-        },
-      },
-      include: [
-        { model: db_User },
-        { model: db_Course },
-        { model: db_Group, include: { model: db_GroupSchedule } },
-      ],
-    });
-    // }
+        ]},
+      });
+     
+  //Total num of all rows
+    let numRows = parseInt(data_all.length);
 
-    let numRows = parseInt(data.length);
-
-    // //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
+   //Total num of valid pages
+  let numPages = Math.ceil(numRows / numPerPage);
 
     data = doPagination ? data : data_all;
+
+
 
     let result = {
       doPagination,

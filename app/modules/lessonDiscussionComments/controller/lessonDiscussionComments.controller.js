@@ -289,12 +289,19 @@ exports.listlessonDiscussionComments = async (req, res) => {
 
     let numRows = parseInt(data_all.length);
 
+<<<<<<< HEAD
+ 
+  // //Total num of valid pages
+  let numPages = Math.ceil(numRows / numPerPage);
+  data=(doPagination?data:data_all);
+=======
     console.log(numRows, data.length, numPerPage);
 
     // //Total num of valid pages
     let numPages = Math.ceil(numRows / numPerPage);
 
     data = doPagination ? data : data_all;
+>>>>>>> 8188392fd053acd2fa854941ad13ebe4ce24ad20
     let result = {
       doPagination,
       numRows,

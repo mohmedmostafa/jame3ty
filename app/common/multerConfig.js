@@ -210,9 +210,9 @@ function onErrorDeleteFiles(req) {
   });
 }
 
-function validateFileAfterUpdate_(req,res,next,upload_addInstructor){
+function validateFileAfterUpdate_(req,res,next,upload_callback){
   console.log("m1");
-    upload_addInstructor(req, res, (err) => {
+    upload_callback(req, res, (err) => {
       console.log("m2");
         if (req.fileVaildMimTypesError) {
           return ValidateResponse(res, err, req.fileVaildMimTypesError);

@@ -30,7 +30,7 @@ updateAssignmentSubmissionValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -47,7 +47,7 @@ deleteAssignmentSubmissionAttachmentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -74,7 +74,7 @@ deleteAssignmentSubmissionValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
@@ -121,7 +121,7 @@ listAssignmentSubmissionByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
     }
   }
 
