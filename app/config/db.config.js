@@ -6,7 +6,7 @@ const {
   DB_NAME,
 } = require('./env.config');
 
-const db_config = {
+const db_config_postgresql = {
   HOST: DB_HOST,
   PORT: DB_PORT,
   USER: DB_USER,
@@ -21,8 +21,7 @@ const db_config = {
   },
 };
 
-/*
-const db_config = {
+const db_config_mysql = {
   HOST: DB_HOST,
   PORT: DB_PORT,
   USER: DB_USER,
@@ -35,6 +34,13 @@ const db_config = {
     acquire: 30000,
     idle: 10000,
   },
-};*/
+};
 
-module.exports = db_config;
+const db_config = {
+  dev: db_config_mysql,
+  production: db_config_postgresql,
+};
+
+const env = process.env.NODE_ENV;
+
+module.exports = db_config[env];
