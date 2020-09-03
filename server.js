@@ -48,6 +48,7 @@ require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
 
 // set port, listen for requests
 app.listen(PORT, () => {
+  console.log(corsOptions);
   console.log(
     `Server set up and running on port number: ${PORT}, environment: ${ENV}`
   );
