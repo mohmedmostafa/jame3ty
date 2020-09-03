@@ -52,6 +52,9 @@ app.listen(process.env.PORT || PORT, () => {
   console.log(
     `Server set up and running on port number: ${PORT}, environment: ${ENV}`
   );
+  console.log(
+    `Server set up and running on port number: ${process.env.PORT}, environment: ${process.env.NODE_ENV}`
+  );
 });
 
 //--------------------------------------

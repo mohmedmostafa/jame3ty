@@ -15,7 +15,7 @@ const dev = {
 
 const production = {
   ENV: process.env.NODE_ENV,
-  PORT: process.env.PRODUCTION_PORT,
+  PORT: process.env.PORT || process.env.PRODUCTION_PORT,
   HOST: process.env.PRODUCTION_HOST,
   DB_HOST: process.env.PRODUCTION_DB_HOST,
   DB_PORT: process.env.PRODUCTION_DB_PORT,
