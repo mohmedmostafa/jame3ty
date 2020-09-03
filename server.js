@@ -5,6 +5,8 @@ const path = require('path');
 const { upload } = require('./app/common/multerConfig');
 const { PORT, HOST, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
+const bcrypt = require('bcryptjs');
+const { function } = require('joi');
 
 const app = express();
 
@@ -72,15 +74,18 @@ if (0) {
 }
 
 //Initialize tables with data such roles
-function initial() {
-  const db_Instructor = db.Instructor;
-
+async function initial() {
+  const db_User = db.User;
+  const db_UserRole = db.UserRole;
   const db_Role = db.Role;
   const db_University = db.University;
   const db_Faculty = db.Faculty;
   const db_Department = db.Department;
   const db_AcademicYear = db.AcademicYear;
   const db_Subject = db.Subject;
+  const db_Instructor = db.Instructor;
+  const db_connection = db.connection;
+  const Op = db.Sequelize.Op;
 
   //--------------------------------------------------
   /////////////////Role//////////////////////////////
@@ -88,22 +93,26 @@ function initial() {
   const ROLES_EN = ['student', 'admin', 'instructor'];
   const ROLES_AR = ['طالب', 'مدير', 'محاضر'];
 
-  db_Role.create({
+  await db_Role.create({
     id: 1,
     name_ar: ROLES_AR[0],
     name_en: ROLES_EN[0],
   });
-  db_Role.create({
+  await db_Role.create({
     id: 2,
     name_ar: ROLES_AR[1],
     name_en: ROLES_EN[1],
   });
-  db_Role.create({
+  await db_Role.create({
     id: 3,
     name_ar: ROLES_AR[2],
     name_en: ROLES_EN[2],
   });
 
+  //--------------------------------------------------
+  /////////////////User///////////////////////////////
+  //--------------------------------------------------
+  signup('admin', 'admin@gmail.com', '123456', 'admin,student,instructor');
   //--------------------------------------------------
   /////////////////University/////////////////////////
   //--------------------------------------------------
@@ -134,5 +143,34 @@ function initial() {
     name_ar: 'ماده 1',
     name_en: 'subject 1',
     academicYearId: academicYear.id,
+  });
+}
+
+async function signup(username, email, password, rol) {
+  //Get all info about roles attached with the new account
+  const roles = await db_Role.findAll({
+    where: {
+      name_en: {
+        [Op.in]: [rol.split(',')],
+      },
+    },
+  });
+
+  //Start "Managed" Transaction
+  const adminUser = await db_connection.transaction(async (t) => {
+    //Save the new account to DB
+    const user = await db_User.create(
+      {
+        username: username,
+        email: email,
+        password: bcrypt.hashSync(password, 8),
+      },
+      { transaction: t }
+    );
+
+    //Add the roles to the new user
+    await user.setRoles(roles, { transaction: t });
+
+    return user;
   });
 }
