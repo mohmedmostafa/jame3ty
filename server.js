@@ -112,7 +112,15 @@ async function initial() {
   //--------------------------------------------------
   /////////////////User///////////////////////////////
   //--------------------------------------------------
-  signup('admin', 'admin@gmail.com', '123456', 'admin,student,instructor');
+  signup(
+    db_connection,
+    db_User,
+    db_Role,
+    'admin',
+    'admin@gmail.com',
+    '123456',
+    'admin,student,instructor'
+  );
   //--------------------------------------------------
   /////////////////University/////////////////////////
   //--------------------------------------------------
@@ -146,7 +154,15 @@ async function initial() {
   });
 }
 
-async function signup(username, email, password, rol) {
+async function signup(
+  db_connection,
+  db_User,
+  db_Role,
+  username,
+  email,
+  password,
+  rol
+) {
   //Get all info about roles attached with the new account
   const roles = await db_Role.findAll({
     where: {
