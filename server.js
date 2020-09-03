@@ -6,7 +6,6 @@ const { upload } = require('./app/common/multerConfig');
 const { PORT, HOST, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
 const bcrypt = require('bcryptjs');
-const { function } = require('joi');
 
 const app = express();
 
