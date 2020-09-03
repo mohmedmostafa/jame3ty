@@ -12,7 +12,7 @@ const db_config_postgresql = {
   USER: DB_USER,
   PASSWORD: DB_PASSWORD,
   DB: DB_NAME,
-  dialect: 'postgres',
+  dialect: 'mysql',
   pool: {
     max: 5,
     min: 0,

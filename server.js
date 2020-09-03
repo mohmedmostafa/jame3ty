@@ -46,7 +46,7 @@ require('./app/modules/student/student.routes')(app);
 require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
 
 // set port, listen for requests
-app.listen(PORT || 3002, () => {
+app.listen(PORT, () => {
   console.log(
     `Server set up and running on port number: ${PORT}, environment: ${ENV}`
   );
