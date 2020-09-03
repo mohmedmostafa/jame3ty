@@ -128,30 +128,30 @@ async function initial() {
   //--------------------------------------------------
   /////////////////University/////////////////////////
   //--------------------------------------------------
-  let university = db_University.create({
+  let university = await db_University.create({
     name_ar: 'جامعه الكويت',
     name_en: 'Kweit Universtiy',
   });
 
-  let faculty = db_Faculty.create({
+  let faculty = await db_Faculty.create({
     name_ar: 'الطب',
     name_en: 'Medical',
     universityId: university.id,
   });
 
-  let department = db_Department.create({
+  let department = await db_Department.create({
     name_ar: 'جراحه',
     name_en: 'PalaPalaPalaPala',
     facultyId: faculty.id,
   });
 
-  let academicYear = db_AcademicYear.create({
+  let academicYear = await db_AcademicYear.create({
     name_ar: 'سنه أولى',
     name_en: '1th',
     departmentId: department.id,
   });
 
-  let subject = db_Subject.create({
+  let subject = await db_Subject.create({
     name_ar: 'ماده 1',
     name_en: 'subject 1',
     academicYearId: academicYear.id,
