@@ -73,13 +73,14 @@ if (1) {
 
 //Initialize tables with data such roles
 function initial() {
+  const db_Instructor = db.Instructor;
+
   const db_Role = db.Role;
   const db_University = db.University;
   const db_Faculty = db.Faculty;
   const db_Department = db.Department;
   const db_AcademicYear = db.AcademicYear;
   const db_Subject = db.Subject;
-  const db_Instructor = db.Instructor;
 
   //--------------------------------------------------
   /////////////////Role//////////////////////////////
