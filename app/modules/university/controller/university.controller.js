@@ -4,6 +4,9 @@ const { Response } = require('../../../common/response.handler');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
+const db_Department = db.Department;
+const db_AcademicYear = db.AcademicYear;
+const db_Subject = db.Subject;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
@@ -219,6 +222,26 @@ function listUniversity_DoPagination(req, db_University, skip, _limit) {
             },
           ],
         },
+        include: [
+          {
+            model: db_Faculty,
+            include: [
+              {
+                model: db_Department,
+                include: [
+                  {
+                    model: db_AcademicYear,
+                    include: [
+                      {
+                        model: db_Subject,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
         offset: skip,
         limit: _limit,
       })
@@ -249,6 +272,26 @@ function listUniversity_NOPagination(req, db_University) {
             },
           ],
         },
+        include: [
+          {
+            model: db_Faculty,
+            include: [
+              {
+                model: db_Department,
+                include: [
+                  {
+                    model: db_AcademicYear,
+                    include: [
+                      {
+                        model: db_Subject,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       })
       .catch((err) => {
         return reject(err);
