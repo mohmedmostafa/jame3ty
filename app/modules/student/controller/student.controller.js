@@ -146,6 +146,21 @@ exports.listStudentById = async (req, res) => {
         },
         {
           model: db_AcademicYear,
+          include: [
+            {
+              model: db_Department,
+              include: [
+                {
+                  model: db_Faculty,
+                  include: [
+                    {
+                      model: db_University,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           model: db_CourseSubscribe,
