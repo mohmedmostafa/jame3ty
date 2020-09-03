@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../../../modules');
 const config = require('../../../config/auth.config');
 const { Response } = require('../../../common/response.handler');
+const { JWT_SECRET_KEY } = require('../../../../app/config/env.config');
 
 const db_connection = db.connection;
 const db_User = db.User;
@@ -95,7 +96,7 @@ exports.signin = async (req, res) => {
         }
 
         //Generate JWT token for that user
-        var token = jwt.sign({ id: loginUser.id }, config.secret, {
+        var token = jwt.sign({ id: loginUser.id }, JWT_SECRET_KEY, {
           expiresIn: 86400, // 24 hours
         });
 

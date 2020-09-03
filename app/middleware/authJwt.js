@@ -2,6 +2,7 @@ const { Response, ValidateResponse } = require('../common/response.handler');
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');
 const db = require('../../app/modules');
+const { JWT_SECRET_KEY } = require('../../app/config/env.config');
 
 //---------------------------------------
 verifyToken = (req, res, next) => {
@@ -18,7 +19,7 @@ verifyToken = (req, res, next) => {
     //let token = req.headers['x-access-token'];
     let token = req.headers.authorization.split(' ')[1];
 
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         return Response(res, 401, 'Unauthorized!', {});
       }
