@@ -180,6 +180,55 @@ exports.listStudentById = async (req, res) => {
   }
 };
 
+//--------------------------------------------------------------
+exports.listStudentByUserId = async (req, res) => {
+  try {
+    let student = await db_User.findOne({
+      where: {
+        id: req.params.userId,
+      },
+      include: [
+        {
+          model: db_Student,
+          include: [
+            {
+              model: db_AcademicYear,
+              include: [
+                {
+                  model: db_Department,
+                  include: [
+                    {
+                      model: db_Faculty,
+                      include: [
+                        {
+                          model: db_University,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              model: db_CourseSubscribe,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!student) {
+      return Response(res, 400, 'Student Not Found!', {});
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { student });
+  } catch (error) {
+    console.log(error);
+    return Response(res, 500, 'Fail to Find!', { error });
+  }
+};
+
 //---------------------------------------------------------------
 exports.updateStudent = async (req, res) => {
   try {

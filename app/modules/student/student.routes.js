@@ -136,4 +136,15 @@ module.exports = function (app) {
     ],
     StudentController.listStudentById
   );
+
+  app.get(
+    '/api/listStudentByUserId/:userId',
+    FileUploader.upload.none(),
+    [
+      StudentValidation.listStudentByUserIdValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    StudentController.listStudentByUserId
+  );
 };

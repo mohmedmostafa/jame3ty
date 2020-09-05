@@ -35,7 +35,9 @@ updateStudentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -67,7 +69,9 @@ deleteStudentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -102,7 +106,28 @@ listStudentByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
+    }
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+listStudentByUserIdValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      userId: Joi.number().integer().min(1).required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -116,6 +141,7 @@ const StudentValidation = {
   listStudentValidation: listStudentValidation,
   listStudentByIdValidation: listStudentByIdValidation,
   updateStudentValidation: updateStudentValidation,
+  listStudentByUserIdValidation: listStudentByUserIdValidation,
 };
 
 module.exports = StudentValidation;
