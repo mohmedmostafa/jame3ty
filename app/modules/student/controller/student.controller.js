@@ -183,7 +183,7 @@ exports.listStudentById = async (req, res) => {
 //--------------------------------------------------------------
 exports.listStudentByUserId = async (req, res) => {
   try {
-    let student = await db_User.findOne({
+    let user = await db_User.findOne({
       where: {
         id: req.params.userId,
       },
@@ -217,12 +217,12 @@ exports.listStudentByUserId = async (req, res) => {
       ],
     });
 
-    if (!student) {
+    if (!user) {
       return Response(res, 400, 'Student Not Found!', {});
     }
 
     //Success
-    return Response(res, 200, 'Success!', { student });
+    return Response(res, 200, 'Success!', { user });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
