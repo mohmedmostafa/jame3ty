@@ -12,14 +12,14 @@ addUniversityValidation = (req, res, next) => {
 
   //One faculty Schema
   let facultySchema = Joi.object().keys({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   //AcademicYear Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     faculties: Joi.array().items(facultySchema),
   });
 
@@ -43,14 +43,16 @@ updateUniversityValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
   //Body Validation
   const schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -71,7 +73,9 @@ listUniversityByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -106,7 +110,9 @@ deleteUniversityValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

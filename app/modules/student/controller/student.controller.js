@@ -40,7 +40,7 @@ exports.addStudent = async (req, res) => {
 
     if (user) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Username already exists', {});
+      return Response(res, 409, 'Username already exists!', {});
     }
 
     //
@@ -52,7 +52,7 @@ exports.addStudent = async (req, res) => {
 
     if (user) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Email already exists', {});
+      return Response(res, 409, 'Email already exists!', {});
     }
 
     //
@@ -64,7 +64,7 @@ exports.addStudent = async (req, res) => {
 
     if (student) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Email already exists', {});
+      return Response(res, 409, 'Email already exists!', {});
     }
 
     //
@@ -76,7 +76,7 @@ exports.addStudent = async (req, res) => {
 
     if (student) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Mobile already exists', {});
+      return Response(res, 409, 'Mobile already exists!', {});
     }
 
     //Create Attachment String
@@ -169,7 +169,7 @@ exports.deleteStudent = async (req, res) => {
     // if (student.courseSubscribes.length > 0) {
     //   return Response(
     //     res,
-    //     400,
+    //     409,
     //     "Can't delete the student, The Student has subscription!",
     //     { course }
     //   );

@@ -13,13 +13,13 @@ addGroupValidation = (req, res, next) => {
 
   //One Group Schedule Schema
   let groupScheduleSchema = Joi.object().keys({
-    day: Joi.string().required(),
+    day: Joi.string().trim().required(),
     time: Joi.date().iso().required(),
   });
 
   //Course Body Validation
   const schema = Joi.object({
-    nameGroup: Joi.string().min(3).max(30).required(),
+    nameGroup: Joi.string().trim().min(3).max(30).required(),
     maxNumOfStudentsGroup: Joi.number().integer().positive().min(1).required(),
     startDateGroup: Joi.date().iso().required(),
     endDateGroup: Joi.date()
@@ -51,13 +51,13 @@ updateGroupValidation = (req, res, next) => {
 
   //One Group Schedule Schema
   let groupScheduleSchema = Joi.object().keys({
-    day: Joi.string().required(),
+    day: Joi.string().trim().required(),
     time: Joi.date().iso().required(),
   });
 
   //Course Body Validation
   const schema = Joi.object({
-    nameGroup: Joi.string().min(3).max(30).required(),
+    nameGroup: Joi.string().trim().min(3).max(30).required(),
     maxNumOfStudentsGroup: Joi.number().integer().positive().min(1).required(),
     startDateGroup: Joi.date().iso().required(),
     endDateGroup: Joi.date()
@@ -89,7 +89,9 @@ deleteGroupValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -106,7 +108,9 @@ listGroupByCourseIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -138,7 +142,9 @@ listGroupByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

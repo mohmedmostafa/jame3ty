@@ -7,9 +7,9 @@ const db = require('../..');
 addLessonValidation = (req, res, next) => {
   //Lesson Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
-    desc: Joi.string().min(5).allow('', null),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
+    desc: Joi.string().trim().min(5).allow('', null),
     type: Joi.number().integer().min(0).max(1).required(),
     isLiveStreaming: Joi.number().integer().min(0).max(1).required(),
     liveStreamingInfo: Joi.when('isLiveStreaming', {
@@ -46,15 +46,17 @@ updateLessonValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
   //Lesson Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
-    desc: Joi.string().min(5).allow('', null),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
+    desc: Joi.string().trim().min(5).allow('', null),
     type: Joi.number().integer().min(0).max(1).required(),
     isLiveStreaming: Joi.number().integer().min(0).max(1).required(),
     liveStreamingInfo: Joi.when('isLiveStreaming', {
@@ -90,7 +92,9 @@ deleteLessonValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -117,7 +121,9 @@ deleteAttachmentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -132,7 +138,7 @@ listLessonValidation = (req, res, next) => {
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),
-    type: Joi.string().valid('1', '0', 'both').required(),
+    type: Joi.string().trim().valid('1', '0', 'both').required(),
   });
 
   const { error } = schema.validate(req.query);
@@ -153,7 +159,9 @@ listLessonByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

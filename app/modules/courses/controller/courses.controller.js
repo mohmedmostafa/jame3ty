@@ -192,7 +192,7 @@ exports.deleteCourse = async (req, res) => {
     if (course.courseSubscribes.length > 0) {
       return Response(
         res,
-        400,
+        409,
         "Can't delete the course, The Course has subscription!",
         { course }
       );

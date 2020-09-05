@@ -99,7 +99,7 @@ exports.deleteDepartment = async (req, res) => {
     }
 
     if (department.academicYears.length > 0) {
-      return Response(res, 404, "Can't delete the department. It has childs", {
+      return Response(res, 409, "Can't delete the department. It has childs", {
         department,
       });
     }

@@ -226,7 +226,7 @@ exports.deleteGroup = async (req, res) => {
     if (group.courseSubscribes.length > 0) {
       return Response(
         res,
-        400,
+        409,
         "Can't delete the group, The Course Group has subscription!",
         { group }
       );

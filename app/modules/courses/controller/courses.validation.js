@@ -14,18 +14,20 @@ addCourseValidation = (req, res, next) => {
     const { error } = schemaParam.validate(req.params);
     if (error) {
       onErrorDeleteFiles(req);
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
   //Course Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     code: Joi.string().allow('', null),
-    desc: Joi.string().min(5).required(),
-    prerequisiteText: Joi.string().min(5).required(),
-    whatYouWillLearn: Joi.string().min(5).required(),
+    desc: Joi.string().trim().min(5).required(),
+    prerequisiteText: Joi.string().trim().min(5).required(),
+    whatYouWillLearn: Joi.string().trim().min(5).required(),
     numOfLessons: Joi.number().integer().positive().min(1).required(),
     price: Joi.number().positive().required(),
     priceBeforeDiscount: Joi.number()
@@ -47,13 +49,13 @@ addCourseValidation = (req, res, next) => {
 
     //One Group Schedule Schema
     let groupScheduleSchema = Joi.object().keys({
-      day: Joi.string().required(),
+      day: Joi.string().trim().required(),
       time: Joi.date().iso().required(),
     });
 
     //Course with Group Body Validation
     schema = schema.keys({
-      nameGroup: Joi.string().min(3).max(30).required(),
+      nameGroup: Joi.string().trim().min(3).max(30).required(),
       maxNumOfStudentsGroup: Joi.number()
         .integer()
         .positive()
@@ -89,7 +91,9 @@ updateCourseValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -97,12 +101,12 @@ updateCourseValidation = (req, res, next) => {
 
   //Course Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     code: Joi.string().allow('', null),
-    desc: Joi.string().min(5).required(),
-    prerequisiteText: Joi.string().min(5).required(),
-    whatYouWillLearn: Joi.string().min(5).required(),
+    desc: Joi.string().trim().min(5).required(),
+    prerequisiteText: Joi.string().trim().min(5).required(),
+    whatYouWillLearn: Joi.string().trim().min(5).required(),
     numOfLessons: Joi.number().integer().positive().min(1).required(),
     price: Joi.number().positive().required(),
     priceBeforeDiscount: Joi.number()
@@ -132,7 +136,9 @@ deleteCourseValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -147,7 +153,7 @@ listCourseValidation = (req, res, next) => {
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),
-    method: Joi.string().valid('1', '0', 'both').required(),
+    method: Joi.string().trim().valid('1', '0', 'both').required(),
     startFrom: Joi.date().iso().required(),
     startTo: Joi.date().iso().greater(Joi.ref('startFrom')).required(),
   });
@@ -170,7 +176,9 @@ listCourseByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

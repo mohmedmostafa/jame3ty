@@ -7,8 +7,8 @@ const db = require('../..');
 addSubjectValidation = (req, res, next) => {
   //Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     academicYearId: Joi.number().integer().required(),
   });
 
@@ -32,14 +32,16 @@ updateSubjectValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
   //Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -60,7 +62,9 @@ deleteSubjectValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -95,7 +99,9 @@ listSubjectByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

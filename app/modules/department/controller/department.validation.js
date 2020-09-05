@@ -13,21 +13,21 @@ addDepartmentValidation = (req, res, next) => {
 
   //One subject Schema
   let subjectsSchema = Joi.object().keys({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   //One academicyear Schema
   let academicyearsSchema = Joi.object().keys({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     subjects: Joi.array().items(subjectsSchema),
   });
 
   //Department Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     facultyId: Joi.number().integer().required(),
     academicyears: Joi.array().items(academicyearsSchema),
   });
@@ -52,14 +52,16 @@ updateDepartmentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
   //Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -80,7 +82,9 @@ deleteDepartmentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -115,7 +119,9 @@ listDepartmentByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

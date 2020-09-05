@@ -7,11 +7,11 @@ const db = require('../../');
 addStudentValidation = (req, res, next) => {
   //Body Validation
   let schema = Joi.object({
-    name: Joi.string().min(3).max(30).required(),
-    mobile: Joi.string().alphanum().required(),
-    email: Joi.string().email().required(),
+    name: Joi.string().trim().min(3).max(30).required(),
+    mobile: Joi.string().trim().alphanum().required(),
+    email: Joi.string().trim().email({ minDomainAtoms: 2 }).required(),
     academicYearId: Joi.number().integer().required(),
-    username: Joi.string().min(3).max(30).required(),
+    username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),
   });
@@ -43,9 +43,9 @@ updateStudentValidation = (req, res, next) => {
 
   //Body Validation
   let schema = Joi.object({
-    name: Joi.string().min(3).max(30).required(),
-    mobile: Joi.string().alphanum().required(),
-    email: Joi.string().email().required(),
+    name: Joi.string().trim().min(3).max(30).required(),
+    mobile: Joi.string().trim().alphanum().required(),
+    email: Joi.string().trim().email().required(),
     academicYearId: Joi.number().integer().required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),

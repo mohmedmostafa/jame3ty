@@ -7,7 +7,7 @@ addRatingAndReviewValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     date: Joi.date().iso().required(),
-    reviewText: Joi.string().min(5).max(300).allow('', null),
+    reviewText: Joi.string().trim().min(5).max(300).allow('', null),
     rate: Joi.number().positive().min(0).max(5).required(),
     courseSubscribeId: Joi.number().integer().required(),
   });
@@ -36,7 +36,7 @@ updateRatingAndReviewValidation = (req, res, next) => {
 
   //Body Validation
   const schema = Joi.object({
-    reviewText: Joi.string().min(5).max(300).allow('', null),
+    reviewText: Joi.string().trim().min(5).max(300).allow('', null),
     rate: Joi.number().positive().min(0).max(5).required(),
   });
 

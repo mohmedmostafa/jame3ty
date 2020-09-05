@@ -68,7 +68,7 @@ exports.deleteSubject = async (req, res) => {
 
     //Check if has childs
     if (subject.courses.length > 0) {
-      return Response(res, 422, "Can't delete the Subject. It has childs", {
+      return Response(res, 409, "Can't delete the Subject. It has childs", {
         subject,
       });
     }

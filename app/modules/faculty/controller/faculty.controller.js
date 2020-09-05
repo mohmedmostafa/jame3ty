@@ -98,7 +98,7 @@ exports.deleteFaculty = async (req, res) => {
 
     //Check if the Universtiy has Faculty
     if (faculty.departments.length > 0) {
-      return Response(res, 422, "Can't Delete. Has Childs", {
+      return Response(res, 409, "Can't Delete. Has Childs", {
         faculty,
       });
     }

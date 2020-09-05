@@ -92,7 +92,7 @@ exports.deleteAcademicYear = async (req, res) => {
     if (academicYear.subjects.length > 0 || academicYear.students.length > 0) {
       return Response(
         res,
-        404,
+        409,
         "Can't delete the AcademicYear. It has childs",
         { academicYear }
       );

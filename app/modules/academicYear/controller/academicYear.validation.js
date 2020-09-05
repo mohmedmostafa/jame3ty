@@ -13,14 +13,14 @@ addAcademicYearValidation = (req, res, next) => {
 
   //One subjects Schema
   let subjectsSchema = Joi.object().keys({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   //AcademicYear Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
     departmentId: Joi.number().integer().required(),
     subjects: Joi.array().items(subjectsSchema),
   });
@@ -51,8 +51,8 @@ updateAcademicYearValidation = (req, res, next) => {
 
   //Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30).required(),
   });
 
   const { error } = schema.validate(req.body);

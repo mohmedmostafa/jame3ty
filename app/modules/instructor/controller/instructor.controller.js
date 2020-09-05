@@ -58,7 +58,7 @@ exports.addInstructor = async (req, res) => {
 
     if (userF) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Username already exists', {});
+      return Response(res, 409, 'Username already exists!', {});
     }
 
     //
@@ -70,7 +70,7 @@ exports.addInstructor = async (req, res) => {
 
     if (userF) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Email already exists', {});
+      return Response(res, 409, 'Email already exists!', {});
     }
 
     //
@@ -82,7 +82,7 @@ exports.addInstructor = async (req, res) => {
 
     if (instructorF) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Email already exists', {});
+      return Response(res, 409, 'Email already exists!', {});
     }
 
     //
@@ -94,7 +94,7 @@ exports.addInstructor = async (req, res) => {
 
     if (instructorF) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'Mobile already exists', {});
+      return Response(res, 409, 'Mobile already exists!', {});
     }
 
     //Save TO DB
@@ -228,7 +228,7 @@ exports.deleteInstructor = async (req, res) => {
     if (Instructor.courses.length > 0) {
       return Response(
         res,
-        400,
+        409,
         "Can't Delete. The Instructor has courses created",
         {
           Instructor,
@@ -239,7 +239,7 @@ exports.deleteInstructor = async (req, res) => {
     if (Instructor.groups.length > 0) {
       return Response(
         res,
-        400,
+        409,
         "Can't Delete. The Instructor has group created",
         {
           Instructor,

@@ -6,12 +6,12 @@ const db = require('../..');
 addInstructorValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30),
-    bio: Joi.string().min(5).max(30),
-    mobile: Joi.string().alphanum().required(),
-    email: Joi.string().email().required(),
-    username: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30),
+    bio: Joi.string().trim().min(5).max(30),
+    mobile: Joi.string().trim().alphanum().required(),
+    email: Joi.string().trim().email().required(),
+    username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
     "g-recaptcha-response": Joi.any(),
     img: Joi.any(),
@@ -42,12 +42,12 @@ updateInstructorValidation = (req, res, next) => {
 
   //Body Validation
   const schema = Joi.object({
-    name_ar: Joi.string().min(3).max(30).required(),
-    name_en: Joi.string().min(3).max(30),
-    bio: Joi.string().min(5).max(30),
-    mobile: Joi.string().alphanum().required(),
-    email: Joi.string().email().required(),
-    username: Joi.string().min(3).max(30).required(),
+    name_ar: Joi.string().trim().min(3).max(30).required(),
+    name_en: Joi.string().trim().min(3).max(30),
+    bio: Joi.string().trim().min(5).max(30),
+    mobile: Joi.string().trim().alphanum().required(),
+    email: Joi.string().trim().email().required(),
+    username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
   });
 
@@ -66,9 +66,9 @@ listInstructorValidation = (req, res, next) => {
     doPagination: Joi.number().integer().valid(1, 0).default(1),
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
-    name_ar: Joi.string().min(3).max(30),
-    name_en: Joi.string().min(3).max(30),
-    mobile: Joi.string().alphanum(),
+    name_ar: Joi.string().trim().min(3).max(30),
+    name_en: Joi.string().trim().min(3).max(30),
+    mobile: Joi.string().trim().alphanum(),
      
   });
 
