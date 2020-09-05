@@ -367,6 +367,24 @@ function listStudent_DoPagination(
             model: db_User,
           },
           {
+            model: db_AcademicYear,
+            include: [
+              {
+                model: db_Department,
+                include: [
+                  {
+                    model: db_Faculty,
+                    include: [
+                      {
+                        model: db_University,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_CourseSubscribe,
           },
         ],
@@ -408,6 +426,24 @@ function listStudent_NOPagination(
         include: [
           {
             model: db_User,
+          },
+          {
+            model: db_AcademicYear,
+            include: [
+              {
+                model: db_Department,
+                include: [
+                  {
+                    model: db_Faculty,
+                    include: [
+                      {
+                        model: db_University,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_CourseSubscribe,
