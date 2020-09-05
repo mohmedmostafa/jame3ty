@@ -16,7 +16,7 @@ exports.addFaculty = async (req, res) => {
     );
 
     if (!university) {
-      return Response(res, 400, 'University Not Found!', {});
+      return Response(res, 404, 'University Not Found!', {});
     }
 
     //Save to DB
@@ -42,7 +42,7 @@ exports.updateFaculty = async (req, res) => {
     faculty = faculty.get({ plain: true });
 
     if (!faculty) {
-      return Response(res, 400, 'Faculty Not Found!', {});
+      return Response(res, 404, 'Faculty Not Found!', {});
     }
 
     //Check the universityId is changed
@@ -53,7 +53,7 @@ exports.updateFaculty = async (req, res) => {
       );
 
       if (!university) {
-        return Response(res, 400, 'University Not Found!', {});
+        return Response(res, 404, 'University Not Found!', {});
       }
     }
 
@@ -91,14 +91,14 @@ exports.deleteFaculty = async (req, res) => {
     });
 
     if (!faculty) {
-      return Response(res, 400, 'Faculty Not Found!', {});
+      return Response(res, 404, 'Faculty Not Found!', {});
     }
 
     faculty = faculty.get({ plain: true });
 
     //Check if the Universtiy has Faculty
     if (faculty.departments.length > 0) {
-      return Response(res, 400, "Can't Delete. Has Childs", {
+      return Response(res, 422, "Can't Delete. Has Childs", {
         faculty,
       });
     }
@@ -130,7 +130,7 @@ exports.listFacultyById = async (req, res) => {
     });
 
     if (!faculty) {
-      return Response(res, 400, 'Faculty Not Found!', {});
+      return Response(res, 404, 'Faculty Not Found!', {});
     }
 
     //Success

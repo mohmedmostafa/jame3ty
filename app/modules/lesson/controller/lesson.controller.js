@@ -32,7 +32,7 @@ exports.addLesson = async (req, res) => {
 
     if (!course) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Course Not Found!', {});
+      return Response(res, 404, 'Course Not Found!', {});
     }
 
     //Check if the Group is under that course
@@ -54,7 +54,7 @@ exports.addLesson = async (req, res) => {
 
       if (!course) {
         onErrorDeleteFiles(req);
-        return Response(res, 400, 'Course with that group Not Found!', {});
+        return Response(res, 404, 'Course with that group Not Found!', {});
       }
     }
 
@@ -114,7 +114,7 @@ exports.deleteLesson = async (req, res) => {
     });
 
     if (!lesson) {
-      return Response(res, 400, 'Lesson Not Found!', {});
+      return Response(res, 404, 'Lesson Not Found!', {});
     }
 
     console.log(lesson);
@@ -155,7 +155,7 @@ exports.deleteAttachment = async (req, res) => {
     });
 
     if (!lesson) {
-      return Response(res, 400, 'Lesson Not Found!', {});
+      return Response(res, 404, 'Lesson Not Found!', {});
     }
 
     console.log(lesson);
@@ -182,10 +182,10 @@ exports.deleteAttachment = async (req, res) => {
           }
         );
       } else {
-        return Response(res, 400, 'Attachemt Not Found!', { lesson });
+        return Response(res, 404, 'Attachemt Not Found!', { lesson });
       }
     } else {
-      return Response(res, 400, 'Lesson has zero attachments!', { lesson });
+      return Response(res, 404, 'Lesson has zero attachments!', { lesson });
     }
 
     //Success
@@ -214,7 +214,7 @@ exports.listLessonById = async (req, res) => {
     });
 
     if (!lesson) {
-      return Response(res, 400, 'Lesson Not Found!', {});
+      return Response(res, 404, 'Lesson Not Found!', {});
     }
 
     //Success
@@ -235,7 +235,7 @@ exports.updateLesson = async (req, res) => {
 
     if (!lesson) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Lesson Not Found!', {});
+      return Response(res, 404, 'Lesson Not Found!', {});
     }
 
     //Check if the Course is already exsits
@@ -245,7 +245,7 @@ exports.updateLesson = async (req, res) => {
 
     if (!course) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Course Not Found!', {});
+      return Response(res, 404, 'Course Not Found!', {});
     }
 
     //Check if the Group is under that course
@@ -267,7 +267,7 @@ exports.updateLesson = async (req, res) => {
 
       if (!course) {
         onErrorDeleteFiles(req);
-        return Response(res, 400, 'Course with that group Not Found!', {});
+        return Response(res, 404, 'Course with that group Not Found!', {});
       }
     }
 

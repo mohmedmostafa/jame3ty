@@ -92,7 +92,12 @@ exports.signin = async (req, res) => {
 
         //If wrong PW
         if (!passwordIsValid) {
-          return Response(res, 401, 'Invalid Password!', {});
+          return Response(
+            res,
+            401,
+            'Authorization Required! - Invalid Password!',
+            {}
+          );
         }
 
         //Generate JWT token for that user

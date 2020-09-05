@@ -52,7 +52,7 @@ exports.updateUniversity = async (req, res) => {
     let university = await db_University.findByPk(req.params.id);
 
     if (!university) {
-      return Response(res, 400, 'University Not Found!', {});
+      return Response(res, 404, 'University Not Found!', {});
     }
 
     university = university.get({ plain: true });
@@ -88,14 +88,14 @@ exports.deleteUniversity = async (req, res) => {
     });
 
     if (!university) {
-      return Response(res, 400, 'University Not Found!', {});
+      return Response(res, 404, 'University Not Found!', {});
     }
 
     university = university.get({ plain: true });
 
     //Check if the Universtiy has Faculty
     if (university.faculties.length > 0) {
-      return Response(res, 400, "Can't Delete. The University has childs", {
+      return Response(res, 422, "Can't Delete. The University has childs", {
         university,
       });
     }
@@ -127,7 +127,7 @@ exports.listUniversityById = async (req, res) => {
     });
 
     if (!university) {
-      return Response(res, 400, 'University Not Found!', {});
+      return Response(res, 404, 'University Not Found!', {});
     }
 
     //Success

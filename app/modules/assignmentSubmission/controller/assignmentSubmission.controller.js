@@ -33,7 +33,7 @@ exports.addAssignmentSubmission = async (req, res) => {
 
     if (!lesson) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Lesson Not Found!', {});
+      return Response(res, 404, 'Lesson Not Found!', {});
     }
 
     //Create Attachment String
@@ -79,7 +79,7 @@ exports.deleteAssignmentSubmission = async (req, res) => {
     });
 
     if (!assignmentSubmission) {
-      return Response(res, 400, 'AssignmentSubmission Not Found!', {});
+      return Response(res, 404, 'AssignmentSubmission Not Found!', {});
     }
 
     //Delete
@@ -118,7 +118,7 @@ exports.deleteAttachment = async (req, res) => {
     });
 
     if (!assignmentSubmission) {
-      return Response(res, 400, 'AssignmentSubmission Not Found!', {});
+      return Response(res, 404, 'AssignmentSubmission Not Found!', {});
     }
 
     console.log(assignmentSubmission);
@@ -144,12 +144,12 @@ exports.deleteAttachment = async (req, res) => {
           }
         );
       } else {
-        return Response(res, 400, 'Attachemt Not Found!', {
+        return Response(res, 404, 'Attachemt Not Found!', {
           assignmentSubmission,
         });
       }
     } else {
-      return Response(res, 400, 'AssignmentSubmission has zero attachments!', {
+      return Response(res, 404, 'AssignmentSubmission has zero attachments!', {
         assignmentSubmission,
       });
     }
@@ -180,7 +180,7 @@ exports.listAssignmentSubmissionById = async (req, res) => {
     });
 
     if (!assignmentSubmission) {
-      return Response(res, 400, 'AssignmentSubmission Not Found!', {});
+      return Response(res, 404, 'AssignmentSubmission Not Found!', {});
     }
 
     //Success
@@ -208,7 +208,7 @@ exports.updateAssignmentSubmission = async (req, res) => {
 
     if (!assignmentSubmission) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Student Assignment Submission Not Found!', {});
+      return Response(res, 404, 'Student Assignment Submission Not Found!', {});
     }
 
     //Append Attachment String

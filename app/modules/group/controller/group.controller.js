@@ -1,5 +1,7 @@
 const db = require('../..');
 const { Response } = require('../../../common/response.handler');
+const { ValidateResponse } = require('../../../common/response.handler');
+
 const { onErrorDeleteFiles } = require('../../../common/multerConfig');
 const moment = require('moment');
 
@@ -25,14 +27,13 @@ exports.addGroup = async (req, res) => {
 
   if (!course) {
     //onErrorDeleteFiles(req);
-    return Response(res, 400, 'Course Not Found or Not Live Streaming', {});
+    return Response(res, 404, 'Course Not Found or Not Live Streaming', {});
   }
 
   //Check startDate of Group - Must be greater than Course Start Date which belongs to.
   if (moment(req.body.startDateGroup) < moment(course.startDate)) {
-    return Response(
+    return ValidateResponse(
       res,
-      400,
       'Start Date of the Group must be greater than start date of the Course which belongs to!',
       { course }
     );
@@ -111,7 +112,7 @@ exports.updateGroup = async (req, res) => {
       //onErrorDeleteFiles(req);
       return Response(
         res,
-        400,
+        404,
         'Course with that group is Not Found or Not Live Streaming',
         {}
       );
@@ -119,9 +120,8 @@ exports.updateGroup = async (req, res) => {
 
     //Check startDate of Group - Must be greater than Course Start Date which belongs to.
     if (moment(req.body.startDateGroup) < moment(course.startDate)) {
-      return Response(
+      return ValidateResponse(
         res,
-        400,
         'Start Date of the Group must be greater than start date of the Course which belongs to!',
         { course }
       );
@@ -131,9 +131,8 @@ exports.updateGroup = async (req, res) => {
     if (
       req.body.maxNumOfStudentsGroup < course.groups[0].courseSubscribes.length
     ) {
-      return Response(
+      return ValidateResponse(
         res,
-        400,
         "The max number of students per group can't be less than the current number of student subsciptions for that group!, Count of registered students = " +
           course.groups[0].courseSubscribes.length,
         { course }
@@ -217,7 +216,7 @@ exports.deleteGroup = async (req, res) => {
     });
 
     if (!group) {
-      return Response(res, 400, 'Group Not Found!', {});
+      return Response(res, 404, 'Group Not Found!', {});
     }
     //course = course.get({ plain: true });
 
@@ -256,7 +255,7 @@ exports.listGroupByCourseId = async (req, res) => {
   });
 
   if (!course) {
-    return Response(res, 400, 'Course Not Found!', {});
+    return Response(res, 404, 'Course Not Found!', {});
   }
 
   //
@@ -453,7 +452,7 @@ exports.listGroupById = async (req, res) => {
     });
 
     if (!group) {
-      return Response(res, 400, 'Group Not Found!', {});
+      return Response(res, 404, 'Group Not Found!', {});
     }
 
     //Success

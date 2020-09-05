@@ -19,7 +19,7 @@ exports.addRatingAndReview = async (req, res) => {
     );
 
     if (!courseSubscribe) {
-      return Response(res, 400, 'Course Subscribe Not Found!', {});
+      return Response(res, 404, 'Course Subscribe Not Found!', {});
     }
 
     //Save to DB
@@ -45,7 +45,7 @@ exports.updateRatingAndReview = async (req, res) => {
     let ratingAndReview = await db_RatingAndReview.findByPk(req.params.id);
 
     if (!ratingAndReview) {
-      return Response(res, 400, 'Rating And Review Not Found!', {});
+      return Response(res, 404, 'Rating And Review Not Found!', {});
     }
 
     //Do Update
@@ -81,7 +81,7 @@ exports.deleteRatingAndReview = async (req, res) => {
     });
 
     if (!ratingAndReview) {
-      return Response(res, 400, 'RatingAndReview Not Found!', {});
+      return Response(res, 404, 'RatingAndReview Not Found!', {});
     }
 
     //Delete
@@ -116,7 +116,7 @@ exports.listRatingAndReviewById = async (req, res) => {
     });
 
     if (!ratingAndReview) {
-      return Response(res, 400, 'RatingAndReview Not Found!', {});
+      return Response(res, 404, 'RatingAndReview Not Found!', {});
     }
 
     //Success
@@ -143,7 +143,7 @@ exports.listRatingAndReviewByCourseId = async (req, res) => {
     });
 
     if (!ratingAndReview) {
-      return Response(res, 400, 'RatingAndReview  Not Found!', {});
+      return Response(res, 404, 'RatingAndReview  Not Found!', {});
     }
 
     //Success

@@ -31,7 +31,7 @@ exports.addSubject = async (req, res) => {
     );
 
     if (!academicYear) {
-      return Response(res, 400, 'AcademicYear Not Found!', {});
+      return Response(res, 404, 'AcademicYear Not Found!', {});
     }
 
     //Add Department to DB
@@ -63,12 +63,12 @@ exports.deleteSubject = async (req, res) => {
     });
 
     if (!subject) {
-      return Response(res, 400, 'Subject Not Found!', {});
+      return Response(res, 404, 'Subject Not Found!', {});
     }
 
     //Check if has childs
     if (subject.courses.length > 0) {
-      return Response(res, 400, "Can't delete the Subject. It has childs", {
+      return Response(res, 422, "Can't delete the Subject. It has childs", {
         subject,
       });
     }
@@ -95,7 +95,7 @@ exports.updateSubject = async (req, res) => {
     });
 
     if (!subject) {
-      return Response(res, 400, 'Subject Not Found!', {});
+      return Response(res, 404, 'Subject Not Found!', {});
     }
 
     await db_Subject.update(
@@ -128,7 +128,7 @@ exports.listSubjectById = async (req, res) => {
     });
 
     if (!subject) {
-      return Response(res, 400, 'Subject Not Found!', {});
+      return Response(res, 404, 'Subject Not Found!', {});
     }
 
     //Success

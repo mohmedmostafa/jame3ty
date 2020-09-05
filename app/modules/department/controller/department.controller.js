@@ -29,7 +29,7 @@ exports.addDepartment = async (req, res) => {
     const faculty = await db_Faculty.findByPk(parseInt(req.body.facultyId));
 
     if (!faculty) {
-      return Response(res, 400, 'Faculty Not Found!', {});
+      return Response(res, 404, 'Faculty Not Found!', {});
     }
 
     //Start "Managed" Transaction
@@ -95,11 +95,11 @@ exports.deleteDepartment = async (req, res) => {
     });
 
     if (!department) {
-      return Response(res, 400, 'Department Not Found!', {});
+      return Response(res, 404, 'Department Not Found!', {});
     }
 
     if (department.academicYears.length > 0) {
-      return Response(res, 400, "Can't delete the department. It has childs", {
+      return Response(res, 404, "Can't delete the department. It has childs", {
         department,
       });
     }
@@ -131,7 +131,7 @@ exports.listDepartmentById = async (req, res) => {
     });
 
     if (!department) {
-      return Response(res, 400, 'Department Not Found!', {});
+      return Response(res, 404, 'Department Not Found!', {});
     }
 
     //Success
@@ -151,7 +151,7 @@ exports.updateDepartment = async (req, res) => {
     });
 
     if (!department) {
-      return Response(res, 400, 'Department Not Found!', {});
+      return Response(res, 404, 'Department Not Found!', {});
     }
 
     await db_Department.update(

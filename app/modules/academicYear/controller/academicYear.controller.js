@@ -31,7 +31,7 @@ exports.addAcademicYear = async (req, res) => {
     );
 
     if (!department) {
-      return Response(res, 400, 'Department Not Found!', {});
+      return Response(res, 404, 'Department Not Found!', {});
     }
 
     //Start "Managed" Transaction
@@ -85,14 +85,14 @@ exports.deleteAcademicYear = async (req, res) => {
     });
 
     if (!academicYear) {
-      return Response(res, 400, 'AcademicYear Not Found!', {});
+      return Response(res, 404, 'AcademicYear Not Found!', {});
     }
 
     //Check if has childs
     if (academicYear.subjects.length > 0 || academicYear.students.length > 0) {
       return Response(
         res,
-        400,
+        404,
         "Can't delete the AcademicYear. It has childs",
         { academicYear }
       );
@@ -120,7 +120,7 @@ exports.updateAcademicYear = async (req, res) => {
     });
 
     if (!academicYear) {
-      return Response(res, 400, 'AcademicYear Not Found!', {});
+      return Response(res, 404, 'AcademicYear Not Found!', {});
     }
 
     await db_AcademicYear.update(
@@ -153,7 +153,7 @@ exports.listAcademicYearById = async (req, res) => {
     });
 
     if (!academicYear) {
-      return Response(res, 400, 'AcademicYear Not Found!', {});
+      return Response(res, 404, 'AcademicYear Not Found!', {});
     }
 
     //Success

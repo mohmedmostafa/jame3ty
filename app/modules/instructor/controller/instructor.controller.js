@@ -152,8 +152,11 @@ exports.updateInstructor = async (req, res) => {
 
     if (!Instructor) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Instructor Not Found!', {});
+      return Response(res, 404, 'Instructor Not Found!', {});
     }
+
+    console.log(Instructor);
+    //
 
     //Do Update
     const instructor = await db_connection.transaction(async (t) => {
@@ -218,7 +221,7 @@ exports.deleteInstructor = async (req, res) => {
     });
 
     if (!Instructor) {
-      return Response(res, 400, 'Instructor Not Found!', {});
+      return Response(res, 404, 'Instructor Not Found!', {});
     }
 
     //Check if it has course or group
@@ -298,7 +301,7 @@ exports.listInstructor = async (req, res) => {
 
   //check if
   const userData = await helper.getUserdata(req, res).catch((err) => {
-    return Response(res, 400, 'Error in Retrieve some data', {
+    return Response(res, 500, 'Error in Retrieve some data', {
       err,
     });
   });
@@ -309,7 +312,7 @@ exports.listInstructor = async (req, res) => {
     userData.type == 'instructor' &&
     (userData.data == null || userData.data.id != req.params.id)
   ) {
-    return Response(res, 400, 'You have no permission to open this page', {});
+    return Response(res, 403, 'You have no permission to open this page', {});
   }
 
   try {
@@ -399,12 +402,12 @@ exports.listInstructorById = async (req, res) => {
     });
 
     if (!Instructor) {
-      return Response(res, 400, 'Instructor Not Found!', {});
+      return Response(res, 404, 'Instructor Not Found!', {});
     }
 
     const userData = await helper.getUserdata(req, res).catch((err) => {
       console.log(err);
-      return Response(res, 400, 'Error in Retrieve some data', {
+      return Response(res, 500, 'Error in Retrieve some data', {
         err,
       });
     });
@@ -413,7 +416,7 @@ exports.listInstructorById = async (req, res) => {
       userData.type == 'instructor' &&
       (userData.data == null || userData.data.id != req.params.id)
     ) {
-      return Response(res, 400, 'You have no permission to open this page', {});
+      return Response(res, 403, 'You have no permission to open this page', {});
     }
 
     //Success

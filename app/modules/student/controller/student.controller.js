@@ -162,7 +162,7 @@ exports.deleteStudent = async (req, res) => {
     // });
 
     // if (!student) {
-    //   return Response(res, 400, 'Student Not Found!', {});
+    //   return Response(res, 404, 'Student Not Found!', {});
     // }
 
     // //If Students Subscribe the course then can not delete it
@@ -219,7 +219,7 @@ exports.listStudentById = async (req, res) => {
     });
 
     if (!student) {
-      return Response(res, 400, 'Student Not Found!', {});
+      return Response(res, 404, 'Student Not Found!', {});
     }
 
     //Success
@@ -268,7 +268,7 @@ exports.listStudentByUserId = async (req, res) => {
     });
 
     if (!user) {
-      return Response(res, 400, 'Student Not Found!', {});
+      return Response(res, 404, 'Student Not Found!', {});
     }
 
     //Success
@@ -296,7 +296,7 @@ exports.updateStudent = async (req, res) => {
 
     if (!student) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Student Not Found!', {});
+      return Response(res, 404, 'Student Not Found!', {});
     }
 
     console.log(student);

@@ -1,5 +1,7 @@
 const db = require('../..');
 const { Response } = require('../../../common/response.handler');
+const { ValidateResponse } = require('../../../common/response.handler');
+
 const {
   onErrorDeleteFiles,
   deleteFile,
@@ -29,7 +31,7 @@ exports.addCourse = async (req, res) => {
 
   if (!subject) {
     onErrorDeleteFiles(req);
-    return Response(res, 400, 'Subject Not Found!', {});
+    return Response(res, 404, 'Subject Not Found!', {});
   }
 
   console.log(req.files);
@@ -180,7 +182,7 @@ exports.deleteCourse = async (req, res) => {
     });
 
     if (!course) {
-      return Response(res, 400, 'Course Not Found!', {});
+      return Response(res, 404, 'Course Not Found!', {});
     }
     //course = course.get({ plain: true });
 
@@ -290,7 +292,7 @@ exports.listCourseById = async (req, res) => {
     });
 
     if (!course) {
-      return Response(res, 400, 'Course Not Found!', {});
+      return Response(res, 404, 'Course Not Found!', {});
     }
 
     //Success
@@ -318,7 +320,7 @@ exports.updateCourse = async (req, res) => {
 
     if (!course) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Course Not Found!', {});
+      return Response(res, 404, 'Course Not Found!', {});
     }
 
     //If the course is live streaming course -> then check the new start date of the course to be
@@ -336,9 +338,8 @@ exports.updateCourse = async (req, res) => {
 
       if (moment(req.body.startDate).isAfter(minStartDateGroup.minStartDate)) {
         onErrorDeleteFiles(req);
-        return Response(
+        return ValidateResponse(
           res,
-          400,
           "Startdate isn't valid, it must be before all start dates of all groups",
           { minStartDateGroup }
         );

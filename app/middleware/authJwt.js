@@ -9,7 +9,7 @@ verifyToken = (req, res, next) => {
   console.log(req.headers.authorization);
 
   if (!req.headers.authorization) {
-    return Response(res, 403, 'No token provided!', {});
+    return Response(res, 401, 'Authorization Required!', {});
   }
 
   if (
@@ -21,7 +21,7 @@ verifyToken = (req, res, next) => {
 
     jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
-        return Response(res, 401, 'Unauthorized!', {});
+        return Response(res, 401, 'Authorization Required!', {});
       }
       req.userId = decoded.id;
       console.log('m7');
@@ -42,7 +42,7 @@ isAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Require Admin Role!', {});
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
     });
   });
 };
@@ -58,7 +58,7 @@ isInstructor = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Require Instructor Role!', {});
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
     });
   });
 };
@@ -79,7 +79,7 @@ isInstructorOrAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Require Instructor or Admin Role!', {});
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
     });
   });
 };
@@ -95,7 +95,7 @@ isStudent = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Require Student Role!', {});
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
     });
   });
 };
@@ -116,7 +116,7 @@ isStudentorOrAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Require Student or Admin Role!', {});
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
     });
   });
 };
@@ -142,7 +142,7 @@ isInstructorOrStudentorOrAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Require Student or Admin Role!', {});
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
     });
   });
 };

@@ -14,13 +14,13 @@ const db_User = db.User;
 exports.addlessonDiscussionComments = async (req, res) => {
   const user = await db_User.findByPk(req.body.userId);
   console.log('test', user);
-  if (!user) return Response(res, 400, 'User Not Found!', {});
+  if (!user) return Response(res, 404, 'User Not Found!', {});
 
   //add post
   if (req.body.lessonId) {
     const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-    if (!lesson) return Response(res, 400, 'lesson Not Found!', {});
+    if (!lesson) return Response(res, 404, 'lesson Not Found!', {});
 
     const post = await addPost(req, user, lesson).catch((err) => {
       console.log(err);
@@ -35,7 +35,7 @@ exports.addlessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussion)
-      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+      return Response(res, 404, 'lessonDiscussion Not Found!', {});
 
     const comment = await addComment(req, user, lessonDiscussion).catch(
       (err) => {
@@ -112,13 +112,13 @@ exports.updatelessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussionComments) {
-      return Response(res, 400, 'lessonDiscussionComments Not Found!', {});
+      return Response(res, 404, 'lessonDiscussionComments Not Found!', {});
     }
 
     //get user model
     const user = await db_User.findByPk(req.body.userId);
 
-    if (!user) return Response(res, 400, 'User Not Found!', {});
+    if (!user) return Response(res, 404, 'User Not Found!', {});
 
     //get lesson model
     const lessonDiscussion = await db_lessonDiscussion.findByPk(
@@ -126,7 +126,7 @@ exports.updatelessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussion)
-      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+      return Response(res, 404, 'lessonDiscussion Not Found!', {});
 
     const comment = await db_connection.transaction(async (t) => {
       //Do Update
@@ -157,18 +157,18 @@ exports.updatelessonDiscussion = async (req, res) => {
     let lessonDiscussion = await db_lessonDiscussion.findByPk(req.params.id);
 
     if (!lessonDiscussion) {
-      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+      return Response(res, 404, 'lessonDiscussion Not Found!', {});
     }
 
     //get user model
     const user = await db_User.findByPk(req.body.userId);
     console.log('test', user);
-    if (!user) return Response(res, 400, 'User Not Found!', {});
+    if (!user) return Response(res, 404, 'User Not Found!', {});
 
     //get lesson model
     const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-    if (!lesson) return Response(res, 400, 'lesson Not Found!', {});
+    if (!lesson) return Response(res, 404, 'lesson Not Found!', {});
 
     const post = await db_connection.transaction(async (t) => {
       //Do Update
@@ -200,7 +200,7 @@ exports.deletelessonDiscussionComments = async (req, res) => {
     });
 
     if (!lessonDiscussionComments) {
-      return Response(res, 400, 'lessonDiscussionComments Not Found!', {});
+      return Response(res, 404, 'lessonDiscussionComments Not Found!', {});
     }
 
     //Delete
@@ -225,7 +225,7 @@ exports.deletelessonDiscussion = async (req, res) => {
     });
 
     if (!lessonDiscussion) {
-      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+      return Response(res, 404, 'lessonDiscussion Not Found!', {});
     }
 
     const comment = await db_connection.transaction(async (t) => {
@@ -330,7 +330,7 @@ exports.listlessonDiscussionById = async (req, res) => {
     });
 
     if (!lessonDiscussion) {
-      return Response(res, 400, 'lessonDiscussion Not Found!', {});
+      return Response(res, 404, 'lessonDiscussion Not Found!', {});
     }
 
     //Success
@@ -347,7 +347,7 @@ exports.listlessonDiscussionCommentsById = async (req, res) => {
     });
 
     if (!lessonDiscussionComments) {
-      return Response(res, 400, 'lessonDiscussionComment Not Found!', {});
+      return Response(res, 404, 'lessonDiscussionComment Not Found!', {});
     }
 
     //Success

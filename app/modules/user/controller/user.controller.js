@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
 
-
 // exports.allAccess = (req, res) => {
 //   return Response(res, 200, 'Success!', 'Public Content.');
 // };
@@ -27,17 +26,15 @@ const db_User = db.User;
 const db_Role = db.Role;
 const db_User_Role = db.UserRole;
 
-
-
 //---------------------------------------------------------------
 exports.updateUser = async (req, res) => {
-  console.log("m8");
+  console.log('m8');
   try {
     //Check if the User is already exsits
     let admin = await db_User.findByPk(req.params.id);
 
     if (!admin) {
-      return Response(res, 400, 'User Not Found!', {});
+      return Response(res, 404, 'User Not Found!', {});
     }
 
     //find admin roles data from db
@@ -50,14 +47,14 @@ exports.updateUser = async (req, res) => {
     });
 
     //Do Update
-    const _admin = await db_connection.transaction(async (t) => {  
-      
-     _User = await db_User.update(
+    const _admin = await db_connection.transaction(async (t) => {
+      _User = await db_User.update(
         {
-          username: req.body.username  ? req.body.username : admin.username,
-          password: req.body.password ? bcrypt.hashSync(req.body.password, 8) : admin.password,
+          username: req.body.username ? req.body.username : admin.username,
+          password: req.body.password
+            ? bcrypt.hashSync(req.body.password, 8)
+            : admin.password,
           email: req.body.email ? req.body.email : admin.email,
-          
         },
         { where: { id: admin.id } },
         { transaction: t }
@@ -66,10 +63,9 @@ exports.updateUser = async (req, res) => {
       await admin.setRoles(roles, { transaction: t });
 
       return _User;
-
-    });     
+    });
     //Success
-    return Response(res, 200, 'Success!', [ _User ]);
+    return Response(res, 200, 'Success!', [_User]);
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -82,30 +78,38 @@ exports.deleteUser = async (req, res) => {
     //Check if the faculty is already exsits
     let Admin = await db_User.findOne({
       where: { id: req.params.id },
-      include:{model: db.Role},
-      
+      include: { model: db.Role },
     });
 
     if (!Admin) {
-      return Response(res, 400, 'User Not Found!', {});
+      return Response(res, 404, 'User Not Found!', {});
     }
     //insure that the user is only admin
-    const adminRoles=Admin.roles.map((item)=>{return item.name_en;});
+    const adminRoles = Admin.roles.map((item) => {
+      return item.name_en;
+    });
 
-    if(adminRoles.includes("student") || adminRoles.includes("instructor"))
-      return Response(res, 400, 'User cant be deleted, has roles more than admin!', {});
-
+    if (adminRoles.includes('student') || adminRoles.includes('instructor'))
+      return Response(
+        res,
+        422,
+        'User cant be deleted, has roles more than admin!',
+        {}
+      );
 
     // //Delete
     const User = await db_connection.transaction(async (t) => {
-
-    role =await db_User_Role.destroy({where:{userId:req.params.id}},
-      { transaction: t });
-    user =await db_User.destroy({where:{id:req.params.id}},
-      { transaction: t });
+      role = await db_User_Role.destroy(
+        { where: { userId: req.params.id } },
+        { transaction: t }
+      );
+      user = await db_User.destroy(
+        { where: { id: req.params.id } },
+        { transaction: t }
+      );
     });
     //Success
-     return Response(res, 200, 'Success!',  [role,user] );
+    return Response(res, 200, 'Success!', [role, user]);
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -114,21 +118,21 @@ exports.deleteUser = async (req, res) => {
 
 //---------------------------------------------------------------
 exports.listUser = async (req, res) => {
-    
   try {
     let data;
-    
-      data = await db_User.findAll({
-        
-        include:  
-          {
-            model: db_Role,where:{name_en: {
-              [Op.substring]: "admin",
-            } }
-          }  ,
-      });
-  
-        console.log(data);
+
+    data = await db_User.findAll({
+      include: {
+        model: db_Role,
+        where: {
+          name_en: {
+            [Op.substring]: 'admin',
+          },
+        },
+      },
+    });
+
+    console.log(data);
     //Success
     return Response(res, 200, 'Success!', { data });
   } catch (error) {
@@ -138,18 +142,16 @@ exports.listUser = async (req, res) => {
 //---------------------------------------------------------------
 exports.listUserById = async (req, res) => {
   try {
-  let User = await db_User.findOne({where: { id:req.params.id},
-    include: 
-      {
-        model: db_Role
-      }
+    let User = await db_User.findOne({
+      where: { id: req.params.id },
+      include: {
+        model: db_Role,
+      },
     });
 
-  if (!User) {
-    return Response(res, 400, 'User Not Found!', {});
-  }
-
- 
+    if (!User) {
+      return Response(res, 404, 'User Not Found!', {});
+    }
 
     //Success
     return Response(res, 200, 'Success!', { User });
