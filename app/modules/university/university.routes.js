@@ -39,8 +39,8 @@ module.exports = function (app) {
     upload.none(),
     [
       UniversityValidation.listUniversityValidation,
-      AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      //AuthJwt.VerifyToken,
+      //AuthJwt.isInstructorOrAdmin,
     ],
     UniversityController.listUniversity
   );

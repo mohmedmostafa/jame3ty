@@ -30,25 +30,23 @@ module.exports = (connection, Sequelize) => {
       },
       cv: {
         type: Sequelize.STRING(255),
-        get(){
+        get() {
           const storedValue = this.getDataValue('cv');
-          if(storedValue){
-            let path= `${HOST}` + `${PORT}` + '/' +storedValue;
+          if (storedValue) {
+            let path = `${HOST}` + `${PORT}` + '/' + storedValue;
             return path;
-          }else
-          return null;
-        }
+          } else return null;
+        },
       },
       img: {
         type: Sequelize.STRING(255),
-        get(){
+        get() {
           const storedValue = this.getDataValue('img');
-          if(storedValue){
-            let path= `${HOST}` + `${PORT}` + '/' +storedValue;
+          if (storedValue) {
+            let path = `${HOST}` + `${PORT}` + '/' + storedValue;
             return path;
-          }else
-            return null;
-        }
+          } else return null;
+        },
       },
       userId: {
         type: Sequelize.INTEGER,

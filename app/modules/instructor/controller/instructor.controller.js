@@ -1,5 +1,6 @@
 const db = require('../../../modules');
 const { Response } = require('../../../common/response.handler');
+const { ValidateResponse } = require('../../../common/response.handler');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
@@ -47,6 +48,55 @@ exports.addInstructor = async (req, res) => {
     //   }
     //   // res.json({"responseSuccess" : "Sucess"});
     // });
+    //
+    //Check if not Unique
+    let userF = await db_User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (userF) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Username already exists', {});
+    }
+
+    //
+    userF = await db_User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (userF) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Email already exists', {});
+    }
+
+    //
+    let instructorF = await db_Instructor.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (instructorF) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Email already exists', {});
+    }
+
+    //
+    instructorF = await db_Instructor.findOne({
+      where: {
+        mobile: req.body.mobile,
+      },
+    });
+
+    if (instructorF) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Mobile already exists', {});
+    }
+
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
       const inst = await db_Instructor.create(
@@ -120,7 +170,7 @@ exports.updateInstructor = async (req, res) => {
         { where: { id: req.params.id } },
         { transaction: t }
       );
-       //delete file
+      //delete file
       if (Instructor.img) {
         unlinkAsync(Instructor.getDataValue('img'));
       }
@@ -184,28 +234,34 @@ exports.deleteInstructor = async (req, res) => {
     }
 
     if (Instructor.groups.length > 0) {
-      
-      return Response(res, 400, "Can't Delete. The Instructor has group created", {
-        Instructor,
-      });
+      return Response(
+        res,
+        400,
+        "Can't Delete. The Instructor has group created",
+        {
+          Instructor,
+        }
+      );
     }
 
     let instructorUserId = Instructor.userId;
     let user_id = Instructor.user.id;
     // //Delete
     const instructor = await db_connection.transaction(async (t) => {
-    Instructor = await db_Instructor.destroy({
-      where: { id: req.params.id }, 
-    },
-    { transaction: t });
-    //delete images
-    if (Instructor.img) {
-      unlinkAsync(Instructor.getDataValue('img'));
-    }
+      Instructor = await db_Instructor.destroy(
+        {
+          where: { id: req.params.id },
+        },
+        { transaction: t }
+      );
+      //delete images
+      if (Instructor.img) {
+        unlinkAsync(Instructor.getDataValue('img'));
+      }
 
-    if (Instructor.cv) {
-       unlinkAsync(Instructor.getDataValue('cv'));
-    }
+      if (Instructor.cv) {
+        unlinkAsync(Instructor.getDataValue('cv'));
+      }
 
       role = await db_User_Role.destroy(
         { where: { userId: user_id } },
@@ -220,7 +276,7 @@ exports.deleteInstructor = async (req, res) => {
     return Response(res, 200, 'Success!', [Instructor, role, user]);
   } catch (error) {
     console.log(error);
-    
+
     return Response(res, 500, 'Fail to Udpate!', { error });
   }
 };
@@ -239,15 +295,15 @@ exports.listInstructor = async (req, res) => {
   let name_ar = req.query.name_ar ? req.query.name_ar : '';
   let name_en = req.query.name_en ? req.query.name_en : '';
   let mobile = req.query.mobile ? req.query.mobile : '';
-  
-  //check if 
-  const userData=await helper.getUserdata(req,res).catch(err=>{
-    return Response(res, 400, "Error in Retrieve some data", {
+
+  //check if
+  const userData = await helper.getUserdata(req, res).catch((err) => {
+    return Response(res, 400, 'Error in Retrieve some data', {
       err,
     });
   });
   console.log(userData);
-  
+
   //if there no user data returned
   if (
     userData.type == 'instructor' &&
@@ -257,16 +313,13 @@ exports.listInstructor = async (req, res) => {
   }
 
   try {
-    
-    
     let data = await db_Instructor.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: name_ar,
-              },
-           
+      where: {
+        [Op.or]: [
+          {
+            name_ar: {
+              [Op.substring]: name_ar,
+            },
           },
           {
             name_en: {
@@ -278,20 +331,21 @@ exports.listInstructor = async (req, res) => {
               [Op.substring]: mobile,
             },
           },
-        ]},
-        offset: skip,
-        limit: _limit,
-      });
-    
-      let data_all = await db_Instructor.findAll({
-        where: {
-          [Op.or]: [
-            {
-              name_ar: {
-                [Op.substring]: name_ar,
-              },
+        ],
+      },
+      offset: skip,
+      limit: _limit,
+    });
+
+    let data_all = await db_Instructor.findAll({
+      where: {
+        [Op.or]: [
+          {
+            name_ar: {
+              [Op.substring]: name_ar,
             },
-         
+          },
+
           {
             name_en: {
               [Op.substring]: name_en,
@@ -302,18 +356,17 @@ exports.listInstructor = async (req, res) => {
               [Op.substring]: mobile,
             },
           },
-        ]},
-      });
-     
-  //Total num of all rows
+        ],
+      },
+    });
+
+    //Total num of all rows
     let numRows = parseInt(data_all.length);
 
-   //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
 
     data = doPagination ? data : data_all;
-
-
 
     let result = {
       doPagination,

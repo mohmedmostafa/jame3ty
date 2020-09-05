@@ -1,5 +1,7 @@
 const db = require('../..');
 const { Response } = require('../../../common/response.handler');
+const { ValidateResponse } = require('../../../common/response.handler');
+
 const {
   onErrorDeleteFiles,
   deleteFile,
@@ -29,6 +31,54 @@ const db_UserRole = db.UserRole;
 //---------------------------------------------------------------
 exports.addStudent = async (req, res) => {
   try {
+    //Check if not Unique
+    let user = await db_User.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (user) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Username already exists', {});
+    }
+
+    //
+    user = await db_User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (user) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Email already exists', {});
+    }
+
+    //
+    let student = await db_Student.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (student) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Email already exists', {});
+    }
+
+    //
+    student = await db_Student.findOne({
+      where: {
+        mobile: req.body.mobile,
+      },
+    });
+
+    if (student) {
+      onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Mobile already exists', {});
+    }
+
     //Create Attachment String
     if (req.files.img) {
       let field_1 = [];
@@ -40,7 +90,7 @@ exports.addStudent = async (req, res) => {
     }
 
     //Start "Managed" Transaction
-    const result = await db_connection.transaction(async (t) => {
+    let result = await db_connection.transaction(async (t) => {
       //Save User to DB
       const user = await db_User.create(
         {

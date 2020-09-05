@@ -17,7 +17,7 @@ module.exports = (connection, Sequelize) => {
       },
       email: {
         type: Sequelize.STRING(255),
-        unique: 'students_mobile_unique',
+        unique: 'students_email_unique',
         allowNull: false,
       },
       img: {
