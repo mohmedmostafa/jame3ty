@@ -13,7 +13,6 @@ addStudentValidation = async (req, res, next) => {
     mobile: Joi.string().trim().alphanum().required(),
     email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
     academicYearId: Joi.number().integer().required(),
-    username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),
   });
@@ -30,7 +29,7 @@ addStudentValidation = async (req, res, next) => {
     .catch((err) => {
       console.log(err);
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'email domain is not valid', {});
+      return ValidateResponse(res, 'Email domain is not valid', {});
     });
 
   if (isValidEmailResult.isValidEmail) {

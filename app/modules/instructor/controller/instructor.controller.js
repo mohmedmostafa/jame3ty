@@ -49,6 +49,7 @@ exports.addInstructor = async (req, res) => {
     //   // res.json({"responseSuccess" : "Sucess"});
     // });
     //
+    //--------------------
     //Check if not Unique
     let userF = await db_User.findOne({
       where: {
@@ -96,6 +97,7 @@ exports.addInstructor = async (req, res) => {
       onErrorDeleteFiles(req);
       return Response(res, 409, 'Mobile already exists!', {});
     }
+    //--------------------
 
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
@@ -147,8 +149,17 @@ exports.addInstructor = async (req, res) => {
 exports.updateInstructor = async (req, res) => {
   console.log('m8');
   try {
-    //Check if the Instructor is already exsits
-    let Instructor = await db_Instructor.findByPk(req.params.id);
+    //Check if already exsits
+    let Instructor = await db_Instructor.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_User,
+        },
+      ],
+    });
 
     if (!Instructor) {
       onErrorDeleteFiles(req);
@@ -156,7 +167,62 @@ exports.updateInstructor = async (req, res) => {
     }
 
     console.log(Instructor);
+
+    //--------------------
+    //Check if not Unique
+    let user = await db_User.findOne({
+      where: {
+        email: req.body.email,
+        id: { [Op.ne]: Instructor.user.id },
+      },
+    });
+
+    if (user) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Email already exists!', {});
+    }
+
+    user = await db_User.findOne({
+      where: {
+        username: req.body.username,
+        id: { [Op.ne]: Instructor.user.id },
+      },
+    });
+
+    if (user) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Username already exists!', {});
+    }
+
+    let inst = await db_Instructor.findOne({
+      where: {
+        email: req.body.email,
+        id: {
+          [Op.ne]: req.params.id,
+        },
+      },
+    });
+
+    if (inst) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Email already exists!', {});
+    }
+
     //
+    inst = await db_Instructor.findOne({
+      where: {
+        mobile: req.body.mobile,
+        id: {
+          [Op.ne]: req.params.id,
+        },
+      },
+    });
+
+    if (inst) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Mobile already exists!', {});
+    }
+    //--------------------
 
     //Do Update
     const instructor = await db_connection.transaction(async (t) => {
@@ -165,7 +231,7 @@ exports.updateInstructor = async (req, res) => {
           name_ar: req.body.name_ar ? req.body.name_ar : Instructor.name_ar,
           name_en: req.body.name_en ? req.body.name_en : Instructor.name_en,
           bio: req.body.bio ? req.body.name_en : Instructor.bio,
-          mobile: req.body.mobile ? req.body.name_en : Instructor.mobile,
+          mobile: req.body.mobile ? req.body.mobile : Instructor.mobile,
           email: req.body.email ? req.body.email : Instructor.email,
           img: req.files['img'] ? req.files['img'][0].path : Instructor.img,
           cv: req.files['file'] ? req.files['file'][0].path : Instructor.cv,

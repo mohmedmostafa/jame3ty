@@ -32,20 +32,9 @@ const db_UserRole = db.UserRole;
 //---------------------------------------------------------------
 exports.addStudent = async (req, res) => {
   try {
+    //--------------------
     //Check if not Unique
     let user = await db_User.findOne({
-      where: {
-        username: req.body.username,
-      },
-    });
-
-    if (user) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Username already exists!', {});
-    }
-
-    //
-    user = await db_User.findOne({
       where: {
         email: req.body.email,
       },
@@ -79,6 +68,7 @@ exports.addStudent = async (req, res) => {
       onErrorDeleteFiles(req);
       return Response(res, 409, 'Mobile already exists!', {});
     }
+    //--------------------
 
     //Create Attachment String
     if (req.files.img) {
@@ -95,7 +85,7 @@ exports.addStudent = async (req, res) => {
       //Save User to DB
       const user = await db_User.create(
         {
-          username: req.body.username,
+          username: req.body.email,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
         },
@@ -187,44 +177,46 @@ exports.deleteStudent = async (req, res) => {
 //--------------------------------------------------------------
 exports.listStudentById = async (req, res) => {
   try {
-    let student = await db_Student.findOne({
-      where: {
-        id: req.params.id,
-      },
+    let user = await db_User.findOne({
       include: [
         {
-          model: db_User,
-        },
-        {
-          model: db_AcademicYear,
+          model: db_Student,
+          where: {
+            id: req.params.id,
+          },
           include: [
             {
-              model: db_Department,
+              model: db_AcademicYear,
               include: [
                 {
-                  model: db_Faculty,
+                  model: db_Department,
                   include: [
                     {
-                      model: db_University,
+                      model: db_Faculty,
+                      include: [
+                        {
+                          model: db_University,
+                        },
+                      ],
                     },
                   ],
                 },
               ],
             },
+            {
+              model: db_CourseSubscribe,
+            },
           ],
-        },
-        {
-          model: db_CourseSubscribe,
         },
       ],
     });
 
-    if (!student) {
+    if (!user) {
       return Response(res, 404, 'Student Not Found!', {});
     }
 
     //Success
-    return Response(res, 200, 'Success!', { student });
+    return Response(res, 200, 'Success!', { user });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -302,6 +294,50 @@ exports.updateStudent = async (req, res) => {
 
     console.log(student);
 
+    //--------------------
+    //Check if not Unique
+    let user = await db_User.findOne({
+      where: {
+        email: req.body.email,
+        id: { [Op.ne]: student.user.id },
+      },
+    });
+
+    if (user) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Email already exists!', {});
+    }
+
+    let stu = await db_Student.findOne({
+      where: {
+        email: req.body.email,
+        id: {
+          [Op.ne]: req.params.id,
+        },
+      },
+    });
+
+    if (stu) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Email already exists!', {});
+    }
+
+    //
+    stu = await db_Student.findOne({
+      where: {
+        mobile: req.body.mobile,
+        id: {
+          [Op.ne]: req.params.id,
+        },
+      },
+    });
+
+    if (stu) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Mobile already exists!', {});
+    }
+    //--------------------
+
     //Create Attachment String
     if (req.files.img) {
       let field_1 = [];
@@ -317,6 +353,7 @@ exports.updateStudent = async (req, res) => {
       //Save User to DB
       const userUpdated = await db_User.update(
         {
+          username: req.body.email ? req.body.email : student.email,
           email: req.body.email ? req.body.email : student.email,
           password: req.body.password
             ? bcrypt.hashSync(req.body.password, 8)
