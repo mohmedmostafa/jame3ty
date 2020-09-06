@@ -85,7 +85,7 @@ updateInstructorValidation = async (req, res, next) => {
     .catch((err) => {
       console.log(err);
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'email domain is not valid', {});
+      return ValidateResponse(res, 'Email domain is not valid', {});
     });
 
   if (isValidEmailResult.isValidEmail) {

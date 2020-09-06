@@ -6,9 +6,9 @@ const { onErrorDeleteFiles } = require('../../../common/multerConfig');
 const db = require('../..');
 
 //----------------------------------------------------------
-signinValidation = (req, res, next) => {
+signinValidation = async (req, res, next) => {
   const schema = Joi.object({
-    username: Joi.string().trim().alphanum().min(3).max(30).required(),
+    username: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -19,7 +19,17 @@ signinValidation = (req, res, next) => {
     return ValidateResponse(res, error.details[0].message, {});
   }
 
-  return next();
+  //Email Domain Validation
+  let isValidEmailResult = await helper
+    .validateEmailDomain(req.body.username)
+    .catch((err) => {
+      console.log(err);
+      return ValidateResponse(res, 'Email domain is not valid', {});
+    });
+
+  if (isValidEmailResult.isValidEmail) {
+    return next();
+  }
 };
 
 //----------------------------------------------------------
