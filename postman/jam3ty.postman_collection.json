@@ -555,7 +555,7 @@
 								},
 								{
 									"key": "email",
-									"value": "ms211q2236@smm.mm",
+									"value": "eman@aou.edu.jo",
 									"type": "text"
 								},
 								{
@@ -570,7 +570,7 @@
 								},
 								{
 									"key": "username",
-									"value": "moh",
+									"value": "emanInstructor",
 									"type": "text"
 								},
 								{
@@ -684,13 +684,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateInstructor/10",
+							"raw": "{{url}}api/updateInstructor/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateInstructor",
-								"10"
+								"1"
 							]
 						}
 					},
@@ -2810,17 +2810,17 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "sara",
+									"value": "eman",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01032947517",
+									"value": "01030047517",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "sara@gmail.com",
+									"value": "ali@aou.edu.om",
 									"type": "text"
 								},
 								{
@@ -2835,7 +2835,7 @@
 								},
 								{
 									"key": "username",
-									"value": "sara",
+									"value": "alieeeeee",
 									"type": "text"
 								},
 								{
@@ -3498,12 +3498,12 @@
 	],
 	"variable": [
 		{
-			"id": "b87333a7-1dfe-4a9b-a109-ebf4bfafb51d",
+			"id": "14037d6f-6bb2-4c49-afda-ca4a8834b8bb",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "3ac4a404-787c-4f5b-96da-075390d0b4e8",
+			"id": "5adfc419-5bf1-4be4-b2f1-5f53f40d6bdf",
 			"key": "auth",
 			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MTg2NzIzLCJleHAiOjE1OTgyNzMxMjN9.qgJ8wQqj7IBnkG5cFJk-7Z7YKrhQdGe6LCrLpb-A5AA"
 		}

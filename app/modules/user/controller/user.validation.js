@@ -1,5 +1,8 @@
 const Joi = require('joi');
+const helper = require('../../../common/helper');
 const { ValidateResponse } = require('../../../common/response.handler');
+const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+
 const db = require('../..');
 
 //----------------------------------------------------------
@@ -20,15 +23,10 @@ signinValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
-signupValidation = (req, res, next) => {
+signupValidation = async (req, res, next) => {
   const schema = Joi.object({
     username: Joi.string().trim().alphanum().min(3).max(30).required(),
-    email: Joi.string()
-      .trim()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: ['com', 'net'] },
-      }),
+    email: Joi.string().trim().email({ minDomainSegments: 3 }),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -40,11 +38,22 @@ signupValidation = (req, res, next) => {
     return ValidateResponse(res, error.details[0].message, {});
   }
 
-  return next();
+  //Email Domain Validation
+  let isValidEmailResult = await helper
+    .validateEmailDomain(req.body.email)
+    .catch((err) => {
+      console.log(err);
+      //onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'email domain is not valid', {});
+    });
+
+  if (isValidEmailResult.isValidEmail) {
+    return next();
+  }
 };
 
 //----------------------------------------------------------
-updateUserValidation = (req, res, next) => {
+updateUserValidation = async (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
@@ -62,12 +71,7 @@ updateUserValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     username: Joi.string().trim().alphanum().min(3).max(30).required(),
-    email: Joi.string()
-      .trim()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: ['com', 'net'] },
-      }),
+    email: Joi.string().trim().email({ minDomainSegments: 3 }),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -81,7 +85,19 @@ updateUserValidation = (req, res, next) => {
     });
   }
   console.log('m6');
-  return next();
+
+  //Email Domain Validation
+  let isValidEmailResult = await helper
+    .validateEmailDomain(req.body.email)
+    .catch((err) => {
+      console.log(err);
+      //onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'email domain is not valid', {});
+    });
+
+  if (isValidEmailResult.isValidEmail) {
+    return next();
+  }
 };
 
 //----------------------------------------------------------
