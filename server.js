@@ -63,7 +63,7 @@ app.listen(process.env.PORT || PORT, () => {
 //ٍSync DB Tables according to Models
 //force: true will drop the table if it already exists
 
-if (0) {
+if (1) {
   db.connection
     .query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
     .then(async (result) => {
@@ -120,8 +120,8 @@ async function initial() {
     db_User,
     db_Role,
     Op,
-    'admin@gmail.com',
-    'admin@gmail.com',
+    'admin@aou.edu.om',
+    'admin@aou.edu.om',
     '123456',
     'admin,student,instructor'
   );
