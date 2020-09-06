@@ -14,7 +14,7 @@ addInstructorValidation = async (req, res, next) => {
     bio: Joi.string().trim().min(5).max(30),
     mobile: Joi.string().trim().alphanum().required(),
     email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
-    username: Joi.string().trim().min(3).max(30).required(),
+    //username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),
     img: Joi.any(),
@@ -68,7 +68,7 @@ updateInstructorValidation = async (req, res, next) => {
     bio: Joi.string().trim().min(5).max(30),
     mobile: Joi.string().trim().alphanum().required(),
     email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
-    username: Joi.string().trim().min(3).max(30).required(),
+    //username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
   });
 

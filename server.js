@@ -120,7 +120,7 @@ async function initial() {
     db_User,
     db_Role,
     Op,
-    'admin',
+    'admin@gmail.com',
     'admin@gmail.com',
     '123456',
     'admin,student,instructor'

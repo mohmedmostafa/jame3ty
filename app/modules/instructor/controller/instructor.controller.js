@@ -53,7 +53,7 @@ exports.addInstructor = async (req, res) => {
     //Check if not Unique
     let userF = await db_User.findOne({
       where: {
-        username: req.body.username,
+        username: req.body.email,
       },
     });
 
@@ -117,7 +117,7 @@ exports.addInstructor = async (req, res) => {
       const user = await db_User.create(
         {
           email: req.body.email,
-          username: req.body.username,
+          username: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
         },
         { transaction: t }
@@ -184,7 +184,7 @@ exports.updateInstructor = async (req, res) => {
 
     user = await db_User.findOne({
       where: {
-        username: req.body.username,
+        username: req.body.email,
         id: { [Op.ne]: Instructor.user.id },
       },
     });
@@ -252,7 +252,7 @@ exports.updateInstructor = async (req, res) => {
 
       _User = await db_User.update(
         {
-          username: req.body.username ? req.body.username : User.username,
+          username: req.body.email ? req.body.email : User.email,
           password: req.body.password
             ? bcrypt.hashSync(req.body.password, 8)
             : User.password,
