@@ -65,7 +65,7 @@ module.exports = function (app) {
     [
       StudentValidation.deleteStudentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
+      AuthJwt.isStudentorOrAdmin,
     ],
     StudentController.deleteStudent
   );

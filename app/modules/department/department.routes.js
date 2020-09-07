@@ -53,7 +53,7 @@ module.exports = function (app) {
     [
       DepartmentValidation.listDepartmentByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     DepartmentController.listDepartmentById
   );
@@ -64,7 +64,7 @@ module.exports = function (app) {
     [
       DepartmentValidation.listDepartmentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     DepartmentController.listDepartment
   );

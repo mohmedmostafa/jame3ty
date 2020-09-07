@@ -54,7 +54,7 @@ module.exports = function (app, Uploader) {
     '/api/listInstructor',
     FileUploader.upload.none(),
     [AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
       InstructorValidation.listInstructorValidation,
       
     ],
@@ -66,7 +66,7 @@ module.exports = function (app, Uploader) {
     FileUploader.upload.none(),
     [
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
       InstructorValidation.listInstructorIdValidation,
     ],
     InstructorController.listInstructorById

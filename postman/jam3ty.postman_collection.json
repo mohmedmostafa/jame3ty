@@ -87,7 +87,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "admin",
+									"value": "admin@aou.edu.om",
 									"type": "text"
 								},
 								{
@@ -569,11 +569,6 @@
 									"src": []
 								},
 								{
-									"key": "username",
-									"value": "emanInstructor",
-									"type": "text"
-								},
-								{
 									"key": "password",
 									"value": "123456",
 									"type": "text"
@@ -650,33 +645,28 @@
 								},
 								{
 									"key": "mobile",
-									"value": "011241147207612",
+									"value": "0100000032",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "mm1212@mm.mm",
-									"type": "text"
-								},
-								{
-									"key": "username",
-									"value": "mm1234512",
+									"value": "Mohm@aou.edu.om",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "12345612",
+									"value": "123456",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/Users/aboaysel/Downloads/_logo.png/tlogo-01.png"
+									"src": []
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/Users/aboaysel/Downloads/Zeplin.app.zip"
+									"src": []
 								}
 							],
 							"options": {
@@ -684,13 +674,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateInstructor/1",
+							"raw": "{{url}}api/updateInstructor/2",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateInstructor",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -1466,12 +1456,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "Farag",
+									"value": "admin",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Farag@gmail.com",
+									"value": "admin@aou.edu.om",
 									"type": "text"
 								},
 								{
@@ -2810,17 +2800,17 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "eman",
+									"value": "soso",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01030047517",
+									"value": "01090047517",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "ali@aou.edu.om",
+									"value": "soso@aou.edu.om",
 									"type": "text"
 								},
 								{
@@ -2831,11 +2821,6 @@
 								{
 									"key": "academicYearId",
 									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "username",
-									"value": "alieeeeee",
 									"type": "text"
 								},
 								{
@@ -2908,18 +2893,18 @@
 								},
 								{
 									"key": "mobile",
-									"value": "01061947517",
+									"value": "01000007517",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Eman@gmail.com",
+									"value": "aliiiii@aou.edu.eg",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/3.PNG"
+									"src": []
 								},
 								{
 									"key": "academicYearId",
@@ -3047,13 +3032,13 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}api/listStudentByUserId/2",
+							"raw": "{{url}}api/listStudentByUserId/8",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listStudentByUserId",
-								"2"
+								"8"
 							]
 						}
 					},
@@ -3498,12 +3483,12 @@
 	],
 	"variable": [
 		{
-			"id": "14037d6f-6bb2-4c49-afda-ca4a8834b8bb",
+			"id": "62ac78c1-41b4-4f34-a9ec-66b47215f4ff",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "5adfc419-5bf1-4be4-b2f1-5f53f40d6bdf",
+			"id": "d5047cf1-7f70-4cd0-9e1d-32908d153f11",
 			"key": "auth",
 			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MTg2NzIzLCJleHAiOjE1OTgyNzMxMjN9.qgJ8wQqj7IBnkG5cFJk-7Z7YKrhQdGe6LCrLpb-A5AA"
 		}

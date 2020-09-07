@@ -18,7 +18,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.addlessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-      
+      AuthJwt.isInstructorOrStudent,
     ],
     lessonDiscussionCommentsController.addlessonDiscussionComments
   );
@@ -29,7 +29,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.updatelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudent,
     ],
     lessonDiscussionCommentsController.updatelessonDiscussionComments
   );
@@ -40,7 +40,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.updatelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudent,
     ],
     lessonDiscussionCommentsController.updatelessonDiscussion
   );
@@ -51,7 +51,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.listlessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.listlessonDiscussionComments
   );
@@ -62,7 +62,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.listlessonDiscussionCommentsValidationById,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.listlessonDiscussionById
   );
@@ -72,11 +72,10 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.listlessonDiscussionCommentsValidationById,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.listlessonDiscussionCommentsById
   );
-
 
   app.post(
     '/api/deletelessonDiscussionComments/:id',
@@ -84,7 +83,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.deletelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudent,
     ],
     lessonDiscussionCommentsController.deletelessonDiscussionComments
   );
@@ -95,7 +94,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.deletelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-       
+      AuthJwt.isInstructorOrStudent,
     ],
     lessonDiscussionCommentsController.deletelessonDiscussion
   );

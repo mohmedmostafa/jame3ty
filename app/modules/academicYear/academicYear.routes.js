@@ -53,7 +53,7 @@ module.exports = function (app) {
     [
       AcademicYearValidation.listAcademicYearByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     AcademicYearController.listAcademicYearById
   );
@@ -64,7 +64,7 @@ module.exports = function (app) {
     [
       AcademicYearValidation.listAcademicYearValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     AcademicYearController.listAcademicYear
   );

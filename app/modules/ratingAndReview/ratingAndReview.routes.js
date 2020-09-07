@@ -40,7 +40,7 @@ module.exports = function (app) {
     [
       RatingAndReviewValidation.listRatingAndReviewValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isStudentorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     RatingAndReviewController.listRatingAndReview
   );
@@ -62,7 +62,7 @@ module.exports = function (app) {
     [
       RatingAndReviewValidation.listRatingAndReviewByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isStudentorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     RatingAndReviewController.listRatingAndReviewById
   );
@@ -73,7 +73,7 @@ module.exports = function (app) {
     [
       RatingAndReviewValidation.deleteRatingAndReviewValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isStudent,
+      AuthJwt.isStudentorOrAdmin,
     ],
     RatingAndReviewController.deleteRatingAndReview
   );

@@ -40,7 +40,7 @@ module.exports = function (app) {
     [
       FacultyValidation.listFacultyValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     FacultyController.listFaculty
   );
@@ -51,7 +51,7 @@ module.exports = function (app) {
     [
       FacultyValidation.listFacultyByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     FacultyController.listFacultyById
   );

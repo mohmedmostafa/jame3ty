@@ -131,7 +131,7 @@ module.exports = function (app) {
     [
       CourseValidation.listCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     CourseController.listCourse
   );
@@ -142,7 +142,7 @@ module.exports = function (app) {
     [
       CourseValidation.listCourseByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     CourseController.listCourseById
   );

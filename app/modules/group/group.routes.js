@@ -53,7 +53,7 @@ module.exports = function (app) {
     [
       GroupValidation.listGroupByCourseIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     GroupController.listGroupByCourseId
   );
@@ -64,7 +64,7 @@ module.exports = function (app) {
     [
       GroupValidation.listGroupByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     GroupController.listGroupById
   );

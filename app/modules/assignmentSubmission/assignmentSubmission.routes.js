@@ -99,7 +99,7 @@ module.exports = function (app) {
     [
       AssignmentSubmissionValidation.listAssignmentSubmissionBylessonIdStudentBased,
       AuthJwt.VerifyToken,
-      AuthJwt.isStudent,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     AssignmentSubmissionController.listAssignmentSubmission
   );*/

@@ -87,7 +87,7 @@ module.exports = function (app) {
     [
       LessonValidation.listLessonByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     LessonController.listLessonById
   );
@@ -98,7 +98,7 @@ module.exports = function (app) {
     [
       LessonValidation.listLessonValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     LessonController.listLesson
   );

@@ -85,6 +85,27 @@ isInstructorOrAdmin = (req, res, next) => {
 };
 
 //---------------------------------------
+isInstructorOrStudent = (req, res, next) => {
+  db.User.findByPk(req.userId).then((user) => {
+    user.getRoles().then((roles) => {
+      for (let i = 0; i < roles.length; i++) {
+        if (roles[i].name_en === 'instructor') {
+          next();
+          return;
+        }
+
+        if (roles[i].name_en === 'student') {
+          next();
+          return;
+        }
+      }
+
+      return Response(res, 403, 'Access to that resource is forbidden!', {});
+    });
+  });
+};
+
+//---------------------------------------
 isStudent = (req, res, next) => {
   db.User.findByPk(req.userId).then((user) => {
     user.getRoles().then((roles) => {
@@ -156,6 +177,7 @@ const authJwt = {
   isStudent: isStudent,
   isStudentorOrAdmin: isStudentorOrAdmin,
   isInstructorOrStudentorOrAdmin: isInstructorOrStudentorOrAdmin,
+  isInstructorOrStudent: isInstructorOrStudent,
 };
 
 module.exports = authJwt;

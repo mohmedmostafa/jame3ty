@@ -16,22 +16,14 @@ module.exports = function (app) {
   app.put(
     '/api/updateUser/:id',
     FileUploader.upload.none(),
-    [ AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-      UserValidation.updateUserValidation,
-     
-    ],
+    [AuthJwt.VerifyToken, AuthJwt.isAdmin, UserValidation.updateUserValidation],
     UserController.updateUser
   );
 
   app.get(
     '/api/listUser',
     FileUploader.upload.none(),
-    [AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-      UserValidation.listUserValidation,
-      
-    ],
+    [AuthJwt.VerifyToken, AuthJwt.isAdmin, UserValidation.listUserValidation],
     UserController.listUser
   );
 
@@ -40,7 +32,7 @@ module.exports = function (app) {
     FileUploader.upload.none(),
     [
       AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
       UserValidation.listUserIdValidation,
     ],
     UserController.listUserById
@@ -49,14 +41,9 @@ module.exports = function (app) {
   app.post(
     '/api/deleteUser/:id',
     FileUploader.upload.none(),
-    [AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
-      UserValidation.deleteUserValidation,
-      
-    ],
+    [AuthJwt.VerifyToken, AuthJwt.isAdmin, UserValidation.deleteUserValidation],
     UserController.deleteUser
   );
-
 
   // app.get('/api/test/all', upload.none(), UserController.allAccess);
 

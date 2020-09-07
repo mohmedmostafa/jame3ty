@@ -20,7 +20,7 @@ module.exports = function (app) {
     [
       SubjectValidation.addSubjectValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     SubjectController.addSubject
   );
@@ -31,7 +31,7 @@ module.exports = function (app) {
     [
       SubjectValidation.deleteSubjectValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     SubjectController.deleteSubject
   );
@@ -42,7 +42,7 @@ module.exports = function (app) {
     [
       SubjectValidation.updateSubjectValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     SubjectController.updateSubject
   );
@@ -53,7 +53,7 @@ module.exports = function (app) {
     [
       SubjectValidation.listSubjectByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     SubjectController.listSubjectById
   );
@@ -64,7 +64,7 @@ module.exports = function (app) {
     [
       SubjectValidation.listSubjectValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     SubjectController.listSubject
   );

@@ -51,7 +51,7 @@ module.exports = function (app) {
     [
       UniversityValidation.listUniversityByIdValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrAdmin,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     UniversityController.listUniversityById
   );
