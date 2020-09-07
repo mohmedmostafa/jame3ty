@@ -167,6 +167,58 @@ listCourseValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+listCourseNoDateValidation = (req, res, next) => {
+  //Body Validation
+  const schema = Joi.object({
+    doPagination: Joi.number().integer().valid(1, 0).default(1),
+    numPerPage: Joi.number().integer().greater(0).required(),
+    page: Joi.number().integer().greater(0).required(),
+    searchKey: Joi.string().allow('', null).required(),
+    method: Joi.string().trim().valid('1', '0', 'both').required(),
+  });
+
+  const { error } = schema.validate(req.query);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+listCourseNoDateByDepartmentValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      departmentId: Joi.number().integer().required(),
+    });
+
+    const { error } = schemaParam.validate(req.params);
+    if (error) {
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
+    }
+  }
+
+  //Body Validation
+  const schema = Joi.object({
+    doPagination: Joi.number().integer().valid(1, 0).default(1),
+    numPerPage: Joi.number().integer().greater(0).required(),
+    page: Joi.number().integer().greater(0).required(),
+    searchKey: Joi.string().allow('', null).required(),
+    method: Joi.string().trim().valid('1', '0', 'both').required(),
+  });
+
+  const { error } = schema.validate(req.query);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 listCourseByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
@@ -192,6 +244,8 @@ const CourseValidation = {
   listCourseValidation: listCourseValidation,
   listCourseByIdValidation: listCourseByIdValidation,
   updateCourseValidation: updateCourseValidation,
+  listCourseNoDateValidation: listCourseNoDateValidation,
+  listCourseNoDateByDepartmentValidation: listCourseNoDateByDepartmentValidation,
 };
 
 module.exports = CourseValidation;

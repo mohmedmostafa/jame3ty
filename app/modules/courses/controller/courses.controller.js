@@ -926,3 +926,544 @@ function listCourse_NOPagination_Method_1_or_0(
     return resolve(result);
   });
 }
+
+//---------------------------------------------------------------
+//List Course NO Date
+//---------------------------------------------------------------
+exports.listCourseNoDate = async (req, res) => {
+  const doPagination = parseInt(req.query.doPagination);
+
+  //Query
+  try {
+    let data;
+    if (doPagination) {
+      if (req.query.method != 'both') {
+        //Do Pagination & Method 1 or 0
+        data = await listCourseNoDate_DoPagination_Method_1_or_0(
+          req,
+          res,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      } else {
+        //Do Pagination & Both
+        data = await listCourseNoDate_DoPagination_Method_Both(
+          req,
+          res,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      }
+    } else {
+      if (req.query.method != 'both') {
+        //NO Pagination & Method 1 or 0
+        data = await listCourseNoDate_NOPagination_Method_1_or_0(
+          req,
+          res,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      } else {
+        //NO Pagination & Method Both
+        data = await listCourseNoDate_NOPagination_Method_Both(
+          req,
+          res,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      }
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { data });
+  } catch (error) {
+    return Response(res, 500, 'Fail To Find!', { error });
+  }
+};
+
+function listCourseNoDate_DoPagination_Method_Both(
+  req,
+  res,
+  db_Course,
+  db_Group,
+  db_GroupSchedule
+) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    let numRows = await db_Course
+      .count({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    numRows = parseInt(numRows);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDate_DoPagination_Method_1_or_0(
+  req,
+  res,
+  db_Course,
+  db_Group,
+  db_GroupSchedule
+) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    let numRows = await db_Course
+      .count({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    numRows = parseInt(numRows);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDate_NOPagination_Method_Both(
+  req,
+  res,
+  db_Course,
+  db_Group,
+  db_GroupSchedule
+) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    let numRows = await db_Course
+      .count({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    numRows = parseInt(numRows);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDate_NOPagination_Method_1_or_0(
+  req,
+  res,
+  db_Course,
+  db_Group,
+  db_GroupSchedule
+) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    let numRows = await db_Course
+      .count({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    numRows = parseInt(numRows);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+        ],
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+//---------------------------------------------------------------
+//List Course NO Date By Department
+//---------------------------------------------------------------
+/*
+exports.listCourseNoDateByDepartment = async (req, res) => {
+  //Check if the Dept is already exsits
+  let dept = await db_Department.findOne({
+    where: {
+      id: req.params.departmentId,
+    },
+  });
+
+  if (!dept) {
+    return Response(res, 404, 'Department Not Found!', {});
+  }
+
+  //
+  const doPagination = parseInt(req.query.doPagination);
+
+  //Query
+  try {
+    let data;
+    if (doPagination) {
+      if (req.query.method != 'both') {
+        //Do Pagination & Method 1 or 0
+        data = await listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
+          req,
+          res,
+          db_Department,
+          db_AcademicYear,
+          db_Subject,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      } else {
+        //Do Pagination & Both
+        data = await listCourseNoDateByDepartment_DoPagination_Method_Both(
+          req,
+          res,
+          db_Department,
+          db_AcademicYear,
+          db_Subject,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      }
+    } else {
+      if (req.query.method != 'both') {
+        //NO Pagination & Method 1 or 0
+        data = await listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
+          req,
+          res,
+          db_Department,
+          db_AcademicYear,
+          db_Subject,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      } else {
+        //NO Pagination & Method Both
+        data = await listCourseNoDateByDepartment_NOPagination_Method_Both(
+          req,
+          res,
+          db_Department,
+          db_AcademicYear,
+          db_Subject,
+          db_Course,
+          db_Group,
+          db_GroupSchedule
+        );
+      }
+    }
+
+    //Success
+    return Response(res, 200, 'Success!', { data });
+  } catch (error) {
+    return Response(res, 500, 'Fail To Find!', { error });
+  }
+};*/

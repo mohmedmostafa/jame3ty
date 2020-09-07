@@ -137,6 +137,28 @@ module.exports = function (app) {
   );
 
   app.get(
+    '/api/listCourseNoDate',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseNoDateValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    CourseController.listCourseNoDate
+  );
+
+  /*app.get(
+    '/api/listCourseNoDateByDepartment/:departmentId',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseNoDateByDepartmentValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    CourseController.listCourseNoDateByDepartment
+  );*/
+
+  app.get(
     '/api/listCourseById/:id',
     FileUploader.upload.none(),
     [
