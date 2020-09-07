@@ -39,6 +39,17 @@ exports.addGroup = async (req, res) => {
     );
   }
 
+  //Get instructor for the uer in the token
+  const instructor = await db_Instructor.findOne({
+    where: {
+      userId: req.userId,
+    },
+  });
+
+  if (!instructor) {
+    return Response(res, 404, 'Instructor Not Found!', {});
+  }
+
   try {
     //Start "Managed" Transaction
     const group = await db_connection.transaction(async (t) => {
@@ -50,7 +61,7 @@ exports.addGroup = async (req, res) => {
           startDate: req.body.startDateGroup,
           endDate: req.body.endDateGroup,
           courseId: course.id,
-          instructorId: req.userId,
+          instructorId: instructor.id,
         },
         { transaction: t }
       );

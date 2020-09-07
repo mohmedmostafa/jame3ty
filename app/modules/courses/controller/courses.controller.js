@@ -34,6 +34,18 @@ exports.addCourse = async (req, res) => {
     return Response(res, 404, 'Subject Not Found!', {});
   }
 
+  //Get instructor for the uer in the token
+  const instructor = await db_Instructor.findOne({
+    where: {
+      userId: req.userId,
+    },
+  });
+
+  if (!instructor) {
+    onErrorDeleteFiles(req);
+    return Response(res, 404, 'Instructor Not Found!', {});
+  }
+
   console.log(req.files);
 
   //Create Attachment String
@@ -60,15 +72,15 @@ exports.addCourse = async (req, res) => {
 
   //If the Course Methiod is 'Recorded Lessons'
   if (req.params.method === '0') {
-    addRecordedLessonsCourse(req, res);
+    addRecordedLessonsCourse(req, res, instructor);
   } else {
     //If the Course Methiod is 'Live Streaming'
-    addLiveStreamingCourse(req, res);
+    addLiveStreamingCourse(req, res, instructor);
   }
 };
 
 //Add Course with 'Recorded Lessons' as a Method
-async function addRecordedLessonsCourse(req, res) {
+async function addRecordedLessonsCourse(req, res, instructor) {
   try {
     //Save to DB
     const course = await db_Course.create({
@@ -87,7 +99,7 @@ async function addRecordedLessonsCourse(req, res) {
       img: req.body.img ? req.body.img : '',
       vedio: req.body.vedio ? req.body.vedio : '',
       subjectId: parseInt(req.body.subjectId),
-      instructorId: req.userId,
+      instructorId: instructor.id,
     });
 
     //Success
@@ -100,7 +112,7 @@ async function addRecordedLessonsCourse(req, res) {
 }
 
 //Add Course with 'Live Streaming' as a Method
-async function addLiveStreamingCourse(req, res) {
+async function addLiveStreamingCourse(req, res, instructor) {
   try {
     //Start "Managed" Transaction
     const course = await db_connection.transaction(async (t) => {
@@ -122,7 +134,7 @@ async function addLiveStreamingCourse(req, res) {
           img: req.body.img ? req.body.img : '',
           vedio: req.body.vedio ? req.body.vedio : '',
           subjectId: parseInt(req.body.subjectId),
-          instructorId: req.userId,
+          instructorId: instructor.id,
         },
         { transaction: t }
       );
@@ -135,7 +147,7 @@ async function addLiveStreamingCourse(req, res) {
           startDate: req.body.startDateGroup,
           endDate: req.body.endDateGroup,
           courseId: course.id,
-          instructorId: req.userId,
+          instructorId: instructor.id,
         },
         { transaction: t }
       );
