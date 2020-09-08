@@ -35,8 +35,7 @@ signinValidation = async (req, res, next) => {
 //----------------------------------------------------------
 signupValidation = async (req, res, next) => {
   const schema = Joi.object({
-    username: Joi.string().trim().alphanum().min(3).max(30).required(),
-    email: Joi.string().trim().email({ minDomainSegments: 3 }),
+    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -54,7 +53,7 @@ signupValidation = async (req, res, next) => {
     .catch((err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
-      return ValidateResponse(res, 'email domain is not valid', {});
+      return ValidateResponse(res, 'Email domain is not valid', {});
     });
 
   if (isValidEmailResult.isValidEmail) {

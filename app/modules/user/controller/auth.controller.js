@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const email = require('../../../common/email');
+const moment = require('moment');
 const db = require('../../../modules');
 const config = require('../../../config/auth.config');
 const { Response } = require('../../../common/response.handler');
@@ -12,6 +14,21 @@ const Op = db.Sequelize.Op;
 
 //---------------------------------------------------------------
 exports.signup = async (req, res) => {
+  //--------------------
+  //Check if not Unique
+  let userF = await db_User.findOne({
+    where: {
+      [Op.or]: {
+        username: req.body.email,
+        email: req.body.email,
+      },
+    },
+  });
+
+  if (userF) {
+    return Response(res, 409, 'Username already exists!', {});
+  }
+
   //Get all info about roles attached with the new account
   const roles = await db_Role.findAll({
     where: {
@@ -24,12 +41,19 @@ exports.signup = async (req, res) => {
   //Start "Managed" Transaction
   try {
     const user = await db_connection.transaction(async (t) => {
+      //const randomToken = await email.generateRandomToken({ byteLength: 10 });
+      const randomToken = Math.floor(100000 + Math.random() * 900000);
+
       //Save the new account to DB
       const user = await db_User.create(
         {
-          username: req.body.username,
+          username: req.body.email,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
+          isVerified: 1,
+          lastVerificationCodeSend: randomToken,
+          lasVerificationCodeCreatedAt: moment(),
+          lasVerificationCodeExpireAt: moment().add(1, 'd'),
         },
         { transaction: t }
       );
@@ -37,8 +61,15 @@ exports.signup = async (req, res) => {
       //Add the roles to the new user
       await user.setRoles(roles, { transaction: t });
 
-      return user;
+      return { user, randomToken };
     });
+
+    //Send Verification Email with Code
+    await email
+      .sendSignupCerificationEmail(user.randomToken, req.body.email)
+      .catch((err) => {
+        console.error(err.message);
+      });
 
     //Success
     return Response(res, 200, 'Success!', { user });
@@ -70,6 +101,7 @@ exports.signin = async (req, res) => {
         loginUser = loginUser.map(function (user) {
           return user.get({ plain: true });
         });
+
         loginUser = loginUser[0];
         loginUser = JSON.parse(JSON.stringify(loginUser));
 
@@ -83,6 +115,16 @@ exports.signin = async (req, res) => {
 
         console.log(loginUser);
         console.log(authorities);
+
+        //If Not verified
+        if (!loginUser.isVerified) {
+          return Response(
+            res,
+            401,
+            'Authorization Required! - Email Verification is Required!',
+            {}
+          );
+        }
 
         //Validate PW
         var passwordIsValid = bcrypt.compareSync(

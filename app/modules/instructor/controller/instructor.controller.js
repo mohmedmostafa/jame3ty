@@ -104,7 +104,8 @@ exports.addInstructor = async (req, res) => {
 
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
-      const randomToken = await email.generateRandomToken({ byteLength: 10 });
+      //const randomToken = await email.generateRandomToken({ byteLength: 10 });
+      const randomToken = Math.floor(100000 + Math.random() * 900000);
 
       //
       const inst = await db_Instructor.create(
@@ -149,7 +150,7 @@ exports.addInstructor = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupCerificationEmail(instructor.randomToken)
+      .sendSignupCerificationEmail(instructor.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
       });

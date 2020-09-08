@@ -24,7 +24,6 @@ module.exports = function (app) {
     upload.none(),
     [
       UserValidation.signupValidation,
-      VerifySignUp.checkDuplicateUsernameOrEmail,
       VerifySignUp.checkRolesExisted,
     ],
     AuthController.signup

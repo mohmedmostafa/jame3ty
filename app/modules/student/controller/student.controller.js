@@ -82,7 +82,8 @@ exports.addStudent = async (req, res) => {
 
     //Start "Managed" Transaction
     let result = await db_connection.transaction(async (t) => {
-      const randomToken = await email.generateRandomToken({ byteLength: 10 });
+      //const randomToken = await email.generateRandomToken({ byteLength: 10 });
+      const randomToken = Math.floor(100000 + Math.random() * 900000);
 
       //Save User to DB
       const user = await db_User.create(
@@ -135,9 +136,11 @@ exports.addStudent = async (req, res) => {
     });
 
     //Send Verification Email with Code
-    await email.sendSignupCerificationEmail(result.randomToken).catch((err) => {
-      console.error(err.message);
-    });
+    await email
+      .sendSignupCerificationEmail(result.randomToken, req.body.email)
+      .catch((err) => {
+        console.error(err.message);
+      });
 
     //Success
     return Response(res, 200, 'Success!', { result });
