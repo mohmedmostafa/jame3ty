@@ -87,7 +87,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "Farag",
+									"value": "Eman",
 									"type": "text"
 								},
 								{
@@ -2758,7 +2758,7 @@
 					"response": []
 				},
 				{
-					"name": "{{url}}api/deleteAttachment",
+					"name": "{{url}}api/deleteLessonAttachment",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -2779,12 +2779,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}api/deleteAttachment/13",
+							"raw": "{{url}}api/deleteLessonAttachment/13",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
-								"deleteAttachment",
+								"deleteLessonAttachment",
 								"13"
 							]
 						}
@@ -3269,6 +3269,184 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "assignmentSubmission",
+			"item": [
+				{
+					"name": "{{url}}api/addAssignmentSubmission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNTk5MDAzNzQ3LCJleHAiOjE1OTkwOTAxNDd9.S3BU2f3BO_6j4-oB5Mq4BkjiRbvIdztSLbOftWvGszA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "submissionDate",
+									"value": "1993-11-23",
+									"type": "text"
+								},
+								{
+									"key": "attachments",
+									"type": "file",
+									"src": [
+										"/C:/Users/Farag/Pictures/1.PNG",
+										"/C:/Users/Farag/Pictures/2.PNG",
+										"/C:/Users/Farag/Pictures/3.PNG",
+										"/C:/Users/Farag/Pictures/4.png",
+										"/C:/Users/Farag/Pictures/5.PNG"
+									]
+								},
+								{
+									"key": "lessonId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/addAssignmentSubmission",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"addAssignmentSubmission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteAssignmentSubmission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNTk5MDAzNzQ3LCJleHAiOjE1OTkwOTAxNDd9.S3BU2f3BO_6j4-oB5Mq4BkjiRbvIdztSLbOftWvGszA"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/deleteAssignmentSubmission/5",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteAssignmentSubmission",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteAssignmentSubmissionAttachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNTk5MDAzNzQ3LCJleHAiOjE1OTkwOTAxNDd9.S3BU2f3BO_6j4-oB5Mq4BkjiRbvIdztSLbOftWvGszA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachmentPath",
+									"value": "public/vedio/q-1599004224241-.mp4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/deleteAssignmentSubmissionAttachment/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteAssignmentSubmissionAttachment",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listAssignmentSubmissionById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNTk5MDAzNzQ3LCJleHAiOjE1OTkwOTAxNDd9.S3BU2f3BO_6j4-oB5Mq4BkjiRbvIdztSLbOftWvGszA"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listAssignmentSubmissionById/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listAssignmentSubmissionById",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/updateAssignmentSubmission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNTk5MDAzNzQ3LCJleHAiOjE1OTkwOTAxNDd9.S3BU2f3BO_6j4-oB5Mq4BkjiRbvIdztSLbOftWvGszA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachments",
+									"type": "file",
+									"src": "/C:/Users/Farag/Pictures/3.PNG"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/updateAssignmentSubmission/6",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"updateAssignmentSubmission",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [
@@ -3295,12 +3473,12 @@
 	],
 	"variable": [
 		{
-			"id": "f1818b58-00a0-48bf-ba50-468f36e6f7ea",
+			"id": "a9257fff-9a1f-4fcc-99d5-7552b79d9424",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "b5eb5b08-3d74-40dc-8aa0-470d329d4a3f",
+			"id": "9e699f7e-5bd1-4492-8980-b5ad0088405e",
 			"key": "auth",
 			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MTg2NzIzLCJleHAiOjE1OTgyNzMxMjN9.qgJ8wQqj7IBnkG5cFJk-7Z7YKrhQdGe6LCrLpb-A5AA"
 		}

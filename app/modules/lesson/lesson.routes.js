@@ -71,7 +71,7 @@ module.exports = function (app) {
   );
 
   app.post(
-    '/api/deleteAttachment/:id',
+    '/api/deleteLessonAttachment/:id',
     FileUploader.upload.none(),
     [
       LessonValidation.deleteAttachmentValidation,

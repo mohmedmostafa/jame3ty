@@ -1,6 +1,7 @@
 {
   "name": "jam3ty",
   "version": "1.0.0",
+  "private": true,
   "description": "jam3ty application",
   "main": "server.js",
   "scripts": {
@@ -31,5 +32,9 @@
     "nodemon": "^2.0.4",
     "request": "^2.88.2",
     "sequelize": "^6.3.4"
+  },
+  "engines": {
+    "node": "10.15.3",
+    "npm": "6.4.x"
   }
 }

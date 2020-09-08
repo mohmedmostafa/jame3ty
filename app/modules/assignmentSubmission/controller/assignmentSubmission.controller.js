@@ -27,39 +27,14 @@ const db_AssignmentSubmission = db.AssignmentSubmission;
 exports.addAssignmentSubmission = async (req, res) => {
   try {
     //Check if the Course is already exsits
-    let course = await db_Course.findOne({
-      where: { id: parseInt(req.body.courseId) },
+    let lesson = await db_Lesson.findOne({
+      where: { id: parseInt(req.body.lessonId) },
     });
 
-    if (!course) {
+    if (!lesson) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Course Not Found!', {});
+      return Response(res, 400, 'Lesson Not Found!', {});
     }
-
-    //Check if the Group is under that course
-    if (
-      req.body.isAssostatedWithGroup &&
-      req.body.isAssostatedWithGroup === '1'
-    ) {
-      course = await db_Course.findOne({
-        where: { id: parseInt(req.body.courseId) },
-        include: [
-          {
-            model: db_Group,
-            where: {
-              id: parseInt(req.body.groupId),
-            },
-          },
-        ],
-      });
-
-      if (!course) {
-        onErrorDeleteFiles(req);
-        return Response(res, 400, 'Course with that group Not Found!', {});
-      }
-    }
-
-    console.log(req.files);
 
     //Create Attachment String
     if (req.files.attachments) {
@@ -71,32 +46,21 @@ exports.addAssignmentSubmission = async (req, res) => {
       req.body.attachments = field_1.join();
     }
 
-    //Validation
-    if (req.body.isAssostatedWithGroup === '0') {
-      req.body.groupId = null;
-    }
-
-    if (req.body.isLiveStreaming === '0') {
-      req.body.liveStreamingInfo = null;
-    }
+    //Get Student Id based on user id from token
+    let student = await db_Student.findOne({
+      where: { userId: parseInt(req.userId) },
+    });
 
     //Save to DB
-    let lesson = db_Lesson.create({
-      name_ar: req.body.name_ar,
-      name_en: req.body.name_en,
-      desc: req.body.desc,
-      type: req.body.type,
-      isLiveStreaming: req.body.isLiveStreaming,
-      liveStreamingInfo: req.body.liveStreamingInfo,
-      isAssostatedWithGroup: req.body.isAssostatedWithGroup,
-      groupId: req.body.groupId,
-      courseId: req.body.courseId,
-      youtubeLink: req.body.youtubeLink,
+    let assignmentSubmission = db_AssignmentSubmission.create({
+      submissionDate: req.body.submissionDate,
       attachments: req.body.attachments,
+      studentId: student.id,
+      lessonId: parseInt(req.body.lessonId),
     });
 
     //Success
-    return Response(res, 200, 'Success!', { lesson });
+    return Response(res, 200, 'Success!', { assignmentSubmission });
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -107,27 +71,25 @@ exports.addAssignmentSubmission = async (req, res) => {
 //---------------------------------------------------------------
 exports.deleteAssignmentSubmission = async (req, res) => {
   try {
-    //Check if the Lesson is already exsits
-    let lesson = await db_Lesson.findOne({
+    //Check if the assignmentSubmission is already exsits
+    let assignmentSubmission = await db_AssignmentSubmission.findOne({
       where: {
         id: req.params.id,
       },
     });
 
-    if (!lesson) {
-      return Response(res, 400, 'Lesson Not Found!', {});
+    if (!assignmentSubmission) {
+      return Response(res, 400, 'AssignmentSubmission Not Found!', {});
     }
 
-    console.log(lesson);
-
     //Delete
-    let deletedLesson = await db_Lesson.destroy({
+    let deletedAssignmentSubmission = await db_AssignmentSubmission.destroy({
       where: { id: req.params.id },
     });
 
     //If the record Deleted then delete files in attachments
-    if (deletedLesson) {
-      let attachmentsStr = lesson.getDataValue('attachments');
+    if (deletedAssignmentSubmission) {
+      let attachmentsStr = assignmentSubmission.getDataValue('attachments');
       if (attachmentsStr.length > 0) {
         let locations = attachmentsStr.split(',');
         console.log(locations);
@@ -138,7 +100,7 @@ exports.deleteAssignmentSubmission = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { deletedLesson });
+    return Response(res, 200, 'Success!', { deletedAssignmentSubmission });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -149,24 +111,23 @@ exports.deleteAssignmentSubmission = async (req, res) => {
 exports.deleteAttachment = async (req, res) => {
   try {
     //Check if the Lesson is already exsits
-    let lesson = await db_Lesson.findOne({
+    let assignmentSubmission = await db_AssignmentSubmission.findOne({
       where: {
         id: req.params.id,
       },
     });
 
-    if (!lesson) {
-      return Response(res, 400, 'Lesson Not Found!', {});
+    if (!assignmentSubmission) {
+      return Response(res, 400, 'AssignmentSubmission Not Found!', {});
     }
 
-    console.log(lesson);
+    console.log(assignmentSubmission);
 
     //Read current Attachments
-    let attachmentsStr = lesson.getDataValue('attachments');
+    let attachmentsStr = assignmentSubmission.getDataValue('attachments');
     if (attachmentsStr.length > 0) {
       let locations = attachmentsStr.split(',');
       console.log(locations);
-
       const index = locations.indexOf(req.body.attachmentPath);
       if (index > -1) {
         deleteFile(locations[index]);
@@ -174,7 +135,7 @@ exports.deleteAttachment = async (req, res) => {
         locations = locations.join();
 
         //Update DB
-        await db_Lesson.update(
+        await db_AssignmentSubmission.update(
           {
             attachments: locations,
           },
@@ -183,14 +144,18 @@ exports.deleteAttachment = async (req, res) => {
           }
         );
       } else {
-        return Response(res, 400, 'Attachemt Not Found!', { lesson });
+        return Response(res, 400, 'Attachemt Not Found!', {
+          assignmentSubmission,
+        });
       }
     } else {
-      return Response(res, 400, 'Lesson has zero attachments!', { lesson });
+      return Response(res, 400, 'AssignmentSubmission has zero attachments!', {
+        assignmentSubmission,
+      });
     }
 
     //Success
-    return Response(res, 200, 'Success!', { lesson });
+    return Response(res, 200, 'Success!', { assignmentSubmission });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete Attachment!', { error });
@@ -200,26 +165,26 @@ exports.deleteAttachment = async (req, res) => {
 //--------------------------------------------------------------
 exports.listAssignmentSubmissionById = async (req, res) => {
   try {
-    let lesson = await db_Lesson.findOne({
+    let assignmentSubmission = await db_AssignmentSubmission.findOne({
       where: {
         id: req.params.id,
       },
       include: [
         {
-          model: db_Course,
+          model: db_Student,
         },
         {
-          model: db_Group,
+          model: db_Lesson,
         },
       ],
     });
 
-    if (!lesson) {
-      return Response(res, 400, 'Lesson Not Found!', {});
+    if (!assignmentSubmission) {
+      return Response(res, 400, 'AssignmentSubmission Not Found!', {});
     }
 
     //Success
-    return Response(res, 200, 'Success!', { lesson });
+    return Response(res, 200, 'Success!', { assignmentSubmission });
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -229,53 +194,27 @@ exports.listAssignmentSubmissionById = async (req, res) => {
 //---------------------------------------------------------------
 exports.updateAssignmentSubmission = async (req, res) => {
   try {
+    //Get Student Id based on user id from token
+    let student = await db_Student.findOne({
+      where: { userId: parseInt(req.userId) },
+    });
+
     //Check if the Lesson is found
-    let lesson = await db_Lesson.findOne({
-      where: { id: parseInt(req.params.id) },
+    let assignmentSubmission = await db_AssignmentSubmission.findOne({
+      where: {
+        [Op.and]: [{ id: parseInt(req.params.id) }, { studentId: student.id }],
+      },
     });
 
-    if (!lesson) {
+    if (!assignmentSubmission) {
       onErrorDeleteFiles(req);
-      return Response(res, 400, 'Lesson Not Found!', {});
-    }
-
-    //Check if the Course is already exsits
-    let course = await db_Course.findOne({
-      where: { id: parseInt(req.body.courseId) },
-    });
-
-    if (!course) {
-      onErrorDeleteFiles(req);
-      return Response(res, 400, 'Course Not Found!', {});
-    }
-
-    //Check if the Group is under that course
-    if (
-      req.body.isAssostatedWithGroup &&
-      req.body.isAssostatedWithGroup === '1'
-    ) {
-      course = await db_Course.findOne({
-        where: { id: parseInt(req.body.courseId) },
-        include: [
-          {
-            model: db_Group,
-            where: {
-              id: parseInt(req.body.groupId),
-            },
-          },
-        ],
-      });
-
-      if (!course) {
-        onErrorDeleteFiles(req);
-        return Response(res, 400, 'Course with that group Not Found!', {});
-      }
+      return Response(res, 400, 'Student Assignment Submission Not Found!', {});
     }
 
     //Append Attachment String
     if (req.files.attachments) {
       //Get Current Paths from DB
-      let fieldFilesPaths = lesson.getDataValue('attachments');
+      let fieldFilesPaths = assignmentSubmission.getDataValue('attachments');
       if (fieldFilesPaths.length > 0) {
         fieldFilesPaths = fieldFilesPaths.split(',');
       } else {
@@ -294,38 +233,9 @@ exports.updateAssignmentSubmission = async (req, res) => {
       req.body.attachments = fieldFilesPaths.join();
     }
 
-    //Validation
-    if (req.body.isAssostatedWithGroup === '0') {
-      req.body.groupId = null;
-    }
-
-    if (req.body.isLiveStreaming === '0') {
-      req.body.liveStreamingInfo = null;
-    }
-
-    console.log(req.body);
-
     //Do Update
-    let updatedLesson = await db_Lesson.update(
+    let updatedAssignmentSubmission = await db_AssignmentSubmission.update(
       {
-        name_ar: req.body.name_ar ? req.body.name_ar : lesson.name_ar,
-        name_en: req.body.name_en ? req.body.name_en : lesson.name_en,
-        desc: req.body.desc ? req.body.desc : lesson.desc,
-        type: req.body.type ? req.body.type : lesson.type,
-        isLiveStreaming: req.body.isLiveStreaming
-          ? req.body.isLiveStreaming
-          : lesson.isLiveStreaming,
-        liveStreamingInfo: req.body.liveStreamingInfo
-          ? req.body.liveStreamingInfo
-          : lesson.liveStreamingInfo,
-        isAssostatedWithGroup: req.body.isAssostatedWithGroup
-          ? req.body.isAssostatedWithGroup
-          : lesson.isAssostatedWithGroup,
-        groupId: req.body.groupId ? req.body.groupId : lesson.groupId,
-        courseId: req.body.courseId ? req.body.courseId : lesson.courseId,
-        youtubeLink: req.body.youtubeLink
-          ? req.body.youtubeLink
-          : lesson.youtubeLink,
         attachments: req.body.attachments
           ? req.body.attachments
           : lesson.getDataValue('attachments'),
@@ -334,7 +244,7 @@ exports.updateAssignmentSubmission = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', { updatedLesson });
+    return Response(res, 200, 'Success!', { updatedAssignmentSubmission });
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -343,15 +253,24 @@ exports.updateAssignmentSubmission = async (req, res) => {
 };
 
 //---------------------------------------------------------------
+/*
 exports.listAssignmentSubmission = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
   //Count all rows
-  let numRows = await db_AssignmentSubmission.count({}).catch((error) => {
-    return Response(res, 500, 'Fail to Count!', { error });
-  });
+  let numRows = await db_AssignmentSubmission
+    .count({
+      where: {
+        rate: {
+          [Op.eq]: req.query.searchKey,
+        },
+      },
+    })
+    .catch((error) => {
+      return Response(res, 500, 'Fail to Count!', { error });
+    });
   numRows = parseInt(numRows);
 
   //Total num of valid pages
@@ -365,48 +284,25 @@ exports.listAssignmentSubmission = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      if (req.query.method != 'both') {
-        //Do Pagination & Type 1 or 0
-        data = await listAssignmentSubmission_DoPagination_Type_1_or_0(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group,
-          skip,
-          _limit
-        );
-      } else {
-        //Do Pagination & Type Both
-        data = await listAssignmentSubmission_DoPagination_Type_Both(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group,
-          skip,
-          _limit
-        );
-      }
+      data = await listRatingAndReview_DoPagination(
+        req,
+        db_RatingAndReview,
+        db_CourseSubscribe,
+        db_Student,
+        skip,
+        _limit
+      );
     } else {
-      if (req.query.method != 'both') {
-        //NO Pagination & Type 1 or 0
-        data = await listAssignmentSubmission_NOPagination_Type_1_or_0(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group
-        );
-      } else {
-        //NO Pagination & Type Both
-        data = await listAssignmentSubmission_NOPagination_Type_Both(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group
-        );
-      }
+      data = await listRatingAndReview_NOPagination(
+        req,
+        db_RatingAndReview,
+        db_CourseSubscribe,
+        db_Student
+      );
     }
 
     let result = {
+      doPagination,
       numRows,
       numPerPage,
       numPages,
@@ -421,46 +317,30 @@ exports.listAssignmentSubmission = async (req, res) => {
   }
 };
 
-function listAssignmentSubmission_DoPagination_Type_Both(
+function listRatingAndReview_DoPagination(
   req,
-  db_Lesson,
-  db_Course,
-  db_Group,
+  db_RatingAndReview,
+  db_CourseSubscribe,
+  db_Student,
   skip,
   _limit
 ) {
   return new Promise(async (resolve, reject) => {
-    await db_Lesson
+    await db_RatingAndReview
       .findAll({
         where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              type: {
-                [Op.in]: ['0', '1'],
+          rate: {
+            [Op.eq]: req.query.searchKey,
+          },
+        },
+        include: [
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
               },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Course,
-          },
-          {
-            model: db_Group,
+            ],
           },
         ],
         offset: skip,
@@ -475,91 +355,28 @@ function listAssignmentSubmission_DoPagination_Type_Both(
   });
 }
 
-function listAssignmentSubmission_DoPagination_Type_1_or_0(
+function listRatingAndReview_NOPagination(
   req,
-  db_Lesson,
-  db_Course,
-  db_Group,
-  skip,
-  _limit
+  db_RatingAndReview,
+  db_CourseSubscribe,
+  db_Student
 ) {
   return new Promise(async (resolve, reject) => {
-    await db_Lesson
+    await db_RatingAndReview
       .findAll({
         where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              type: req.query.type,
-            },
-          ],
+          rate: {
+            [Op.eq]: req.query.searchKey,
+          },
         },
         include: [
           {
-            model: db_Course,
-          },
-          {
-            model: db_Group,
-          },
-        ],
-        offset: skip,
-        limit: _limit,
-      })
-      .catch((err) => {
-        return reject(err);
-      })
-      .then((data) => {
-        return resolve(data);
-      });
-  });
-}
-
-function listAssignmentSubmission_NOPagination_Type_Both(
-  req,
-  db_Lesson,
-  db_Course,
-  db_Group
-) {
-  return new Promise(async (resolve, reject) => {
-    await db_Lesson
-      .findAll({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Course,
-          },
-          {
-            model: db_Group,
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
       })
@@ -571,51 +388,4 @@ function listAssignmentSubmission_NOPagination_Type_Both(
       });
   });
 }
-
-function listAssignmentSubmission_NOPagination_Type_1_or_0(
-  req,
-  db_Lesson,
-  db_Course,
-  db_Group
-) {
-  return new Promise(async (resolve, reject) => {
-    await db_Lesson
-      .findAll({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              type: req.query.type,
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Course,
-          },
-          {
-            model: db_Group,
-          },
-        ],
-      })
-      .catch((err) => {
-        return reject(err);
-      })
-      .then((data) => {
-        return resolve(data);
-      });
-  });
-}
+*/
