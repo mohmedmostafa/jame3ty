@@ -7,8 +7,9 @@ const {
   deleteFile,
 } = require('../../../common/multerConfig');
 const moment = require('moment');
-const { Sequelize } = require('../..');
+const { Sequelize, connection } = require('../..');
 
+const QueryTypes = db.Sequelize.QueryTypes;
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
@@ -1388,7 +1389,6 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
 //---------------------------------------------------------------
 //List Course NO Date By Department
 //---------------------------------------------------------------
-/*
 exports.listCourseNoDateByDepartment = async (req, res) => {
   //Check if the Dept is already exsits
   let dept = await db_Department.findOne({
@@ -1412,25 +1412,13 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
           req,
-          res,
-          db_Department,
-          db_AcademicYear,
-          db_Subject,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          res
         );
       } else {
         //Do Pagination & Both
         data = await listCourseNoDateByDepartment_DoPagination_Method_Both(
           req,
-          res,
-          db_Department,
-          db_AcademicYear,
-          db_Subject,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          res
         );
       }
     } else {
@@ -1438,25 +1426,13 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         //NO Pagination & Method 1 or 0
         data = await listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
           req,
-          res,
-          db_Department,
-          db_AcademicYear,
-          db_Subject,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          res
         );
       } else {
         //NO Pagination & Method Both
         data = await listCourseNoDateByDepartment_NOPagination_Method_Both(
           req,
-          res,
-          db_Department,
-          db_AcademicYear,
-          db_Subject,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          res
         );
       }
     }
@@ -1466,4 +1442,454 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }
-};*/
+};
+
+function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join subjects sub on sub.id = cr.subjectId \
+      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join departments dept on dept.id = acy.departmentId \
+      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.departmentId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          req.query.method,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+          {
+            model: db_Subject,
+            required: true,
+            attributes: [],
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                attributes: [],
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    attributes: [],
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join subjects sub on sub.id = cr.subjectId \
+      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join departments dept on dept.id = acy.departmentId \
+      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.departmentId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          1,
+          0,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+          {
+            model: db_Subject,
+            required: true,
+            attributes: [],
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                attributes: [],
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    attributes: [],
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join subjects sub on sub.id = cr.subjectId \
+      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join departments dept on dept.id = acy.departmentId \
+      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.departmentId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          req.query.method,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+          {
+            model: db_Subject,
+            required: true,
+            attributes: [],
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                attributes: [],
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    attributes: [],
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join subjects sub on sub.id = cr.subjectId \
+      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join departments dept on dept.id = acy.departmentId \
+      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.departmentId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          1,
+          0,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        return Response(res, 500, 'Fail to Count!', { error });
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Group,
+            include: [{ model: db_GroupSchedule }],
+          },
+          {
+            model: db_Subject,
+            required: true,
+            attributes: [],
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                attributes: [],
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    attributes: [],
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}

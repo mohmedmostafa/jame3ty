@@ -147,7 +147,7 @@ module.exports = function (app) {
     CourseController.listCourseNoDate
   );
 
-  /*app.get(
+  app.get(
     '/api/listCourseNoDateByDepartment/:departmentId',
     FileUploader.upload.none(),
     [
@@ -156,7 +156,7 @@ module.exports = function (app) {
       AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     CourseController.listCourseNoDateByDepartment
-  );*/
+  );
 
   app.get(
     '/api/listCourseById/:id',
