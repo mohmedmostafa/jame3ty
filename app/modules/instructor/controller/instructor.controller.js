@@ -4,6 +4,9 @@ const { ValidateResponse } = require('../../../common/response.handler');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
+const email = require('../../../common/email');
+const moment = require('moment');
+
 const {
   onErrorDeleteFiles,
   deleteFile,
@@ -101,6 +104,9 @@ exports.addInstructor = async (req, res) => {
 
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
+      const randomToken = await email.generateRandomToken({ byteLength: 10 });
+
+      //
       const inst = await db_Instructor.create(
         {
           name_ar: req.body.name_ar,
@@ -119,6 +125,10 @@ exports.addInstructor = async (req, res) => {
           email: req.body.email,
           username: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
+          isVerified: 0,
+          lastVerificationCodeSend: randomToken,
+          lasVerificationCodeCreatedAt: moment(),
+          lasVerificationCodeExpireAt: moment().add(1, 'd'),
         },
         { transaction: t }
       );
@@ -134,8 +144,16 @@ exports.addInstructor = async (req, res) => {
 
       await user.addRole(roles, { transaction: t });
 
-      return inst;
+      return { inst, randomToken };
     });
+
+    //Send Verification Email with Code
+    await email
+      .sendSignupCerificationEmail(instructor.randomToken)
+      .catch((err) => {
+        console.error(err.message);
+      });
+
     //Success
     return Response(res, 200, 'Success!', { instructor });
   } catch (error) {
