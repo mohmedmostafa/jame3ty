@@ -1454,7 +1454,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
     const sql =
       'select count(*) as count from courses cr \
       inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join academicYears acy on acy.id = sub.academicYearId \
       inner join departments dept on dept.id = acy.departmentId \
       where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
 
@@ -1566,7 +1566,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
     const sql =
       'select count(*) as count from courses cr \
       inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join academicYears acy on acy.id = sub.academicYearId \
       inner join departments dept on dept.id = acy.departmentId \
       where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
 
@@ -1681,7 +1681,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
     const sql =
       'select count(*) as count from courses cr \
       inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join academicYears acy on acy.id = sub.academicYearId \
       inner join departments dept on dept.id = acy.departmentId \
       where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
 
@@ -1791,7 +1791,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
     const sql =
       'select count(*) as count from courses cr \
       inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicyears acy on acy.id = sub.academicYearId \
+      inner join academicYears acy on acy.id = sub.academicYearId \
       inner join departments dept on dept.id = acy.departmentId \
       where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
 

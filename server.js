@@ -113,19 +113,6 @@ async function initial() {
   });
 
   //--------------------------------------------------
-  /////////////////User///////////////////////////////
-  //--------------------------------------------------
-  signup(
-    db_connection,
-    db_User,
-    db_Role,
-    Op,
-    'admin@aou.edu.om',
-    'admin@aou.edu.om',
-    '123456',
-    'admin,student,instructor'
-  );
-  //--------------------------------------------------
   /////////////////University/////////////////////////
   //--------------------------------------------------
   let university = await db_University.create({
@@ -158,6 +145,7 @@ async function initial() {
   });
 }
 
+/*
 async function signup(
   db_connection,
   db_User,
@@ -194,4 +182,4 @@ async function signup(
 
     return user;
   });
-}
+}*/

@@ -162,6 +162,29 @@ deleteUserValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+changePasswordInsideValidation = async (req, res, next) => {
+  const schema = Joi.object({
+    oldPassword: Joi.string()
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .required(),
+    newPassword: Joi.string()
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .required(),
+    newPasswordRepeat: Joi.string()
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .valid(Joi.ref('newPassword'))
+      .required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 const UserValidation = {
   signinValidation: signinValidation,
   signupValidation: signupValidation,
@@ -169,6 +192,7 @@ const UserValidation = {
   listUserValidation: listUserValidation,
   listUserIdValidation: listUserIdValidation,
   deleteUserValidation: deleteUserValidation,
+  changePasswordInsideValidation: changePasswordInsideValidation,
 };
 
 module.exports = UserValidation;

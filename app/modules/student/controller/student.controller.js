@@ -2,7 +2,7 @@ const db = require('../..');
 const { Response } = require('../../../common/response.handler');
 const { ValidateResponse } = require('../../../common/response.handler');
 const helper = require('../../../common/helper');
-
+const email = require('../../../common/email');
 const {
   onErrorDeleteFiles,
   deleteFile,
@@ -82,12 +82,18 @@ exports.addStudent = async (req, res) => {
 
     //Start "Managed" Transaction
     let result = await db_connection.transaction(async (t) => {
+      const randomToken = await email.generateRandomToken({ byteLength: 10 });
+
       //Save User to DB
       const user = await db_User.create(
         {
           username: req.body.email,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
+          isVerified: 0,
+          lastVerificationCodeSend: randomToken,
+          lasVerificationCodeCreatedAt: moment(),
+          lasVerificationCodeExpireAt: moment().add(1, 'd'),
         },
         { transaction: t }
       );
@@ -125,7 +131,12 @@ exports.addStudent = async (req, res) => {
         { transaction: t }
       );
 
-      return { student, user, userRole };
+      return { student, user, userRole, randomToken };
+    });
+
+    //Send Verification Email with Code
+    await email.sendSignupCerificationEmail(result.randomToken).catch((err) => {
+      console.error(err.message);
     });
 
     //Success

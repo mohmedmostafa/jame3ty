@@ -21,6 +21,23 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      isVerified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      lastVerificationCodeSend: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      lasVerificationCodeCreatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      lasVerificationCodeExpireAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),

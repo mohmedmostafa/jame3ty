@@ -535,17 +535,17 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "محمد مصطفي",
+									"value": "فرج",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "mohamed mostafa",
+									"value": "farag",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "very quit man",
+									"value": "farag",
 									"type": "text"
 								},
 								{
@@ -555,7 +555,7 @@
 								},
 								{
 									"key": "email",
-									"value": "eman@aou.edu.jo",
+									"value": "farag@aou.edu.jo",
 									"type": "text"
 								},
 								{
@@ -876,7 +876,7 @@
 								},
 								{
 									"key": "subjectId",
-									"value": "1",
+									"value": "2",
 									"type": "text"
 								},
 								{
@@ -1150,6 +1150,113 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "{{url}}api/listCourseNoDate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listCourseNoDate?doPagination=1&numPerPage=1&page=1&searchKey=&method=both",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listCourseNoDate"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								},
+								{
+									"key": "method",
+									"value": "both",
+									"description": "1 or 0 or both"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listCourseNoDateByDepartment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=0&numPerPage=1&page=2&searchKey&method=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listCourseNoDateByDepartment",
+								"1"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "searchKey",
+									"value": null
+								},
+								{
+									"key": "method",
+									"value": "1",
+									"description": "1 or 0 or both"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -1199,7 +1306,7 @@
 								},
 								{
 									"key": "courseId",
-									"value": "13",
+									"value": "3",
 									"type": "text"
 								}
 							]
@@ -3483,14 +3590,14 @@
 	],
 	"variable": [
 		{
-			"id": "62ac78c1-41b4-4f34-a9ec-66b47215f4ff",
+			"id": "224721f9-dac7-4a42-ab73-fa44070e2a69",
 			"key": "url",
-			"value": "http://localhost:3001/"
+			"value": "http://jamety.herokuapp.com/"
 		},
 		{
-			"id": "d5047cf1-7f70-4cd0-9e1d-32908d153f11",
-			"key": "auth",
-			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk4MTg2NzIzLCJleHAiOjE1OTgyNzMxMjN9.qgJ8wQqj7IBnkG5cFJk-7Z7YKrhQdGe6LCrLpb-A5AA"
+			"id": "8b600b87-3da7-4679-a41f-d883e600b2ab",
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk5NTE2NTAxLCJleHAiOjE1OTk2MDI5MDF9.cHbbOhxIDuDBhtSactORVR82H5_T_uf1jPKhDovOJWk"
 		}
 	],
 	"protocolProfileBehavior": {}
