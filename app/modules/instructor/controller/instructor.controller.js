@@ -240,7 +240,7 @@ exports.listInstructor = async (req, res) => {
   let name_en = req.query.name_en ? req.query.name_en : '';
   let mobile = req.query.mobile ? req.query.mobile : '';
   
-  //check if 
+  //check if user is admin(retrieve all instructors) else (retrieve only one)
   const userData=await helper.getUserdata(req,res).catch(err=>{
     return Response(res, 400, "Error in Retrieve some data", {
       err,
