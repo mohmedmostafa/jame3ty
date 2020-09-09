@@ -23,13 +23,8 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "username",
-									"value": "Sara",
-									"type": "text"
-								},
-								{
 									"key": "email",
-									"value": "Sara@gmail.com",
+									"value": "Sara@aou.edu.jo",
 									"type": "text"
 								},
 								{
@@ -39,7 +34,8 @@
 								},
 								{
 									"key": "roles",
-									"value": "student",
+									"value": "admin,student,instructor",
+									"description": "admin,student,instructor",
 									"type": "text"
 								}
 							],
@@ -87,7 +83,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "admin@aou.edu.om",
+									"value": "Sara@aou.edu.jo",
 									"type": "text"
 								},
 								{
@@ -132,6 +128,39 @@
 							"path": [
 								"test",
 								"instructor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/auth/verifyEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "Aliiiii@aou.edu.om",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "231784",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/auth/verifyEmail",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"auth",
+								"verifyEmail"
 							]
 						}
 					},
@@ -876,7 +905,7 @@
 								},
 								{
 									"key": "subjectId",
-									"value": "2",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -892,39 +921,44 @@
 								{
 									"key": "nameGroup",
 									"value": "ggggg",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
 									"value": "13",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "startDateGroup",
 									"value": "1994-11-06",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "endDateGroup",
 									"value": "1994-11-07",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "groupSchedule",
 									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1998-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1984-11-05T08:15:30-05:00\"}]",
 									"description": "Array of JSON Objects => As String",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{url}}api/addCourse/1",
+							"raw": "{{url}}api/addCourse/0",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"addCourse",
-								"1"
+								"0"
 							]
 						}
 					},
@@ -1034,13 +1068,13 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseById/13",
+							"raw": "{{url}}api/listCourseById/2",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseById",
-								"13"
+								"2"
 							]
 						}
 					},
@@ -1223,7 +1257,7 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=0&numPerPage=1&page=2&searchKey&method=1",
+							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=1&numPerPage=1&page=2&searchKey&method=both",
 							"host": [
 								"{{url}}api"
 							],
@@ -1234,7 +1268,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
@@ -1250,7 +1284,7 @@
 								},
 								{
 									"key": "method",
-									"value": "1",
+									"value": "both",
 									"description": "1 or 0 or both"
 								}
 							]
@@ -2907,17 +2941,17 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "soso",
+									"value": "Aliiiii",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01090047517",
+									"value": "01020047317",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "soso@aou.edu.om",
+									"value": "Aliiiii@aou.edu.om",
 									"type": "text"
 								},
 								{
@@ -3590,14 +3624,14 @@
 	],
 	"variable": [
 		{
-			"id": "224721f9-dac7-4a42-ab73-fa44070e2a69",
+			"id": "4a575c63-3cfc-41cd-885e-c6fcb8384336",
 			"key": "url",
-			"value": "http://jamety.herokuapp.com/"
+			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "8b600b87-3da7-4679-a41f-d883e600b2ab",
+			"id": "62ce1f5a-d1aa-4ebf-823c-72b93181e25c",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTk5NTE2NTAxLCJleHAiOjE1OTk2MDI5MDF9.cHbbOhxIDuDBhtSactORVR82H5_T_uf1jPKhDovOJWk"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTk5NTk4OTAyLCJleHAiOjE1OTk2ODUzMDJ9.PZwlR7JNzipEeBuF7ymjoanwKOm2JvdQQJQ8BJdqnv4"
 		}
 	],
 	"protocolProfileBehavior": {}
