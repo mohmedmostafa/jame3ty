@@ -92,6 +92,7 @@ async function addRecordedLessonsCourse(req, res, instructor) {
       prerequisiteText: req.body.prerequisiteText,
       whatYouWillLearn: req.body.whatYouWillLearn,
       numOfLessons: req.body.numOfLessons,
+      numOfHours: req.body.numOfHours,
       price: req.body.price,
       priceBeforeDiscount: req.body.priceBeforeDiscount,
       startDate: req.body.startDate,
@@ -127,6 +128,7 @@ async function addLiveStreamingCourse(req, res, instructor) {
           prerequisiteText: req.body.prerequisiteText,
           whatYouWillLearn: req.body.whatYouWillLearn,
           numOfLessons: req.body.numOfLessons,
+          numOfHours: req.body.numOfHours,
           price: req.body.price,
           priceBeforeDiscount: req.body.priceBeforeDiscount,
           startDate: req.body.startDate,
@@ -405,6 +407,9 @@ exports.updateCourse = async (req, res) => {
         numOfLessons: req.body.numOfLessons
           ? req.body.numOfLessons
           : course.numOfLessons,
+        numOfHours: req.body.numOfHours
+          ? req.body.numOfHours
+          : course.numOfHours,
         price: req.body.price ? req.body.price : course.price,
         priceBeforeDiscount: req.body.priceBeforeDiscount
           ? req.body.priceBeforeDiscount
