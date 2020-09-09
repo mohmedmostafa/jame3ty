@@ -11,10 +11,10 @@ const app = express();
 
 app.use('/public', express.static('public'));
 
-var corsOptions = {
-  origin: `${HOST}` + `${PORT}`,
-};
-app.use(cors(corsOptions));
+// var corsOptions = {
+//   origin: `${HOST}` + `${PORT}`,
+// };
+app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -48,7 +48,7 @@ require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
 
 // set port, listen for requests
 app.listen(process.env.PORT || PORT, () => {
-  console.log(corsOptions);
+  // console.log(corsOptions);
   console.log(
     `Server set up and running on port number: ${PORT}, environment: ${ENV}`
   );
