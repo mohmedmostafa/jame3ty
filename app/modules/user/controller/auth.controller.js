@@ -163,3 +163,43 @@ exports.signin = async (req, res) => {
       return Response(res, 500, err.message, {});
     });
 };
+
+exports.verifyEmail = async (req, res) => {
+  //Get account info
+  await db_User
+    .findOne({
+      where: {
+        email: req.body.email,
+      },
+    })
+    .then((user) => {
+      //If Email not found
+      if (!user) {
+        return Response(res, 404, 'Email Not found!', {});
+      } else {
+        //If account already verified
+        if (user.isVerified) {
+          return Response(res, 200, 'Email is already verified!', {});
+        } else {
+          //If Code is expired
+          if (moment().isAfter(user.lasVerificationCodeExpireAt)) {
+            return Response(res, 410, 'Verification code is expired!', {});
+          } else {
+            if (req.body.code != user.lastVerificationCodeSend) {
+              return Response(res, 401, 'Verification code was incorrect!', {});
+            } else {
+              db_User
+                .update({ isVerified: 1 }, { where: { email: req.body.email } })
+                .catch((error) => {
+                  console.log(error);
+                  return Response(res, 500, 'Fail to Udpate!', { error });
+                })
+                .then((result) => {
+                  return Response(res, 200, 'Success!', { result });
+                });
+            }
+          }
+        }
+      }
+    });
+};
