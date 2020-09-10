@@ -61,6 +61,7 @@ module.exports = function (app, Uploader) {
     InstructorController.listInstructor
   );
 
+  
   app.get(
     '/api/listInstructorById/:id',
     FileUploader.upload.none(),
