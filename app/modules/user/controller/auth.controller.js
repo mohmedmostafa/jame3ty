@@ -116,15 +116,7 @@ exports.signin = async (req, res) => {
         console.log(loginUser);
         console.log(authorities);
 
-        //If Not verified
-        if (!loginUser.isVerified) {
-          return Response(
-            res,
-            401,
-            'Authorization Required! - Email Verification is Required!',
-            {}
-          );
-        }
+        
 
         //Validate PW
         var passwordIsValid = bcrypt.compareSync(
@@ -138,6 +130,16 @@ exports.signin = async (req, res) => {
             res,
             401,
             'Authorization Required! - Invalid Password!',
+            {}
+          );
+        }
+
+        //If Not verified
+        if (!loginUser.isVerified) {
+          return Response(
+            res,
+            401,
+            'Authorization Required! - Email Verification is Required!',
             {}
           );
         }
