@@ -124,6 +124,9 @@ exports.listSubjectById = async (req, res) => {
         {
           model: db_Course,
         },
+        {
+          model: db_AcademicYear,
+        },
       ],
     });
 
@@ -204,6 +207,7 @@ exports.listSubject = async (req, res) => {
 
 function listSubject_NOPagination(req, db_Subject) {
   return new Promise(async (resolve, reject) => {
+    let yearId=req.query.yearId?req.query.yearId:'%%';
     await db_Subject
       .findAll({
         where: {
@@ -224,6 +228,9 @@ function listSubject_NOPagination(req, db_Subject) {
           {
             model: db_Course,
           },
+          {
+            model: db_AcademicYear, where: {id:{[Op.like]:yearId}}
+          },
         ],
       })
       .catch((err) => {
@@ -237,6 +244,7 @@ function listSubject_NOPagination(req, db_Subject) {
 
 function listSubject_DoPagination(req, db_AcademicYear, skip, _limit) {
   return new Promise(async (resolve, reject) => {
+    let yearId=req.query.yearId?req.query.yearId:'%%';
     await db_Subject
       .findAll({
         where: {
@@ -256,6 +264,9 @@ function listSubject_DoPagination(req, db_AcademicYear, skip, _limit) {
         include: [
           {
             model: db_Course,
+          },
+          {
+            model: db_AcademicYear, where: {id:{[Op.like]:yearId}}
           },
         ],
         offset: skip,

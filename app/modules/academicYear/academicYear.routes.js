@@ -20,7 +20,7 @@ module.exports = function (app) {
     [
       AcademicYearValidation.addAcademicYearValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isAdmin,
     ],
     AcademicYearController.addAcademicYear
   );
@@ -31,7 +31,7 @@ module.exports = function (app) {
     [
       AcademicYearValidation.deleteAcademicYearValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isAdmin,
     ],
     AcademicYearController.deleteAcademicYear
   );
@@ -42,7 +42,7 @@ module.exports = function (app) {
     [
       AcademicYearValidation.updateAcademicYearValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isAdmin,
     ],
     AcademicYearController.updateAcademicYear
   );

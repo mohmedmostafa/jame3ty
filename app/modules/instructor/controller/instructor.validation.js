@@ -69,7 +69,7 @@ updateInstructorValidation = async (req, res, next) => {
     mobile: Joi.string().trim().alphanum().required(),
     email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
     //username: Joi.string().trim().min(3).max(30).required(),
-    password: Joi.string().min(5).max(30).required(),
+    password: Joi.string().min(5).max(30).allow('', null).required(),
   });
 
   const { error } = schema.validate(req.body);
@@ -103,6 +103,7 @@ listInstructorValidation = (req, res, next) => {
     name_ar: Joi.string().trim().min(3).max(30),
     name_en: Joi.string().trim().min(3).max(30),
     mobile: Joi.string().trim().alphanum(),
+    searchKey:Joi.any(),
   });
 
   const { error } = schema.validate(req.query);
