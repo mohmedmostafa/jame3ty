@@ -29,6 +29,7 @@ addCourseValidation = (req, res, next) => {
     prerequisiteText: Joi.string().trim().min(5).required(),
     whatYouWillLearn: Joi.string().trim().min(5).required(),
     numOfLessons: Joi.number().integer().positive().min(1).required(),
+    numOfHours: Joi.number().positive().required(),
     price: Joi.number().positive().required(),
     priceBeforeDiscount: Joi.number()
       .positive()
@@ -108,6 +109,7 @@ updateCourseValidation = (req, res, next) => {
     prerequisiteText: Joi.string().trim().min(5).required(),
     whatYouWillLearn: Joi.string().trim().min(5).required(),
     numOfLessons: Joi.number().integer().positive().min(1).required(),
+    numOfHours: Joi.number().positive().required(),
     price: Joi.number().positive().required(),
     priceBeforeDiscount: Joi.number()
       .positive()

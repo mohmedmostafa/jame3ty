@@ -92,6 +92,7 @@ async function addRecordedLessonsCourse(req, res, instructor) {
       prerequisiteText: req.body.prerequisiteText,
       whatYouWillLearn: req.body.whatYouWillLearn,
       numOfLessons: req.body.numOfLessons,
+      numOfHours: req.body.numOfHours,
       price: req.body.price,
       priceBeforeDiscount: req.body.priceBeforeDiscount,
       startDate: req.body.startDate,
@@ -127,6 +128,7 @@ async function addLiveStreamingCourse(req, res, instructor) {
           prerequisiteText: req.body.prerequisiteText,
           whatYouWillLearn: req.body.whatYouWillLearn,
           numOfLessons: req.body.numOfLessons,
+          numOfHours: req.body.numOfHours,
           price: req.body.price,
           priceBeforeDiscount: req.body.priceBeforeDiscount,
           startDate: req.body.startDate,
@@ -260,15 +262,35 @@ exports.listCourseById = async (req, res) => {
         },
         {
           model: db_Subject,
+          include: [
+            {
+              model: db_AcademicYear,
+              include: [
+                {
+                  model: db_Department,
+                  include: [
+                    {
+                      model: db_Faculty,
+                      include: [
+                        {
+                          model: db_University,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           model: db_Group,
           include: [
             {
-              model: db_Lesson,
+              model: db_GroupSchedule,
             },
             {
-              model: db_GroupSchedule,
+              model: db_Lesson,
             },
             {
               model: db_CourseSubscribe,
@@ -282,22 +304,12 @@ exports.listCourseById = async (req, res) => {
         },
         {
           model: db_Lesson,
+        },
+        {
+          model: db_CourseSubscribe,
           include: [
             {
-              model: db_Group,
-              include: [
-                {
-                  model: db_GroupSchedule,
-                },
-                {
-                  model: db_CourseSubscribe,
-                  include: [
-                    {
-                      model: db_Student,
-                    },
-                  ],
-                },
-              ],
+              model: db_Student,
             },
           ],
         },
@@ -395,6 +407,9 @@ exports.updateCourse = async (req, res) => {
         numOfLessons: req.body.numOfLessons
           ? req.body.numOfLessons
           : course.numOfLessons,
+        numOfHours: req.body.numOfHours
+          ? req.body.numOfHours
+          : course.numOfHours,
         price: req.body.price ? req.body.price : course.price,
         priceBeforeDiscount: req.body.priceBeforeDiscount
           ? req.body.priceBeforeDiscount
@@ -580,8 +595,60 @@ function listCourse_DoPagination_Method_Both(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
         offset: skip,
@@ -688,8 +755,60 @@ function listCourse_DoPagination_Method_1_or_0(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
         offset: skip,
@@ -800,8 +919,60 @@ function listCourse_NOPagination_Method_Both(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
       })
@@ -906,8 +1077,60 @@ function listCourse_NOPagination_Method_1_or_0(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
       })
@@ -1065,8 +1288,60 @@ function listCourseNoDate_DoPagination_Method_Both(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
         offset: skip,
@@ -1164,8 +1439,60 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
         offset: skip,
@@ -1267,8 +1594,60 @@ function listCourseNoDate_NOPagination_Method_Both(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
       })
@@ -1364,8 +1743,60 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
         },
         include: [
           {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
             model: db_Group,
-            include: [{ model: db_GroupSchedule }],
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
       })
@@ -1508,7 +1939,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
             },
           ],
         },
-        include: [
+        /*include: [
           {
             model: db_Group,
             include: [{ model: db_GroupSchedule }],
@@ -1532,6 +1963,70 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
                     },
                   },
                 ],
+              },
+            ],
+          },
+        ],*/
+        include: [
+          {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            required: true,
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
               },
             ],
           },
@@ -1623,7 +2118,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
             },
           ],
         },
-        include: [
+        /*include: [
           {
             model: db_Group,
             include: [{ model: db_GroupSchedule }],
@@ -1647,6 +2142,70 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
                     },
                   },
                 ],
+              },
+            ],
+          },
+        ],*/
+        include: [
+          {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            required: true,
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
               },
             ],
           },
@@ -1735,7 +2294,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
             },
           ],
         },
-        include: [
+        /*include: [
           {
             model: db_Group,
             include: [{ model: db_GroupSchedule }],
@@ -1759,6 +2318,70 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
                     },
                   },
                 ],
+              },
+            ],
+          },
+        ],*/
+        include: [
+          {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            required: true,
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
               },
             ],
           },
@@ -1848,7 +2471,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
             },
           ],
         },
-        include: [
+        /*include: [
           {
             model: db_Group,
             include: [{ model: db_GroupSchedule }],
@@ -1872,6 +2495,70 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
                     },
                   },
                 ],
+              },
+            ],
+          },
+        ],*/
+        include: [
+          {
+            model: db_Instructor,
+          },
+          {
+            model: db_Subject,
+            required: true,
+            include: [
+              {
+                model: db_AcademicYear,
+                required: true,
+                include: [
+                  {
+                    model: db_Department,
+                    required: true,
+                    where: {
+                      id: req.params.departmentId,
+                    },
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
               },
             ],
           },

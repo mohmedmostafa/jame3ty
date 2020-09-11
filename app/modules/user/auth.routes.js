@@ -22,10 +22,14 @@ module.exports = function (app) {
   app.post(
     '/api/auth/signup',
     upload.none(),
-    [
-      UserValidation.signupValidation,
-      VerifySignUp.checkRolesExisted,
-    ],
+    [UserValidation.signupValidation, VerifySignUp.checkRolesExisted],
     AuthController.signup
+  );
+
+  app.post(
+    '/api/auth/verifyEmail',
+    upload.none(),
+    [UserValidation.verifyEmailValidation],
+    AuthController.verifyEmail
   );
 };

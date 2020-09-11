@@ -32,6 +32,10 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      numOfHours: {
+        type: Sequelize.DOUBLE,
+        allowNull: false,
+      },
       price: {
         type: Sequelize.DOUBLE,
         allowNull: false,

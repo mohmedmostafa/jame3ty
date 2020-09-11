@@ -159,6 +159,34 @@ deleteUserValidation = (req, res, next) => {
 
   return next();
 };
+//----------------------------------------------------------
+verifyEmailValidation = async (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
+    code: Joi.string()
+      .length(6)
+      .pattern(/^[0-9]+$/)
+      .required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  //Email Domain Validation
+  let isValidEmailResult = await helper
+    .validateEmailDomain(req.body.email)
+    .catch((err) => {
+      console.log(err);
+      //onErrorDeleteFiles(req);
+      return ValidateResponse(res, 'Email domain is not valid', {});
+    });
+
+  if (isValidEmailResult.isValidEmail) {
+    return next();
+  }
+};
 
 //----------------------------------------------------------
 changePasswordInsideValidation = async (req, res, next) => {
@@ -192,6 +220,7 @@ const UserValidation = {
   listUserIdValidation: listUserIdValidation,
   deleteUserValidation: deleteUserValidation,
   changePasswordInsideValidation: changePasswordInsideValidation,
+  verifyEmailValidation: verifyEmailValidation,
 };
 
 module.exports = UserValidation;
