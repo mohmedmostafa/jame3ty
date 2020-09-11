@@ -23,8 +23,13 @@
 							"mode": "formdata",
 							"formdata": [
 								{
+									"key": "username",
+									"value": "sara90",
+									"type": "text"
+								},
+								{
 									"key": "email",
-									"value": "Sara@aou.edu.jo",
+									"value": "Sara@yahoo.com",
 									"type": "text"
 								},
 								{
@@ -83,7 +88,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "Sara@aou.edu.jo",
+									"value": "sara90",
 									"type": "text"
 								},
 								{
@@ -143,12 +148,12 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "Aliiiii@aou.edu.om",
+									"value": "farag@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "231784",
+									"value": "748918",
 									"type": "text"
 								}
 							]
@@ -564,17 +569,17 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "فرج",
+									"value": "inst",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "farag",
+									"value": "inst",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "farag",
+									"value": "insttttt",
 									"type": "text"
 								},
 								{
@@ -583,8 +588,13 @@
 									"type": "text"
 								},
 								{
+									"key": "username",
+									"value": "arabi",
+									"type": "text"
+								},
+								{
 									"key": "email",
-									"value": "farag@aou.edu.jo",
+									"value": "arabi@gmail.com",
 									"type": "text"
 								},
 								{
@@ -659,27 +669,22 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "محمد مصطفي 12",
+									"value": "عربى",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "mohamed mostafa12",
+									"value": "Arabi Keshk",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "very quit man12",
+									"value": "aaaaa",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
 									"value": "0100000032",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "Mohm@aou.edu.om",
 									"type": "text"
 								},
 								{
@@ -703,13 +708,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateInstructor/2",
+							"raw": "{{url}}api/updateInstructor/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateInstructor",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -884,6 +889,11 @@
 									"type": "text"
 								},
 								{
+									"key": "numOfHours",
+									"value": "1.5",
+									"type": "text"
+								},
+								{
 									"key": "price",
 									"value": "19.9",
 									"type": "text"
@@ -921,44 +931,39 @@
 								{
 									"key": "nameGroup",
 									"value": "ggggg",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
 									"value": "13",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "startDateGroup",
 									"value": "1994-11-06",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "endDateGroup",
 									"value": "1994-11-07",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "groupSchedule",
 									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1998-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1984-11-05T08:15:30-05:00\"}]",
 									"description": "Array of JSON Objects => As String",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{url}}api/addCourse/0",
+							"raw": "{{url}}api/addCourse/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"addCourse",
-								"0"
+								"1"
 							]
 						}
 					},
@@ -1068,13 +1073,13 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseById/2",
+							"raw": "{{url}}api/listCourseById/3",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseById",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -1136,6 +1141,11 @@
 									"type": "text"
 								},
 								{
+									"key": "numOfHours",
+									"value": "15.5",
+									"type": "text"
+								},
+								{
 									"key": "price",
 									"value": "19.9",
 									"type": "text"
@@ -1173,13 +1183,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}api/updateCourse/14",
+							"raw": "{{url}}api/updateCourse/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateCourse",
-								"14"
+								"1"
 							]
 						}
 					},
@@ -1596,18 +1606,8 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "username",
-									"value": "admin",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "admin@aou.edu.om",
-									"type": "text"
-								},
-								{
 									"key": "password",
-									"value": "12345",
+									"value": "12345678",
 									"type": "text"
 								},
 								{
@@ -1621,13 +1621,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateUser/1",
+							"raw": "{{url}}api/updateUser/2",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateUser",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -2950,8 +2950,13 @@
 									"type": "text"
 								},
 								{
+									"key": "username",
+									"value": "farag",
+									"type": "text"
+								},
+								{
 									"key": "email",
-									"value": "Aliiiii@aou.edu.om",
+									"value": "farag@gmail.com",
 									"type": "text"
 								},
 								{
@@ -3029,17 +3034,12 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Eman",
+									"value": "Farag",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
 									"value": "01000007517",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "aliiiii@aou.edu.eg",
 									"type": "text"
 								},
 								{
@@ -3054,7 +3054,7 @@
 								},
 								{
 									"key": "password",
-									"value": "123456",
+									"value": "12345678",
 									"type": "text"
 								}
 							],
@@ -3063,13 +3063,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateStudent/3",
+							"raw": "{{url}}api/updateStudent/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateStudent",
-								"3"
+								"1"
 							]
 						}
 					},
@@ -3624,14 +3624,14 @@
 	],
 	"variable": [
 		{
-			"id": "4a575c63-3cfc-41cd-885e-c6fcb8384336",
+			"id": "1fe0efa1-bb2e-4bf5-940c-0d9e15216f1b",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "62ce1f5a-d1aa-4ebf-823c-72b93181e25c",
+			"id": "44944706-19bc-4d6d-930d-4fa535f38684",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTk5NTk4OTAyLCJleHAiOjE1OTk2ODUzMDJ9.PZwlR7JNzipEeBuF7ymjoanwKOm2JvdQQJQ8BJdqnv4"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTk5NjEyNzg4LCJleHAiOjE1OTk2OTkxODh9.U5wneP1uwOOrC6SkbX9WLuedxhFGDYJlVJ3FZO_q7Ew"
 		}
 	],
 	"protocolProfileBehavior": {}
