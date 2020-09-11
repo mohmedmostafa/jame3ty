@@ -19,7 +19,7 @@ exports.signup = async (req, res) => {
   let userF = await db_User.findOne({
     where: {
       [Op.or]: {
-        username: req.body.email,
+        username: req.body.username,
         email: req.body.email,
       },
     },
@@ -47,7 +47,7 @@ exports.signup = async (req, res) => {
       //Save the new account to DB
       const user = await db_User.create(
         {
-          username: req.body.email,
+          username: req.body.username,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
           isVerified: 1,
@@ -66,7 +66,7 @@ exports.signup = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupCerificationEmail(user.randomToken, req.body.email)
+      .sendSignupVerificationEmail(user.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
       });
@@ -115,8 +115,6 @@ exports.signin = async (req, res) => {
 
         console.log(loginUser);
         console.log(authorities);
-
-        
 
         //Validate PW
         var passwordIsValid = bcrypt.compareSync(

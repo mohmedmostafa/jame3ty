@@ -8,7 +8,7 @@ const db = require('../..');
 //----------------------------------------------------------
 signinValidation = async (req, res, next) => {
   const schema = Joi.object({
-    username: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
+    username: Joi.string().alphanum().trim().min(3).max(30).required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -20,7 +20,7 @@ signinValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.username)
     .catch((err) => {
       console.log(err);
@@ -29,13 +29,16 @@ signinValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------
 signupValidation = async (req, res, next) => {
   const schema = Joi.object({
-    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
+    username: Joi.string().alphanum().trim().min(3).max(30).required(),
+    email: Joi.string().trim().email().required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -48,7 +51,7 @@ signupValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -58,7 +61,9 @@ signupValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------
@@ -79,8 +84,6 @@ updateUserValidation = async (req, res, next) => {
 
   //Body Validation
   const schema = Joi.object({
-    username: Joi.string().trim().alphanum().min(3).max(30).required(),
-    email: Joi.string().trim().email({ minDomainSegments: 3 }),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -96,7 +99,7 @@ updateUserValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -106,7 +109,9 @@ updateUserValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------
@@ -162,7 +167,7 @@ deleteUserValidation = (req, res, next) => {
 //----------------------------------------------------------
 verifyEmailValidation = async (req, res, next) => {
   const schema = Joi.object({
-    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
+    email: Joi.string().trim().email().required(),
     code: Joi.string()
       .length(6)
       .pattern(/^[0-9]+$/)
@@ -175,7 +180,7 @@ verifyEmailValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -185,7 +190,9 @@ verifyEmailValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------

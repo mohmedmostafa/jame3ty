@@ -13,8 +13,8 @@ addInstructorValidation = async (req, res, next) => {
     name_en: Joi.string().trim().min(3).max(30),
     bio: Joi.string().trim().min(5).max(30),
     mobile: Joi.string().trim().alphanum().required(),
-    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
-    //username: Joi.string().trim().min(3).max(30).required(),
+    email: Joi.string().trim().email().required(),
+    username: Joi.string().alphanum().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),
     img: Joi.any(),
@@ -31,7 +31,7 @@ addInstructorValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -41,7 +41,9 @@ addInstructorValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------
@@ -67,8 +69,6 @@ updateInstructorValidation = async (req, res, next) => {
     name_en: Joi.string().trim().min(3).max(30),
     bio: Joi.string().trim().min(5).max(30),
     mobile: Joi.string().trim().alphanum().required(),
-    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
-    //username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
   });
 
@@ -80,7 +80,7 @@ updateInstructorValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -90,7 +90,9 @@ updateInstructorValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------

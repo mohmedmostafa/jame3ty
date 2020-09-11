@@ -56,7 +56,7 @@ exports.addInstructor = async (req, res) => {
     //Check if not Unique
     let userF = await db_User.findOne({
       where: {
-        username: req.body.email,
+        username: req.body.username,
       },
     });
 
@@ -124,7 +124,7 @@ exports.addInstructor = async (req, res) => {
       const user = await db_User.create(
         {
           email: req.body.email,
-          username: req.body.email,
+          username: req.body.username,
           password: bcrypt.hashSync(req.body.password, 8),
           isVerified: 0,
           lastVerificationCodeSend: randomToken,
@@ -150,7 +150,7 @@ exports.addInstructor = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupCerificationEmail(instructor.randomToken, req.body.email)
+      .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
       });
@@ -189,46 +189,7 @@ exports.updateInstructor = async (req, res) => {
 
     //--------------------
     //Check if not Unique
-    let user = await db_User.findOne({
-      where: {
-        email: req.body.email,
-        id: { [Op.ne]: Instructor.user.id },
-      },
-    });
-
-    if (user) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
-    user = await db_User.findOne({
-      where: {
-        username: req.body.email,
-        id: { [Op.ne]: Instructor.user.id },
-      },
-    });
-
-    if (user) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Username already exists!', {});
-    }
-
     let inst = await db_Instructor.findOne({
-      where: {
-        email: req.body.email,
-        id: {
-          [Op.ne]: req.params.id,
-        },
-      },
-    });
-
-    if (inst) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
-    //
-    inst = await db_Instructor.findOne({
       where: {
         mobile: req.body.mobile,
         id: {
@@ -258,6 +219,7 @@ exports.updateInstructor = async (req, res) => {
         { where: { id: req.params.id } },
         { transaction: t }
       );
+      
       //delete file
       if (Instructor.img) {
         unlinkAsync(Instructor.getDataValue('img'));
@@ -267,20 +229,21 @@ exports.updateInstructor = async (req, res) => {
         unlinkAsync(Instructor.getDataValue('cv'));
       }
 
-      let User = await db_Instructor.findByPk(Instructor.userId);
-
       _User = await db_User.update(
         {
-          username: req.body.email ? req.body.email : User.email,
+          username: req.body.username
+            ? req.body.username
+            : Instructor.user.username,
           password: req.body.password
             ? bcrypt.hashSync(req.body.password, 8)
-            : User.password,
-          email: req.body.email ? req.body.email : User.email,
+            : Instructor.user.password,
+          email: req.body.email ? req.body.email : Instructor.email,
         },
         { where: { id: Instructor.userId } },
         { transaction: t }
       );
     });
+
     //Success
     return Response(res, 200, 'Success!', [_Instructor, _User]);
   } catch (error) {
