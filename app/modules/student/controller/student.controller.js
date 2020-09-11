@@ -151,6 +151,12 @@ exports.addStudent = async (req, res) => {
       .sendSignupVerificationEmail(result.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
+        return Response(
+          res,
+          502,
+          'Failed to Send Verification Code to ' + req.body.email,
+          { err }
+        );
       });
 
     //Success

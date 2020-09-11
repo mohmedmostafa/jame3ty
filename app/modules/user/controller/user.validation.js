@@ -164,6 +164,7 @@ deleteUserValidation = (req, res, next) => {
 
   return next();
 };
+
 //----------------------------------------------------------
 verifyEmailValidation = async (req, res, next) => {
   const schema = Joi.object({
@@ -196,6 +197,20 @@ verifyEmailValidation = async (req, res, next) => {
 };
 
 //----------------------------------------------------------
+sendVerificationCodeValidation = async (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().trim().email().required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 changePasswordInsideValidation = async (req, res, next) => {
   const schema = Joi.object({
     oldPassword: Joi.string()
@@ -219,6 +234,27 @@ changePasswordInsideValidation = async (req, res, next) => {
 };
 
 //----------------------------------------------------------
+forgotPasswordValidation = async (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().trim().email().required(),
+    password: Joi.string()
+      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .required(),
+    code: Joi.string()
+      .length(6)
+      .pattern(/^[0-9]+$/)
+      .required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return ValidateResponse(res, error.details[0].message, {});
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 const UserValidation = {
   signinValidation: signinValidation,
   signupValidation: signupValidation,
@@ -228,6 +264,8 @@ const UserValidation = {
   deleteUserValidation: deleteUserValidation,
   changePasswordInsideValidation: changePasswordInsideValidation,
   verifyEmailValidation: verifyEmailValidation,
+  sendVerificationCodeValidation: sendVerificationCodeValidation,
+  forgotPasswordValidation: forgotPasswordValidation,
 };
 
 module.exports = UserValidation;

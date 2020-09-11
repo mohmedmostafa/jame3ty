@@ -153,6 +153,12 @@ exports.addInstructor = async (req, res) => {
       .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
+        return Response(
+          res,
+          502,
+          'Failed to Send Verification Code to ' + req.body.email,
+          { err }
+        );
       });
 
     //Success
@@ -219,7 +225,7 @@ exports.updateInstructor = async (req, res) => {
         { where: { id: req.params.id } },
         { transaction: t }
       );
-      
+
       //delete file
       if (Instructor.img) {
         unlinkAsync(Instructor.getDataValue('img'));
