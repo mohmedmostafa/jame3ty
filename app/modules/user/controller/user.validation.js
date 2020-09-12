@@ -8,7 +8,7 @@ const db = require('../..');
 //----------------------------------------------------------
 signinValidation = async (req, res, next) => {
   const schema = Joi.object({
-    username: Joi.string().alphanum().trim().min(3).max(30).required(),
+    username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),

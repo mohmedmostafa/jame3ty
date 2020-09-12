@@ -97,7 +97,10 @@ exports.signin = async (req, res) => {
   await db_User
     .findAll({
       where: {
-        username: req.body.username,
+        [Op.or]: {
+          username: req.body.username,
+          email: req.body.username,
+        },
       },
       include: [
         {
