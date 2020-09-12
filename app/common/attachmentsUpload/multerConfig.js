@@ -8,7 +8,7 @@ const path = require('path');
 const {
   valid_mim_types_constants,
   valid_form_data_param_names_constants,
-} = require('./multerConstants');
+} = require('../attachmentsUpload/multerConstants');
 
 const maxSize = 500 * 1024 * 1024;
 
