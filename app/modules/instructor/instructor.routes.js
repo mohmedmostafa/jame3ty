@@ -5,8 +5,6 @@ const FileUploader = require('../../common/multerConfig');
 const multer = require('multer');
 const { ValidateResponse } = require('../../common/response.handler');
 
-
-
 module.exports = function (app, Uploader) {
   app.use(function (req, res, next) {
     res.header(
@@ -18,34 +16,47 @@ module.exports = function (app, Uploader) {
 
   const upload_addInstructor = FileUploader.upload.fields([
     {
-      name: FileUploader.validForm_DataParamNames()[0],
+      name: 'img',
       maxCount: 1,
     },
     {
-      name: FileUploader.validForm_DataParamNames()[3],
+      name: 'file',
       maxCount: 1,
     },
   ]);
 
   app.post(
     '/api/addInstructor',
-    (req,res,next)=>{FileUploader.validateFileAfterUpdate(req,res,next,upload_addInstructor)},
+    (req, res, next) => {
+      FileUploader.validateFileAfterUpdate(
+        req,
+        res,
+        next,
+        upload_addInstructor
+      );
+    },
     [
       // AuthJwt.VerifyToken,
       // AuthJwt.isAdmin,
       InstructorValidation.addInstructorValidation,
-      
     ],
     InstructorController.addInstructor
   );
 
   app.put(
     '/api/updateInstructor/:id',
-    (req,res,next)=>{FileUploader.validateFileAfterUpdate(req,res,next,upload_addInstructor)},
-    [ AuthJwt.VerifyToken,
+    (req, res, next) => {
+      FileUploader.validateFileAfterUpdate(
+        req,
+        res,
+        next,
+        upload_addInstructor
+      );
+    },
+    [
+      AuthJwt.VerifyToken,
       AuthJwt.isAdmin,
       InstructorValidation.updateInstructorValidation,
-     
     ],
     InstructorController.updateInstructor
   );
@@ -53,15 +64,14 @@ module.exports = function (app, Uploader) {
   app.get(
     '/api/listInstructor',
     FileUploader.upload.none(),
-    [AuthJwt.VerifyToken,
+    [
+      AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrStudentorOrAdmin,
       InstructorValidation.listInstructorValidation,
-      
     ],
     InstructorController.listInstructor
   );
 
-  
   app.get(
     '/api/listInstructorById/:id',
     FileUploader.upload.none(),
@@ -76,10 +86,10 @@ module.exports = function (app, Uploader) {
   app.post(
     '/api/deleteInstructor/:id',
     FileUploader.upload.none(),
-    [AuthJwt.VerifyToken,
+    [
+      AuthJwt.VerifyToken,
       AuthJwt.isAdmin,
       InstructorValidation.deleteInstructorValidation,
-      
     ],
     InstructorController.deleteInstructor
   );
@@ -91,18 +101,16 @@ module.exports = function (app, Uploader) {
   //   }
   //   console.log(req.body['g-recaptcha-response']);
   //   const secretKey = "6Lc82cIZAAAAAG0yX5SrfKAbOPw2J1XVgq4UDkJ1";
-  
+
   //   const verificationURL = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.connection.remoteAddress;
-  
+
   //   request(verificationURL,function(error,response,body) {
   //     body = JSON.parse(body);
-  
+
   //     if(body.success !== undefined && !body.success) {
   //       return res.json({"responseError" : "Failed captcha verification"});
   //     }
   //     res.json({"responseSuccess" : "Sucess"});
   //   });
   // });
-  
-  
 };

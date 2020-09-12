@@ -18,15 +18,22 @@ exports.signup = async (req, res) => {
   //Check if not Unique
   let userF = await db_User.findOne({
     where: {
-      [Op.or]: {
-        username: req.body.username,
-        email: req.body.email,
-      },
+      username: req.body.username,
     },
   });
 
   if (userF) {
     return Response(res, 409, 'Username already exists!', {});
+  }
+
+  userF = await db_User.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+
+  if (userF) {
+    return Response(res, 409, 'Email already exists!', {});
   }
 
   //Get all info about roles attached with the new account

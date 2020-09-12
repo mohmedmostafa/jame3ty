@@ -101,6 +101,25 @@ exports.addInstructor = async (req, res) => {
       return Response(res, 409, 'Mobile already exists!', {});
     }
     //--------------------
+    //Create Attachment String
+    if (req.files.img) {
+      let field_1 = [];
+      req.files['img'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.img = field_1.join();
+    }
+
+    //Create Attachment String
+    if (req.files.file) {
+      let field_1 = [];
+      req.files['file'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.file = field_1.join();
+    }
 
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
@@ -115,8 +134,8 @@ exports.addInstructor = async (req, res) => {
           bio: req.body.bio,
           mobile: req.body.mobile,
           email: req.body.email,
-          img: req.files['img'] ? req.files['img'][0].path : null,
-          cv: req.files['file'] ? req.files['file'][0].path : null,
+          img: req.body.img,
+          cv: req.body.file,
         },
         { transaction: t }
       );
@@ -208,7 +227,27 @@ exports.updateInstructor = async (req, res) => {
       onErrorDeleteFiles(req);
       return Response(res, 409, 'Mobile already exists!', {});
     }
+
     //--------------------
+    //Create Attachment String
+    if (req.files.img) {
+      let field_1 = [];
+      req.files['img'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.img = field_1.join();
+    }
+
+    //Create Attachment String
+    if (req.files.file) {
+      let field_1 = [];
+      req.files['file'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.file = field_1.join();
+    }
 
     //Do Update
     const instructor = await db_connection.transaction(async (t) => {
@@ -219,20 +258,35 @@ exports.updateInstructor = async (req, res) => {
           bio: req.body.bio ? req.body.name_en : Instructor.bio,
           mobile: req.body.mobile ? req.body.mobile : Instructor.mobile,
           email: req.body.email ? req.body.email : Instructor.email,
-          img: req.files['img'] ? req.files['img'][0].path : Instructor.img,
-          cv: req.files['file'] ? req.files['file'][0].path : Instructor.cv,
+          //img: req.files['img'] ? req.files['img'][0].path : Instructor.img,
+          img: req.body.img ? req.body.img : Instructor.getDataValue('img'),
+          //cv: req.files['file'] ? req.files['file'][0].path : Instructor.cv,
+          cv: req.body.file ? req.body.file : Instructor.getDataValue('cv'),
         },
         { where: { id: req.params.id } },
         { transaction: t }
       );
 
-      //delete file
-      if (Instructor.img) {
-        unlinkAsync(Instructor.getDataValue('img'));
+      if (_Instructor && req.body.img) {
+        let imgStr = Instructor.getDataValue('img');
+        if (imgStr.length > 0) {
+          let locations = imgStr.split(',');
+          console.log(locations);
+          locations.forEach((loc) => {
+            deleteFile(loc);
+          });
+        }
       }
 
-      if (Instructor.cv) {
-        unlinkAsync(Instructor.getDataValue('cv'));
+      if (_Instructor && req.body.file) {
+        let imgStr = Instructor.getDataValue('cv');
+        if (imgStr.length > 0) {
+          let locations = imgStr.split(',');
+          console.log(locations);
+          locations.forEach((loc) => {
+            deleteFile(loc);
+          });
+        }
       }
 
       _User = await db_User.update(

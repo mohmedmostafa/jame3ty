@@ -88,12 +88,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "sara90",
+									"value": "farag",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "123456",
+									"value": "1234567890",
 									"type": "text"
 								}
 							],
@@ -153,7 +153,7 @@
 								},
 								{
 									"key": "code",
-									"value": "748918",
+									"value": "784894",
 									"type": "text"
 								}
 							]
@@ -166,6 +166,72 @@
 							"path": [
 								"auth",
 								"verifyEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/auth/forgotPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "farag@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "732610",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/auth/forgotPassword",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"auth",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/auth/sendVerificationCode",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "farag@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/auth/sendVerificationCode",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"auth",
+								"sendVerificationCode"
 							]
 						}
 					},
@@ -3624,12 +3690,12 @@
 	],
 	"variable": [
 		{
-			"id": "1fe0efa1-bb2e-4bf5-940c-0d9e15216f1b",
+			"id": "0bb6d81a-cf02-439f-9ce9-b326966e1f75",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "44944706-19bc-4d6d-930d-4fa535f38684",
+			"id": "3d7334e0-a1a8-402f-a5c8-0f95c501b4a3",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTk5NjEyNzg4LCJleHAiOjE1OTk2OTkxODh9.U5wneP1uwOOrC6SkbX9WLuedxhFGDYJlVJ3FZO_q7Ew"
 		}
