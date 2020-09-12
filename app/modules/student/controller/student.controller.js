@@ -3,6 +3,10 @@ const {
   Response,
   ValidateResponse,
 } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+
 const helper = require('../../../common/helper');
 const email = require('../../../common/email');
 const {
@@ -44,7 +48,13 @@ exports.addStudent = async (req, res) => {
 
     if (user) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Username already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //'Username already exists!',
+        {}
+      );
     }
 
     user = await db_User.findOne({
@@ -55,7 +65,13 @@ exports.addStudent = async (req, res) => {
 
     if (user) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //'Email already exists!',
+        {}
+      );
     }
 
     //
@@ -67,7 +83,13 @@ exports.addStudent = async (req, res) => {
 
     if (student) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        'Email already exists!',
+        {}
+      );
     }
 
     //
@@ -79,7 +101,13 @@ exports.addStudent = async (req, res) => {
 
     if (student) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Mobile already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        'Mobile already exists!',
+        {}
+      );
     }
     //--------------------
 
@@ -162,7 +190,12 @@ exports.addStudent = async (req, res) => {
       });
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -186,21 +219,29 @@ exports.deleteStudent = async (req, res) => {
     // });
 
     // if (!student) {
-    //   return Response(res, 404, 'Student Not Found!', {});
+    //   return Response(res, ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+    // ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type
+    // .RESOURCE_NOT_FOUND,{});
     // }
 
     // //If Students Subscribe the course then can not delete it
     // if (student.courseSubscribes.length > 0) {
     //   return Response(
     //     res,
-    //     409,
-    //     "Can't delete the student, The Student has subscription!",
+    //     ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+    // ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+    //     //"Can't delete the student, The Student has subscription!",
     //     { course }
     //   );
     // }
 
     //Success
-    return Response(res, 200, 'Success!', { student });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { student }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -245,11 +286,21 @@ exports.listStudentById = async (req, res) => {
     });
 
     if (!user) {
-      return Response(res, 404, 'Student Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { user });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { user }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -294,11 +345,21 @@ exports.listStudentByUserId = async (req, res) => {
     });
 
     if (!user) {
-      return Response(res, 404, 'Student Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { user });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { user }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -322,7 +383,12 @@ exports.updateStudent = async (req, res) => {
 
     if (!student) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Student Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     console.log(student);
@@ -340,7 +406,13 @@ exports.updateStudent = async (req, res) => {
 
     if (stu) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Mobile already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        // 'Mobile already exists!',
+        {}
+      );
     }
     //--------------------
 
@@ -399,7 +471,12 @@ exports.updateStudent = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -474,7 +551,12 @@ exports.listStudent = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

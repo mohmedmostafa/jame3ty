@@ -1,6 +1,8 @@
 const db = require('../../../modules');
 const { Response } = require('../../../common/response/response.handler');
-
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
@@ -38,7 +40,12 @@ exports.addUniversity = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add!', { error });
@@ -52,7 +59,12 @@ exports.updateUniversity = async (req, res) => {
     let university = await db_University.findByPk(req.params.id);
 
     if (!university) {
-      return Response(res, 404, 'University Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     university = university.get({ plain: true });
@@ -67,7 +79,12 @@ exports.updateUniversity = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', { university });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { university }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -88,16 +105,28 @@ exports.deleteUniversity = async (req, res) => {
     });
 
     if (!university) {
-      return Response(res, 404, 'University Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     university = university.get({ plain: true });
 
     //Check if the Universtiy has Faculty
     if (university.faculties.length > 0) {
-      return Response(res, 409, "Can't Delete. The University has childs", {
-        university,
-      });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        // "Can't Delete. The University has childs",
+        {
+          university,
+        }
+      );
     }
 
     //Delete
@@ -106,7 +135,12 @@ exports.deleteUniversity = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { university });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { university }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -127,11 +161,21 @@ exports.listUniversityById = async (req, res) => {
     });
 
     if (!university) {
-      return Response(res, 404, 'University Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { university });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { university }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -198,7 +242,12 @@ exports.listUniversity = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

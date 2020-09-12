@@ -5,6 +5,9 @@ const moment = require('moment');
 const db = require('../../../modules');
 const config = require('../../../config/auth.config');
 const { Response } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 const { JWT_SECRET_KEY } = require('../../../../app/config/env.config');
 
 const db_connection = db.connection;
@@ -23,7 +26,13 @@ exports.signup = async (req, res) => {
   });
 
   if (userF) {
-    return Response(res, 409, 'Username already exists!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+      ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+      //  'Username already exists!',
+      {}
+    );
   }
 
   userF = await db_User.findOne({
@@ -33,7 +42,13 @@ exports.signup = async (req, res) => {
   });
 
   if (userF) {
-    return Response(res, 409, 'Email already exists!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+      ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+      // 'Email already exists!',
+      {}
+    );
   }
 
   //Get all info about roles attached with the new account
@@ -85,7 +100,12 @@ exports.signup = async (req, res) => {
       });
 
     //Success
-    return Response(res, 200, 'Success!', { user });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { user }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail to add the new user!', { error });
   }
@@ -111,7 +131,12 @@ exports.signin = async (req, res) => {
     .then((loginUser) => {
       //If username not found
       if (loginUser.length <= 0) {
-        return Response(res, 404, 'User Not found!', {});
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       } else {
         //Focus on the desired data
         loginUser = loginUser.map(function (user) {
@@ -142,8 +167,9 @@ exports.signin = async (req, res) => {
         if (!passwordIsValid) {
           return Response(
             res,
-            401,
-            'Authorization Required! - Invalid Password!',
+            ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+            ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+              .INVALID_PASSWORD,
             {}
           );
         }
@@ -152,8 +178,9 @@ exports.signin = async (req, res) => {
         if (!loginUser.isVerified) {
           return Response(
             res,
-            401,
-            'Authorization Required! - Email Verification is Required!',
+            ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+            ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+              .EMAIL_UNVERIFIED,
             {}
           );
         }
@@ -164,13 +191,18 @@ exports.signin = async (req, res) => {
         });
 
         //Success
-        return Response(res, 200, 'Success!', {
-          id: loginUser.id,
-          username: loginUser.username,
-          email: loginUser.email,
-          roles: authorities,
-          accessToken: token,
-        });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+          ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+          {
+            id: loginUser.id,
+            username: loginUser.username,
+            email: loginUser.email,
+            roles: authorities,
+            accessToken: token,
+          }
+        );
       }
     })
     .catch((err) => {
@@ -191,18 +223,36 @@ exports.verifyEmail = async (req, res) => {
     .then(async (user) => {
       //If Email not found
       if (!user) {
-        return Response(res, 404, 'Email Not found!', {});
+        //'Email Not found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       } else {
         //If account already verified
         if (user.isVerified) {
-          return Response(res, 200, 'Email is already verified!', {});
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+            ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type
+              .EMAIL_ALREADY_VERIFIED,
+            {}
+          );
         } else {
           //If Code is expired
           if (moment().isAfter(user.lasVerificationCodeExpireAt)) {
             return Response(res, 410, 'Verification code is expired!', {});
           } else {
             if (req.body.code != user.lastVerificationCodeSend) {
-              return Response(res, 401, 'Verification code was incorrect!', {});
+              return Response(
+                res,
+                ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+                ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+                  .VERIFICATION_CODE_INCORRECT,
+                {}
+              );
             } else {
               await db_User
                 .update({ isVerified: 1 }, { where: { email: req.body.email } })
@@ -216,7 +266,12 @@ exports.verifyEmail = async (req, res) => {
                   );
                 })
                 .then((result) => {
-                  return Response(res, 200, 'Success!', { result });
+                  return Response(
+                    res,
+                    ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+                    ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+                    { result }
+                  );
                 });
             }
           }
@@ -236,7 +291,13 @@ exports.sendVerificationCode = async (req, res) => {
     .then(async (user) => {
       //If Email not found
       if (!user) {
-        return Response(res, 404, 'Email Not found!', {});
+        //'Email Not found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       } else {
         //const randomToken = await email.generateRandomToken({ byteLength: 10 });
         const randomToken = Math.floor(100000 + Math.random() * 900000);
@@ -265,8 +326,9 @@ exports.sendVerificationCode = async (req, res) => {
           .then((result) => {
             return Response(
               res,
-              200,
-              'Success! Verification Code has been send to ' + req.body.email,
+              ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+              ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type
+                .VERIFICATION_CODE_SENT,
               {}
             );
           });
@@ -285,18 +347,36 @@ exports.forgotPassword = async (req, res) => {
     .then(async (user) => {
       //If Email not found
       if (!user) {
-        return Response(res, 404, 'Email Not found!', {});
+        //Email Not Found
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       } else {
         //If account not verified yet
         if (!user.isVerified) {
-          return Response(res, 200, 'Email is not verified!', {});
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+            ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+              .EMAIL_UNVERIFIED,
+            {}
+          );
         } else {
           //If Code is expired
           if (moment().isAfter(user.lasVerificationCodeExpireAt)) {
             return Response(res, 410, 'Verification code is expired!', {});
           } else {
             if (req.body.code != user.lastVerificationCodeSend) {
-              return Response(res, 401, 'Verification code was incorrect!', {});
+              return Response(
+                res,
+                ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+                ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+                  .VERIFICATION_CODE_INCORRECT,
+                {}
+              );
             } else {
               db_User
                 .update(
@@ -310,7 +390,12 @@ exports.forgotPassword = async (req, res) => {
                   });
                 })
                 .then((result) => {
-                  return Response(res, 200, 'Success!', { result });
+                  return Response(
+                    res,
+                    ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+                    ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+                    { result }
+                  );
                 });
             }
           }

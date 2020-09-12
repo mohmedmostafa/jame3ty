@@ -1,6 +1,9 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
 const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+const {
   onErrorDeleteFiles,
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -33,7 +36,12 @@ exports.addAssignmentSubmission = async (req, res) => {
 
     if (!lesson) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Lesson Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Create Attachment String
@@ -60,7 +68,12 @@ exports.addAssignmentSubmission = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { assignmentSubmission });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { assignmentSubmission }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -79,7 +92,12 @@ exports.deleteAssignmentSubmission = async (req, res) => {
     });
 
     if (!assignmentSubmission) {
-      return Response(res, 404, 'AssignmentSubmission Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Delete
@@ -100,7 +118,12 @@ exports.deleteAssignmentSubmission = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { deletedAssignmentSubmission });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { deletedAssignmentSubmission }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -118,7 +141,12 @@ exports.deleteAttachment = async (req, res) => {
     });
 
     if (!assignmentSubmission) {
-      return Response(res, 404, 'AssignmentSubmission Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     console.log(assignmentSubmission);
@@ -144,18 +172,35 @@ exports.deleteAttachment = async (req, res) => {
           }
         );
       } else {
-        return Response(res, 404, 'Attachemt Not Found!', {
-          assignmentSubmission,
-        });
+        //'Attachemt Not Found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {
+            assignmentSubmission,
+          }
+        );
       }
     } else {
-      return Response(res, 404, 'AssignmentSubmission has zero attachments!', {
-        assignmentSubmission,
-      });
+      //'AssignmentSubmission has zero attachments!'
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {
+          assignmentSubmission,
+        }
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { assignmentSubmission });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { assignmentSubmission }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete Attachment!', { error });
@@ -180,11 +225,21 @@ exports.listAssignmentSubmissionById = async (req, res) => {
     });
 
     if (!assignmentSubmission) {
-      return Response(res, 404, 'AssignmentSubmission Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { assignmentSubmission });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { assignmentSubmission }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -208,7 +263,12 @@ exports.updateAssignmentSubmission = async (req, res) => {
 
     if (!assignmentSubmission) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Student Assignment Submission Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Append Attachment String
@@ -244,7 +304,12 @@ exports.updateAssignmentSubmission = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', { updatedAssignmentSubmission });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { updatedAssignmentSubmission }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -311,7 +376,8 @@ exports.listAssignmentSubmission = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, { result });
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

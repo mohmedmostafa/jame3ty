@@ -20,7 +20,13 @@ checkDuplicateUsernameOrEmail = async (req, res, next) => {
     });
 
     if (username) {
-      return Response(res, 422, 'Failed! Username is already in use!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //'Failed! Username is already in use!',
+        {}
+      );
     }
 
     //Email
@@ -31,7 +37,13 @@ checkDuplicateUsernameOrEmail = async (req, res, next) => {
     });
 
     if (email) {
-      return Response(res, 422, 'Failed! Email is already in use!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //  'Failed! Email is already in use!',
+        {}
+      );
     }
 
     return next();
@@ -75,10 +87,15 @@ checkRolesExisted = async (req, res, next) => {
 
   //Check that count of returned row equals to count of submited roles
   if (matchedRoles.length != bodyRoles.length) {
-    return Response(res, 404, 'Some Roles are not valid!', {
-      allValidRoles: allValidRolesNames,
-      matchedRoles: matchedRolesNames,
-    });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.INVALID_ROLE,
+      {
+        allValidRoles: allValidRolesNames,
+        matchedRoles: matchedRolesNames,
+      }
+    );
   }
 
   return next();

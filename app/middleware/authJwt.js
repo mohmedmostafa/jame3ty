@@ -12,7 +12,13 @@ verifyToken = (req, res, next) => {
   console.log(req.headers.authorization);
 
   if (!req.headers.authorization) {
-    return Response(res, 401, 'Authorization Required!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+        .BEARER_TOKEN_NOT_FOUND,
+      {}
+    );
   }
 
   if (
@@ -24,7 +30,13 @@ verifyToken = (req, res, next) => {
 
     jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
-        return Response(res, 401, 'Authorization Required!', {});
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+            .BEARER_TOKEN_INCORRECT,
+          {}
+        );
       }
       req.userId = decoded.id;
       console.log('m7');
@@ -45,7 +57,12 @@ isAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
@@ -61,7 +78,12 @@ isInstructor = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
@@ -82,7 +104,12 @@ isInstructorOrAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
@@ -103,7 +130,12 @@ isInstructorOrStudent = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
@@ -119,7 +151,12 @@ isStudent = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
@@ -140,7 +177,12 @@ isStudentorOrAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
@@ -166,7 +208,12 @@ isInstructorOrStudentorOrAdmin = (req, res, next) => {
         }
       }
 
-      return Response(res, 403, 'Access to that resource is forbidden!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     });
   });
 };
