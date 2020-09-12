@@ -1,5 +1,5 @@
 const db = require('../..');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../response/response.handler');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;
@@ -127,9 +127,8 @@ exports.listFacultyById = async (req, res) => {
           model: db_Department,
         },
         {
-          model: db_University
-        }
-        
+          model: db_University,
+        },
       ],
     });
 
@@ -221,7 +220,7 @@ function listFaculty_DoPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     //query paramter to filter faculties based on university id
-    let universityId=req.query.universityId?req.query.universityId:'%%';
+    let universityId = req.query.universityId ? req.query.universityId : '%%';
     await db_Faculty
       .findAll({
         where: {
@@ -243,11 +242,11 @@ function listFaculty_DoPagination(
             model: db_Department,
           },
           {
-            model: db_University, where: {id:{[Op.like]:universityId}}
+            model: db_University,
+            where: { id: { [Op.like]: universityId } },
           },
-        ],order:[
-          [{model: db_University}, 'name_ar', 'DESC']
         ],
+        order: [[{ model: db_University }, 'name_ar', 'DESC']],
         offset: skip,
         limit: _limit,
       })
@@ -261,10 +260,9 @@ function listFaculty_DoPagination(
 }
 
 function listFaculty_NOPagination(req, db_Faculty, db_Department) {
-  
   return new Promise(async (resolve, reject) => {
     //query paramter to filter faculties based on university id
-    let universityId=req.query.universityId?req.query.universityId:'%%';
+    let universityId = req.query.universityId ? req.query.universityId : '%%';
 
     await db_Faculty
       .findAll({
@@ -287,11 +285,11 @@ function listFaculty_NOPagination(req, db_Faculty, db_Department) {
             model: db_Department,
           },
           {
-            model: db_University, where: {id:{[Op.like]:universityId}}
+            model: db_University,
+            where: { id: { [Op.like]: universityId } },
           },
-        ],order:[
-          [{model: db_University}, 'name_ar', 'DESC']
-        ]
+        ],
+        order: [[{ model: db_University }, 'name_ar', 'DESC']],
       })
       .catch((err) => {
         return reject(err);

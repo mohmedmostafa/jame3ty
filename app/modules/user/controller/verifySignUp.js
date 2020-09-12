@@ -2,7 +2,7 @@ const Joi = require('joi');
 const {
   Response,
   ValidateResponse,
-} = require('../../../common/response.handler');
+} = require('../../../response/response.handler');
 const db = require('../..');
 const db_User = db.User;
 const db_Role = db.Role;

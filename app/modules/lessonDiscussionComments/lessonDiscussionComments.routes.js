@@ -1,5 +1,5 @@
 const { AuthJwt } = require('../../middleware');
-const FileUploader = require('../../common/multerConfig');
+const FileUploader = require('../../common/attachmentsUpload/multerConfig');
 const lessonDiscussionCommentsValidation = require('./controller/lessonDiscussionComments.validation');
 const lessonDiscussionCommentsController = require('./controller/lessonDiscussionComments.controller');
 

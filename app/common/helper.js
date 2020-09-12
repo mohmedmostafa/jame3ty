@@ -38,6 +38,8 @@ function getUserdata(req, res) {
   return result;
 }
 
+//---------------------------------------------
+//Email Domain Validation
 //Email Valdiation
 let validDomains = [
   '@aou.edu.om',
@@ -71,6 +73,8 @@ function validateEmailDomain(email) {
     return;
   });
 }
+
+//------------------------------------------
 
 module.exports.getUserdata = getUserdata;
 module.exports.validateEmailDomain = validateEmailDomain;

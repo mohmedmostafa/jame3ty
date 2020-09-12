@@ -1,5 +1,5 @@
 const db = require('../../../modules');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../response/response.handler');
 const { ref, date } = require('joi');
 const { User } = require('../../../modules');
 

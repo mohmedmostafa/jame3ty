@@ -1,4 +1,4 @@
-const { Response, ValidateResponse } = require('../common/response.handler');
+const { Response, ValidateResponse } = require('../response/response.handler');
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');
 const db = require('../../app/modules');

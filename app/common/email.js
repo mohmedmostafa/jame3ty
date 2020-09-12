@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
+//-------------------------------------------------
+//Generate random token
 exports.generateRandomToken = ({
   stringBase = 'base64',
   byteLength = 48,
@@ -19,6 +21,8 @@ exports.generateRandomToken = ({
   });
 };
 
+//-------------------------------------------------
+//Send token to Email
 exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing

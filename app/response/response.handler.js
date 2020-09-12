@@ -1,4 +1,5 @@
 const { Sequelize } = require('../modules/index');
+
 exports.Response = (res, statusCode, message, data) => {
   if (statusCode == '200')
     return res.status(statusCode).send({

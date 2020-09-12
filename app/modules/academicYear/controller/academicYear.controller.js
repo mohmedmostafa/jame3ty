@@ -1,9 +1,9 @@
 const db = require('../..');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../response/response.handler');
 const {
   onErrorDeleteFiles,
   deleteFile,
-} = require('../../../common/multerConfig');
+} = require('../../../common/attachmentsUpload/multerConfig');
 const moment = require('moment');
 const { Sequelize } = require('../..');
 
@@ -237,7 +237,7 @@ exports.listAcademicYear = async (req, res) => {
 
 function listAcademicYear_NOPagination(req, db_AcademicYear) {
   return new Promise(async (resolve, reject) => {
-    let departmentId=req.query.DepartmentId?req.query.DepartmentId:'%%';
+    let departmentId = req.query.DepartmentId ? req.query.DepartmentId : '%%';
 
     await db_AcademicYear
       .findAll({
@@ -260,7 +260,8 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
             model: db_Subject,
           },
           {
-            model: db_Department, where: {id:{[Op.like]:departmentId}}
+            model: db_Department,
+            where: { id: { [Op.like]: departmentId } },
           },
         ],
       })
@@ -275,7 +276,7 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
 
 function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    let departmentId=req.query.DepartmentId?req.query.DepartmentId:'%%';
+    let departmentId = req.query.DepartmentId ? req.query.DepartmentId : '%%';
 
     await db_AcademicYear
       .findAll({
@@ -298,7 +299,8 @@ function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
             model: db_Subject,
           },
           {
-            model: db_Department, where: {id:{[Op.like]:departmentId}}
+            model: db_Department,
+            where: { id: { [Op.like]: departmentId } },
           },
         ],
         offset: skip,

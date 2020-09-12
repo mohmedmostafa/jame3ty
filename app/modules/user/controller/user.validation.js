@@ -1,7 +1,9 @@
 const Joi = require('joi');
 const helper = require('../../../common/helper');
-const { ValidateResponse } = require('../../../common/response.handler');
-const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const { ValidateResponse } = require('../../../response/response.handler');
+const {
+  onErrorDeleteFiles,
+} = require('../../../common/attachmentsUpload/multerConfig');
 
 const db = require('../..');
 

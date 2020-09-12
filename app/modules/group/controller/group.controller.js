@@ -1,8 +1,10 @@
 const db = require('../..');
-const { Response } = require('../../../common/response.handler');
-const { ValidateResponse } = require('../../../common/response.handler');
+const { Response } = require('../../../response/response.handler');
+const { ValidateResponse } = require('../../../response/response.handler');
 
-const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const {
+  onErrorDeleteFiles,
+} = require('../../../common/attachmentsUpload/multerConfig');
 const moment = require('moment');
 
 const Op = db.Sequelize.Op;

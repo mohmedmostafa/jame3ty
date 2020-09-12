@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { ValidateResponse } = require('../../../common/response.handler');
+const { ValidateResponse } = require('../../../response/response.handler');
 const db = require('../../');
 
 //----------------------------------------------------------
