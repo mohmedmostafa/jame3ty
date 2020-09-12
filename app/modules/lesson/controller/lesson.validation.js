@@ -139,6 +139,7 @@ listLessonValidation = (req, res, next) => {
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),
     type: Joi.string().trim().valid('1', '0', 'both').required(),
+    course_id: Joi.any(),
   });
 
   const { error } = schema.validate(req.query);

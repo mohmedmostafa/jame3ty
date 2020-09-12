@@ -244,8 +244,7 @@ function listSubject_NOPagination(req, db_Subject) {
 
 function listSubject_DoPagination(req, db_AcademicYear, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    let yearId=req.query.yearId?req.query.yearId:'%%';
-    await db_Subject
+     await db_Subject
       .findAll({
         where: {
           [Op.or]: [
@@ -266,8 +265,9 @@ function listSubject_DoPagination(req, db_AcademicYear, skip, _limit) {
             model: db_Course,
           },
           {
-            model: db_AcademicYear, where: {id:{[Op.like]:yearId}}
+            model: db_AcademicYear
           },
+          
         ],
         offset: skip,
         limit: _limit,

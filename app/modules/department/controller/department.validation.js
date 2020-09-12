@@ -101,6 +101,7 @@ listDepartmentValidation = (req, res, next) => {
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),
+    facultyId:Joi.any(),
   });
 
   const { error } = schema.validate(req.query);

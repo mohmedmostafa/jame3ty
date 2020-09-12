@@ -221,8 +221,7 @@ function listFaculty_DoPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     //query paramter to filter faculties based on university id
-    let universityId=req.query.universityId?req.query.universityId:'%%';
-    await db_Faculty
+     await db_Faculty
       .findAll({
         where: {
           [Op.or]: [
@@ -242,9 +241,7 @@ function listFaculty_DoPagination(
           {
             model: db_Department,
           },
-          {
-            model: db_University, where: {id:{[Op.like]:universityId}}
-          },
+          
         ],order:[
           [{model: db_University}, 'name_ar', 'DESC']
         ],

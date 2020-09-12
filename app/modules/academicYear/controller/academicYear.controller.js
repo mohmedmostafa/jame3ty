@@ -275,8 +275,7 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
 
 function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    let departmentId=req.query.DepartmentId?req.query.DepartmentId:'%%';
-
+ 
     await db_AcademicYear
       .findAll({
         where: {
@@ -298,7 +297,7 @@ function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
             model: db_Subject,
           },
           {
-            model: db_Department, where: {id:{[Op.like]:departmentId}}
+            model: db_Department
           },
         ],
         offset: skip,
