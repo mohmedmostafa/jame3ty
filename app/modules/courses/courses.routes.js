@@ -60,7 +60,7 @@ module.exports = function (app) {
     [
       CourseValidation.addCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     CourseController.addCourse
   );

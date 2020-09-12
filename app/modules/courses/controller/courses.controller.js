@@ -20,6 +20,7 @@ const db_University = db.University;
 const db_Faculty = db.Faculty;
 const db_Course = db.Course;
 const db_Group = db.Group;
+const db_User = db.User;
 const db_GroupSchedule = db.GroupSchedule;
 const db_AcademicYear = db.AcademicYear;
 const db_Department = db.Department;
@@ -46,9 +47,9 @@ exports.addCourse = async (req, res) => {
   }
 
   //Get instructor for the uer in the token
-  const instructor = await db_Instructor.findOne({
+  const instructor = await db_User.findOne({
     where: {
-      userId: req.userId,
+      id: req.userId,
     },
   });
 
