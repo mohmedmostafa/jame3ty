@@ -5,10 +5,6 @@ const unlinkAsync = promisify(fs.unlink);
 const { ValidateResponse } = require('../../common/response/response.handler');
 const multer = require('multer');
 const path = require('path');
-const {
-  valid_mim_types_constants,
-  valid_form_data_param_names_constants,
-} = require('./multerConstants.js');
 
 const maxSize = 500 * 1024 * 1024;
 
@@ -58,6 +54,66 @@ const storage = multer.diskStorage({
 });
 
 exports.upload = multer({ storage: storage, fileFilter: fieldsFileFilter });
+
+//----------------------------------------------------------------
+const valid_mim_types_constants = {
+  IMAGE: ['image/jpg', 'image/png', 'image/jpeg'],
+  VEDIO: ['video/mp4'],
+  FILE_PDF: ['application/pdf'],
+  FILE_WORD: [
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ],
+  FILE_POWERPOINT: [
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  ],
+  FILE_EXCEL: [
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ],
+  FILE_COMPRESSED: [
+    'application/vnd.rar',
+    'application/zip',
+    'application/x-7z-compressed',
+  ],
+  FILE_ANY: [
+    'image/jpg',
+    'image/png',
+    'image/jpeg',
+    'video/mp4',
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.rar',
+    'application/zip',
+    'application/x-7z-compressed',
+    'image/jpg',
+    'image/png',
+    'image/jpeg',
+  ],
+};
+
+const valid_form_data_param_names_constants = {
+  VALID_FORM_DATA_PARAM_NAMES_WITH_MIM_TYPES: [
+    ['img', valid_mim_types_constants.IMAGE],
+    ['img1', valid_mim_types_constants.IMAGE],
+    ['vedio', valid_mim_types_constants.VEDIO],
+    ['file', valid_mim_types_constants.FILE_ANY],
+    ['file1', valid_mim_types_constants.FILE_ANY],
+    ['attachments', valid_mim_types_constants.FILE_ANY],
+    ['pdf', valid_mim_types_constants.FILE_PDF],
+    ['pdf1', valid_mim_types_constants.FILE_PDF],
+    ['word', valid_mim_types_constants.FILE_WORD],
+    ['powerpoint', valid_mim_types_constants.FILE_POWERPOINT],
+    ['excel', valid_mim_types_constants.FILE_EXCEL],
+    ['compressed', valid_mim_types_constants.FILE_COMPRESSED],
+  ],
+};
 
 //------------------------------------------------------------------
 //------------------------------------------------------------------
