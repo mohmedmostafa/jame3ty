@@ -47,9 +47,9 @@ exports.addCourse = async (req, res) => {
   }
 
   //Get instructor for the uer in the token
-  const instructor = await db_User.findOne({
+  const instructor = await db_Instructor.findOne({
     where: {
-      id: req.userId,
+      userId: req.userId,
     },
   });
 
