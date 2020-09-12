@@ -1,4 +1,4 @@
-exports.valid_mim_types_constants = {
+module.exports.valid_mim_types_constants = {
   IMAGE: ['image/jpg', 'image/png', 'image/jpeg'],
   VEDIO: ['video/mp4'],
   FILE_PDF: ['application/pdf'],
@@ -43,7 +43,7 @@ exports.valid_mim_types_constants = {
 //------------------------------------------------------------------
 //NOTE: Parameter Name in (form-data) MUST be 1 of these names:-
 //[img, vedio, file, pdf, word, powerpoint, excel, compressed]
-exports.valid_form_data_param_names_constants = {
+module.exports.valid_form_data_param_names_constants = {
   VALID_FORM_DATA_PARAM_NAMES_WITH_MIM_TYPES: [
     ['img', exports.valid_mim_types_constants.IMAGE],
     ['img1', exports.valid_mim_types_constants.IMAGE],
