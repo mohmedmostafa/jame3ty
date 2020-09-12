@@ -20,7 +20,7 @@ module.exports = function (app) {
     [
       DepartmentValidation.addDepartmentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isAdmin,
     ],
     DepartmentController.addDepartment
   );
@@ -31,7 +31,7 @@ module.exports = function (app) {
     [
       DepartmentValidation.deleteDepartmentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isAdmin,
     ],
     DepartmentController.deleteDepartment
   );
@@ -42,7 +42,7 @@ module.exports = function (app) {
     [
       DepartmentValidation.updateDepartmentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isAdmin,
     ],
     DepartmentController.updateDepartment
   );

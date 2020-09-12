@@ -210,7 +210,7 @@ exports.updateInstructor = async (req, res) => {
       return Response(res, 404, 'Instructor Not Found!', {});
     }
 
-    console.log(Instructor);
+    console.log(req.body.password ?true:false,"dsasasdasd");
 
     //--------------------
     //Check if not Unique
@@ -309,7 +309,7 @@ exports.updateInstructor = async (req, res) => {
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(res, 500, 'Fail to Update!', { error });
   }
 };
 
@@ -403,10 +403,8 @@ exports.listInstructor = async (req, res) => {
   let _limit = numPerPage;
 
   //Query
-  let name_ar = req.query.name_ar ? req.query.name_ar : '';
-  let name_en = req.query.name_en ? req.query.name_en : '';
-  let mobile = req.query.mobile ? req.query.mobile : '';
-
+  let searchKey = req.query.searchKey ? req.query.searchKey : '';
+   
   //check if
   const userData = await helper.getUserdata(req, res).catch((err) => {
     return Response(res, 500, 'Error in Retrieve some data', {
@@ -429,17 +427,17 @@ exports.listInstructor = async (req, res) => {
         [Op.or]: [
           {
             name_ar: {
-              [Op.substring]: name_ar,
+              [Op.substring]:searchKey,
             },
           },
           {
             name_en: {
-              [Op.substring]: name_en,
+              [Op.substring]:searchKey,
             },
           },
           {
             mobile: {
-              [Op.substring]: mobile,
+              [Op.substring]:searchKey,
             },
           },
         ],
@@ -453,18 +451,18 @@ exports.listInstructor = async (req, res) => {
         [Op.or]: [
           {
             name_ar: {
-              [Op.substring]: name_ar,
+              [Op.substring]: searchKey,
             },
           },
 
           {
             name_en: {
-              [Op.substring]: name_en,
+              [Op.substring]: searchKey,
             },
           },
           {
             mobile: {
-              [Op.substring]: mobile,
+              [Op.substring]: searchKey,
             },
           },
         ],

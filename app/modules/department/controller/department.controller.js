@@ -127,6 +127,9 @@ exports.listDepartmentById = async (req, res) => {
         {
           model: db_AcademicYear,
         },
+        {
+          model: db_Faculty,
+        },
       ],
     });
 
@@ -260,6 +263,9 @@ function listDepartment_NOPagination(req, db_Department) {
           {
             model: db_AcademicYear,
           },
+          {
+            model: db_Faculty,
+          },
         ],
       })
       .catch((err) => {
@@ -292,6 +298,9 @@ function listDepartment_DoPagination(req, db_Department, skip, _limit) {
         include: [
           {
             model: db_AcademicYear,
+          },
+          {
+            model: db_Faculty,
           },
         ],
         offset: skip,

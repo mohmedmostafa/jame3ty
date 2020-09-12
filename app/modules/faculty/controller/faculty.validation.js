@@ -55,6 +55,7 @@ listFacultyValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     doPagination: Joi.number().integer().valid(1, 0).default(1),
+    universityId: Joi.any(),
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),

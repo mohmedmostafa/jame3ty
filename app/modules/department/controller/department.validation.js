@@ -48,6 +48,7 @@ updateDepartmentValidation = (req, res, next) => {
   if (req.params) {
     const schemaParam = Joi.object({
       id: Joi.number().integer().required(),
+    
     });
 
     const { error } = schemaParam.validate(req.params);
@@ -62,6 +63,7 @@ updateDepartmentValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string().trim().min(3).max(30).required(),
     name_en: Joi.string().trim().min(3).max(30).required(),
+    facultyId:Joi.any(),
   });
 
   const { error } = schema.validate(req.body);
