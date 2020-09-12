@@ -60,7 +60,7 @@ module.exports = function (app) {
     [
       CourseValidation.addCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     CourseController.addCourse
   );
@@ -71,7 +71,7 @@ module.exports = function (app) {
     [
       CourseValidation.deleteCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     CourseController.deleteCourse
   );
@@ -120,7 +120,7 @@ module.exports = function (app) {
     [
       CourseValidation.updateCourseValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     CourseController.updateCourse
   );
