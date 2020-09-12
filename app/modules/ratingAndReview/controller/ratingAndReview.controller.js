@@ -1,5 +1,8 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;
@@ -19,7 +22,12 @@ exports.addRatingAndReview = async (req, res) => {
     );
 
     if (!courseSubscribe) {
-      return Response(res, 404, 'Course Subscribe Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Save to DB
@@ -31,7 +39,12 @@ exports.addRatingAndReview = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { ratingAndReview });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { ratingAndReview }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add', { error });
@@ -45,7 +58,12 @@ exports.updateRatingAndReview = async (req, res) => {
     let ratingAndReview = await db_RatingAndReview.findByPk(req.params.id);
 
     if (!ratingAndReview) {
-      return Response(res, 404, 'Rating And Review Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Do Update
@@ -60,7 +78,12 @@ exports.updateRatingAndReview = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', { ratingAndReview });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { ratingAndReview }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -81,7 +104,12 @@ exports.deleteRatingAndReview = async (req, res) => {
     });
 
     if (!ratingAndReview) {
-      return Response(res, 404, 'RatingAndReview Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Delete
@@ -90,7 +118,12 @@ exports.deleteRatingAndReview = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { ratingAndReview });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { ratingAndReview }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -116,11 +149,21 @@ exports.listRatingAndReviewById = async (req, res) => {
     });
 
     if (!ratingAndReview) {
-      return Response(res, 404, 'RatingAndReview Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { ratingAndReview });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { ratingAndReview }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -143,11 +186,21 @@ exports.listRatingAndReviewByCourseId = async (req, res) => {
     });
 
     if (!ratingAndReview) {
-      return Response(res, 404, 'RatingAndReview  Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { ratingAndReview });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { ratingAndReview }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -212,7 +265,12 @@ exports.listRatingAndReview = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

@@ -3,6 +3,9 @@ const {
   Response,
   ValidateResponse,
 } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 
 const {
   onErrorDeleteFiles,
@@ -31,7 +34,13 @@ exports.addGroup = async (req, res) => {
 
   if (!course) {
     //onErrorDeleteFiles(req);
-    return Response(res, 404, 'Course Not Found or Not Live Streaming', {});
+    //'Course Not Found or Not Live Streaming'
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
   }
 
   //Check startDate of Group - Must be greater than Course Start Date which belongs to.
@@ -51,7 +60,12 @@ exports.addGroup = async (req, res) => {
   });
 
   if (!instructor) {
-    return Response(res, 404, 'Instructor Not Found!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
   }
 
   try {
@@ -90,7 +104,12 @@ exports.addGroup = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { group });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { group }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail to add', { error });
   }
@@ -125,10 +144,11 @@ exports.updateGroup = async (req, res) => {
 
     if (!course) {
       //onErrorDeleteFiles(req);
+      //'Course with that group is Not Found or Not Live Streaming'
       return Response(
         res,
-        404,
-        'Course with that group is Not Found or Not Live Streaming',
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
         {}
       );
     }
@@ -204,7 +224,12 @@ exports.updateGroup = async (req, res) => {
     console.log(group);
 
     //Success
-    return Response(res, 200, 'Success!', { group });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { group }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -231,7 +256,12 @@ exports.deleteGroup = async (req, res) => {
     });
 
     if (!group) {
-      return Response(res, 404, 'Group Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
     //course = course.get({ plain: true });
 
@@ -241,8 +271,10 @@ exports.deleteGroup = async (req, res) => {
     if (group.courseSubscribes.length > 0) {
       return Response(
         res,
-        409,
-        "Can't delete the group, The Course Group has subscription!",
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't delete the group, The Course Group has subscription!",
         { group }
       );
     }
@@ -253,7 +285,12 @@ exports.deleteGroup = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { group });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { group }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -270,7 +307,12 @@ exports.listGroupByCourseId = async (req, res) => {
   });
 
   if (!course) {
-    return Response(res, 404, 'Course Not Found!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
   }
 
   //
@@ -336,7 +378,12 @@ exports.listGroupByCourseId = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }
@@ -467,11 +514,21 @@ exports.listGroupById = async (req, res) => {
     });
 
     if (!group) {
-      return Response(res, 404, 'Group Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { group });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { group }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });

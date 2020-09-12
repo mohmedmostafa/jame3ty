@@ -3,6 +3,9 @@ const {
   Response,
   ValidateResponse,
 } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 
 const {
   onErrorDeleteFiles,
@@ -34,7 +37,12 @@ exports.addCourse = async (req, res) => {
 
   if (!subject) {
     onErrorDeleteFiles(req);
-    return Response(res, 404, 'Subject Not Found!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
   }
 
   //Get instructor for the uer in the token
@@ -46,7 +54,12 @@ exports.addCourse = async (req, res) => {
 
   if (!instructor) {
     onErrorDeleteFiles(req);
-    return Response(res, 404, 'Instructor Not Found!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
   }
 
   console.log(req.files);
@@ -107,7 +120,12 @@ async function addRecordedLessonsCourse(req, res, instructor) {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { course });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { course }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -175,7 +193,12 @@ async function addLiveStreamingCourse(req, res, instructor) {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { course });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { course }
+    );
   } catch (error) {
     onErrorDeleteFiles(req);
     return Response(res, 500, 'Fail to add', { error });
@@ -199,7 +222,12 @@ exports.deleteCourse = async (req, res) => {
     });
 
     if (!course) {
-      return Response(res, 404, 'Course Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
     //course = course.get({ plain: true });
 
@@ -209,8 +237,10 @@ exports.deleteCourse = async (req, res) => {
     if (course.courseSubscribes.length > 0) {
       return Response(
         res,
-        409,
-        "Can't delete the course, The Course has subscription!",
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't delete the course, The Course has subscription!",
         { course }
       );
     }
@@ -244,7 +274,12 @@ exports.deleteCourse = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { course });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { course }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -319,11 +354,21 @@ exports.listCourseById = async (req, res) => {
     });
 
     if (!course) {
-      return Response(res, 404, 'Course Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { course });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { course }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -347,7 +392,12 @@ exports.updateCourse = async (req, res) => {
 
     if (!course) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Course Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //If the course is live streaming course -> then check the new start date of the course to be
@@ -449,7 +499,12 @@ exports.updateCourse = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      {}
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -503,7 +558,12 @@ exports.listCourse = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { data });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }
@@ -1205,7 +1265,12 @@ exports.listCourseNoDate = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { data });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }
@@ -1831,7 +1896,12 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
   });
 
   if (!dept) {
-    return Response(res, 404, 'Department Not Found!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
   }
 
   //
@@ -1871,7 +1941,12 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { data });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

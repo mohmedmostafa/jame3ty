@@ -1,23 +1,30 @@
 const db = require('../../../modules');
 const { Response } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
 
 // exports.allAccess = (req, res) => {
-//   return Response(res, 200, 'Success!', 'Public Content.');
+//   return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+// ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, 'Public Content.');
 // };
 
 // exports.userBoard = (req, res) => {
-//   return Response(res, 200, 'Success!', 'User Content.');
+//   return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+// ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, 'User Content.');
 // };
 
 // exports.adminBoard = (req, res) => {
-//   return Response(res, 200, 'Success!', 'Admin Content.');
+//   return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+// ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, 'Admin Content.');
 // };
 
 // exports.UserBoard = (req, res) => {
-//   return Response(res, 200, 'Success!', 'User Content.');
+//   return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+// ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, 'User Content.');
 // };
 
 const Op = db.Sequelize.Op;
@@ -34,7 +41,12 @@ exports.updateUser = async (req, res) => {
     let admin = await db_User.findByPk(req.params.id);
 
     if (!admin) {
-      return Response(res, 404, 'User Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //find admin roles data from db
@@ -65,7 +77,12 @@ exports.updateUser = async (req, res) => {
       return _User;
     });
     //Success
-    return Response(res, 200, 'Success!', [_User]);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      [_User]
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -82,7 +99,12 @@ exports.deleteUser = async (req, res) => {
     });
 
     if (!Admin) {
-      return Response(res, 404, 'User Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
     //insure that the user is only admin
     const adminRoles = Admin.roles.map((item) => {
@@ -92,8 +114,9 @@ exports.deleteUser = async (req, res) => {
     if (adminRoles.includes('student') || adminRoles.includes('instructor'))
       return Response(
         res,
-        422,
-        'User cant be deleted, has roles more than admin!',
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.HAS_MANY_ROLES,
+        //'User cant be deleted, has roles more than admin!',
         {}
       );
 
@@ -109,7 +132,12 @@ exports.deleteUser = async (req, res) => {
       );
     });
     //Success
-    return Response(res, 200, 'Success!', [role, user]);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      [role, user]
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -134,7 +162,12 @@ exports.listUser = async (req, res) => {
 
     console.log(data);
     //Success
-    return Response(res, 200, 'Success!', { data });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }
@@ -150,11 +183,21 @@ exports.listUserById = async (req, res) => {
     });
 
     if (!User) {
-      return Response(res, 404, 'User Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { User });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { User }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

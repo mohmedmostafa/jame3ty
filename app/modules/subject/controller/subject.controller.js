@@ -1,6 +1,9 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
 const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+const {
   onErrorDeleteFiles,
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -31,7 +34,12 @@ exports.addSubject = async (req, res) => {
     );
 
     if (!academicYear) {
-      return Response(res, 404, 'AcademicYear Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Add Department to DB
@@ -42,7 +50,12 @@ exports.addSubject = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { subject });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { subject }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add!', { error });
@@ -63,14 +76,26 @@ exports.deleteSubject = async (req, res) => {
     });
 
     if (!subject) {
-      return Response(res, 404, 'Subject Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check if has childs
     if (subject.courses.length > 0) {
-      return Response(res, 409, "Can't delete the Subject. It has childs", {
-        subject,
-      });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't delete the Subject. It has childs",
+        {
+          subject,
+        }
+      );
     }
 
     //Delete
@@ -79,7 +104,12 @@ exports.deleteSubject = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { deletedSubject });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { deletedSubject }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -95,7 +125,12 @@ exports.updateSubject = async (req, res) => {
     });
 
     if (!subject) {
-      return Response(res, 404, 'Subject Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     await db_Subject.update(
@@ -107,7 +142,12 @@ exports.updateSubject = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      {}
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -131,11 +171,21 @@ exports.listSubjectById = async (req, res) => {
     });
 
     if (!subject) {
-      return Response(res, 404, 'Subject Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { subject });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { subject }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -199,7 +249,12 @@ exports.listSubject = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

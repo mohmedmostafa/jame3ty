@@ -1,5 +1,9 @@
 const db = require('../../../modules');
 const { Response } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+
 const { ref, date } = require('joi');
 const { User } = require('../../../modules');
 
@@ -14,19 +18,36 @@ const db_User = db.User;
 exports.addlessonDiscussionComments = async (req, res) => {
   const user = await db_User.findByPk(req.body.userId);
   console.log('test', user);
-  if (!user) return Response(res, 404, 'User Not Found!', {});
+  if (!user)
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      {}
+    );
 
   //add post
   if (req.body.lessonId) {
     const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-    if (!lesson) return Response(res, 404, 'lesson Not Found!', {});
+    if (!lesson)
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
 
     const post = await addPost(req, user, lesson).catch((err) => {
       console.log(err);
       return Response(res, 500, 'Fail to Insert!', { err });
     });
-    return Response(res, 200, 'Success!', { post });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { post }
+    );
 
     //add comment
   } else {
@@ -35,7 +56,12 @@ exports.addlessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussion)
-      return Response(res, 404, 'lessonDiscussion Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
 
     const comment = await addComment(req, user, lessonDiscussion).catch(
       (err) => {
@@ -43,7 +69,12 @@ exports.addlessonDiscussionComments = async (req, res) => {
         return Response(res, 500, 'Fail to Insert!', { err });
       }
     );
-    return Response(res, 200, 'Success!', { comment });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { comment }
+    );
   }
 };
 
@@ -112,13 +143,24 @@ exports.updatelessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussionComments) {
-      return Response(res, 404, 'lessonDiscussionComments Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //get user model
     const user = await db_User.findByPk(req.body.userId);
 
-    if (!user) return Response(res, 404, 'User Not Found!', {});
+    if (!user)
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
 
     //get lesson model
     const lessonDiscussion = await db_lessonDiscussion.findByPk(
@@ -126,7 +168,12 @@ exports.updatelessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussion)
-      return Response(res, 404, 'lessonDiscussion Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
 
     const comment = await db_connection.transaction(async (t) => {
       //Do Update
@@ -144,7 +191,12 @@ exports.updatelessonDiscussionComments = async (req, res) => {
       });
     });
     //Success
-    return Response(res, 200, 'Success!', { _lessonDiscussionComments });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { _lessonDiscussionComments }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -157,18 +209,35 @@ exports.updatelessonDiscussion = async (req, res) => {
     let lessonDiscussion = await db_lessonDiscussion.findByPk(req.params.id);
 
     if (!lessonDiscussion) {
-      return Response(res, 404, 'lessonDiscussion Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //get user model
     const user = await db_User.findByPk(req.body.userId);
     console.log('test', user);
-    if (!user) return Response(res, 404, 'User Not Found!', {});
+    if (!user)
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
 
     //get lesson model
     const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-    if (!lesson) return Response(res, 404, 'lesson Not Found!', {});
+    if (!lesson)
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
 
     const post = await db_connection.transaction(async (t) => {
       //Do Update
@@ -184,7 +253,12 @@ exports.updatelessonDiscussion = async (req, res) => {
       await lessonDiscussion.setLesson(lesson, { transaction: t });
     });
     //Success
-    return Response(res, 200, 'Success!', { _lessonDiscussion });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { _lessonDiscussion }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -200,7 +274,12 @@ exports.deletelessonDiscussionComments = async (req, res) => {
     });
 
     if (!lessonDiscussionComments) {
-      return Response(res, 404, 'lessonDiscussionComments Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Delete
@@ -209,7 +288,12 @@ exports.deletelessonDiscussionComments = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { lessonDiscussionComments });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { lessonDiscussionComments }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -225,7 +309,12 @@ exports.deletelessonDiscussion = async (req, res) => {
     });
 
     if (!lessonDiscussion) {
-      return Response(res, 404, 'lessonDiscussion Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     const comment = await db_connection.transaction(async (t) => {
@@ -244,7 +333,12 @@ exports.deletelessonDiscussion = async (req, res) => {
       );
     });
     //Success
-    return Response(res, 200, 'Success!', { _lessonDiscussion });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { _lessonDiscussion }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -302,7 +396,12 @@ exports.listlessonDiscussionComments = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail To Find!', { error });
@@ -320,11 +419,21 @@ exports.listlessonDiscussionById = async (req, res) => {
     });
 
     if (!lessonDiscussion) {
-      return Response(res, 404, 'lessonDiscussion Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { lessonDiscussion });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { lessonDiscussion }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }
@@ -337,11 +446,21 @@ exports.listlessonDiscussionCommentsById = async (req, res) => {
     });
 
     if (!lessonDiscussionComments) {
-      return Response(res, 404, 'lessonDiscussionComment Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { lessonDiscussionComments });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { lessonDiscussionComments }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

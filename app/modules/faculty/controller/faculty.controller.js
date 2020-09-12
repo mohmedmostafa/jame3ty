@@ -1,6 +1,8 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
-
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
@@ -16,7 +18,12 @@ exports.addFaculty = async (req, res) => {
     );
 
     if (!university) {
-      return Response(res, 404, 'University Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Save to DB
@@ -27,7 +34,12 @@ exports.addFaculty = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { faculty });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { faculty }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add', { error });
@@ -42,7 +54,12 @@ exports.updateFaculty = async (req, res) => {
     faculty = faculty.get({ plain: true });
 
     if (!faculty) {
-      return Response(res, 404, 'Faculty Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check the universityId is changed
@@ -53,7 +70,12 @@ exports.updateFaculty = async (req, res) => {
       );
 
       if (!university) {
-        return Response(res, 404, 'University Not Found!', {});
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       }
     }
 
@@ -70,7 +92,12 @@ exports.updateFaculty = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', { faculty });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { faculty }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -91,16 +118,28 @@ exports.deleteFaculty = async (req, res) => {
     });
 
     if (!faculty) {
-      return Response(res, 404, 'Faculty Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     faculty = faculty.get({ plain: true });
 
     //Check if the Universtiy has Faculty
     if (faculty.departments.length > 0) {
-      return Response(res, 409, "Can't Delete. Has Childs", {
-        faculty,
-      });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't Delete. Has Childs",
+        {
+          faculty,
+        }
+      );
     }
 
     //Delete
@@ -109,7 +148,12 @@ exports.deleteFaculty = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { faculty });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { faculty }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -133,11 +177,21 @@ exports.listFacultyById = async (req, res) => {
     });
 
     if (!faculty) {
-      return Response(res, 404, 'Faculty Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { faculty });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { faculty }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -205,7 +259,12 @@ exports.listFaculty = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

@@ -1,6 +1,9 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
 const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+const {
   onErrorDeleteFiles,
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -29,7 +32,12 @@ exports.addDepartment = async (req, res) => {
     const faculty = await db_Faculty.findByPk(parseInt(req.body.facultyId));
 
     if (!faculty) {
-      return Response(res, 404, 'Faculty Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Start "Managed" Transaction
@@ -74,7 +82,12 @@ exports.addDepartment = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add!', { error });
@@ -95,13 +108,25 @@ exports.deleteDepartment = async (req, res) => {
     });
 
     if (!department) {
-      return Response(res, 404, 'Department Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     if (department.academicYears.length > 0) {
-      return Response(res, 409, "Can't delete the department. It has childs", {
-        department,
-      });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't delete the department. It has childs",
+        {
+          department,
+        }
+      );
     }
 
     //Delete
@@ -110,7 +135,12 @@ exports.deleteDepartment = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { deletedDepartment });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { deletedDepartment }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -134,11 +164,21 @@ exports.listDepartmentById = async (req, res) => {
     });
 
     if (!department) {
-      return Response(res, 404, 'Department Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { department });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { department }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -154,7 +194,12 @@ exports.updateDepartment = async (req, res) => {
     });
 
     if (!department) {
-      return Response(res, 404, 'Department Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     await db_Department.update(
@@ -166,7 +211,12 @@ exports.updateDepartment = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      {}
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -235,7 +285,12 @@ exports.listDepartment = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

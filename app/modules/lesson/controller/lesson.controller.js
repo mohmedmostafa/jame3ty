@@ -1,6 +1,10 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
 const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+
+const {
   onErrorDeleteFiles,
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -32,7 +36,12 @@ exports.addLesson = async (req, res) => {
 
     if (!course) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Course Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check if the Group is under that course
@@ -54,7 +63,13 @@ exports.addLesson = async (req, res) => {
 
       if (!course) {
         onErrorDeleteFiles(req);
-        return Response(res, 404, 'Course with that group Not Found!', {});
+        //'Course with that group Not Found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       }
     }
 
@@ -95,7 +110,12 @@ exports.addLesson = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { lesson });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { lesson }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -114,7 +134,12 @@ exports.deleteLesson = async (req, res) => {
     });
 
     if (!lesson) {
-      return Response(res, 404, 'Lesson Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     console.log(lesson);
@@ -137,7 +162,12 @@ exports.deleteLesson = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { deletedLesson });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { deletedLesson }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -155,7 +185,12 @@ exports.deleteAttachment = async (req, res) => {
     });
 
     if (!lesson) {
-      return Response(res, 404, 'Lesson Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     console.log(lesson);
@@ -182,14 +217,31 @@ exports.deleteAttachment = async (req, res) => {
           }
         );
       } else {
-        return Response(res, 404, 'Attachemt Not Found!', { lesson });
+        //'Attachemt Not Found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          { lesson }
+        );
       }
     } else {
-      return Response(res, 404, 'Lesson has zero attachments!', { lesson });
+      //'Lesson has zero attachments!'
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        { lesson }
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { lesson });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { lesson }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete Attachment!', { error });
@@ -214,11 +266,21 @@ exports.listLessonById = async (req, res) => {
     });
 
     if (!lesson) {
-      return Response(res, 404, 'Lesson Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { lesson });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { lesson }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Find!', { error });
@@ -235,7 +297,12 @@ exports.updateLesson = async (req, res) => {
 
     if (!lesson) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Lesson Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check if the Course is already exsits
@@ -245,7 +312,12 @@ exports.updateLesson = async (req, res) => {
 
     if (!course) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Course Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check if the Group is under that course
@@ -267,7 +339,13 @@ exports.updateLesson = async (req, res) => {
 
       if (!course) {
         onErrorDeleteFiles(req);
-        return Response(res, 404, 'Course with that group Not Found!', {});
+        //'Course with that group Not Found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+          {}
+        );
       }
     }
 
@@ -333,7 +411,12 @@ exports.updateLesson = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', { updatedLesson });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { updatedLesson }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -387,7 +470,12 @@ exports.listLesson = async (req, res) => {
     }
 
     //Success
-    return Response(res, 200, 'Success!', { data });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

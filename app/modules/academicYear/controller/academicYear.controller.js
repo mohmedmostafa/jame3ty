@@ -1,6 +1,10 @@
 const db = require('../..');
 const { Response } = require('../../../common/response/response.handler');
 const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+
+const {
   onErrorDeleteFiles,
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -31,7 +35,12 @@ exports.addAcademicYear = async (req, res) => {
     );
 
     if (!department) {
-      return Response(res, 404, 'Department Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Start "Managed" Transaction
@@ -61,7 +70,12 @@ exports.addAcademicYear = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Add!', { error });
@@ -85,15 +99,22 @@ exports.deleteAcademicYear = async (req, res) => {
     });
 
     if (!academicYear) {
-      return Response(res, 404, 'AcademicYear Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check if has childs
     if (academicYear.subjects.length > 0 || academicYear.students.length > 0) {
       return Response(
         res,
-        409,
-        "Can't delete the AcademicYear. It has childs",
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't delete the AcademicYear. It has childs",
         { academicYear }
       );
     }
@@ -104,7 +125,12 @@ exports.deleteAcademicYear = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', { deletedAcademicYear });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { deletedAcademicYear }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -120,7 +146,12 @@ exports.updateAcademicYear = async (req, res) => {
     });
 
     if (!academicYear) {
-      return Response(res, 404, 'AcademicYear Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     await db_AcademicYear.update(
@@ -132,7 +163,12 @@ exports.updateAcademicYear = async (req, res) => {
     );
 
     //Success
-    return Response(res, 200, 'Success!', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      {}
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Udpate!', { error });
@@ -156,11 +192,21 @@ exports.listAcademicYearById = async (req, res) => {
     });
 
     if (!academicYear) {
-      return Response(res, 404, 'AcademicYear Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { academicYear });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { academicYear }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail to Delete!', { error });
@@ -229,7 +275,12 @@ exports.listAcademicYear = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     return Response(res, 500, 'Fail To Find!', { error });
   }

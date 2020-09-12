@@ -3,6 +3,10 @@ const {
   Response,
   ValidateResponse,
 } = require('../../../common/response/response.handler');
+const {
+  ResponseConstants,
+} = require('../../../common/response/response.constants');
+
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
@@ -64,7 +68,13 @@ exports.addInstructor = async (req, res) => {
 
     if (userF) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Username already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //'Username already exists!',
+        {}
+      );
     }
 
     //
@@ -76,7 +86,13 @@ exports.addInstructor = async (req, res) => {
 
     if (userF) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        // 'Email already exists!',
+        {}
+      );
     }
 
     //
@@ -88,7 +104,13 @@ exports.addInstructor = async (req, res) => {
 
     if (instructorF) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //'Email already exists!',
+        {}
+      );
     }
 
     //
@@ -100,7 +122,13 @@ exports.addInstructor = async (req, res) => {
 
     if (instructorF) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Mobile already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        // 'Mobile already exists!',
+        {}
+      );
     }
     //--------------------
     //Create Attachment String
@@ -183,7 +211,12 @@ exports.addInstructor = async (req, res) => {
       });
 
     //Success
-    return Response(res, 200, 'Success!', { instructor });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { instructor }
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -209,7 +242,12 @@ exports.updateInstructor = async (req, res) => {
 
     if (!Instructor) {
       onErrorDeleteFiles(req);
-      return Response(res, 404, 'Instructor Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     console.log(req.body.password ? true : false, 'dsasasdasd');
@@ -227,7 +265,13 @@ exports.updateInstructor = async (req, res) => {
 
     if (inst) {
       onErrorDeleteFiles(req);
-      return Response(res, 409, 'Mobile already exists!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
+        //'Mobile already exists!',
+        {}
+      );
     }
 
     //--------------------
@@ -307,7 +351,12 @@ exports.updateInstructor = async (req, res) => {
     });
 
     //Success
-    return Response(res, 200, 'Success!', [_Instructor, _User]);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      [_Instructor, _User]
+    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -331,15 +380,22 @@ exports.deleteInstructor = async (req, res) => {
     });
 
     if (!Instructor) {
-      return Response(res, 404, 'Instructor Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     //Check if it has course or group
     if (Instructor.courses.length > 0) {
       return Response(
         res,
-        409,
-        "Can't Delete. The Instructor has courses created",
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        //"Can't Delete. The Instructor has courses created",
         {
           Instructor,
         }
@@ -349,8 +405,10 @@ exports.deleteInstructor = async (req, res) => {
     if (Instructor.groups.length > 0) {
       return Response(
         res,
-        409,
-        "Can't Delete. The Instructor has group created",
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+          .RESOURCE_HAS_DEPENDENTS,
+        // "Can't Delete. The Instructor has group created",
         {
           Instructor,
         }
@@ -386,7 +444,12 @@ exports.deleteInstructor = async (req, res) => {
       );
     });
     //Success
-    return Response(res, 200, 'Success!', [Instructor, role, user]);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      [Instructor, role, user]
+    );
   } catch (error) {
     console.log(error);
 
@@ -420,7 +483,12 @@ exports.listInstructor = async (req, res) => {
     userData.type == 'instructor' &&
     (userData.data == null || userData.data.id != req.params.id)
   ) {
-    return Response(res, 403, 'You have no permission to open this page', {});
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+      ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+      {}
+    );
   }
 
   try {
@@ -489,7 +557,12 @@ exports.listInstructor = async (req, res) => {
     };
 
     //Success
-    return Response(res, 200, 'Success!', { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail To Find!', { error });
@@ -510,7 +583,12 @@ exports.listInstructorById = async (req, res) => {
     });
 
     if (!Instructor) {
-      return Response(res, 404, 'Instructor Not Found!', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        {}
+      );
     }
 
     const userData = await helper.getUserdata(req, res).catch((err) => {
@@ -524,11 +602,21 @@ exports.listInstructorById = async (req, res) => {
       userData.type == 'instructor' &&
       (userData.data == null || userData.data.id != req.params.id)
     ) {
-      return Response(res, 403, 'You have no permission to open this page', {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+        {}
+      );
     }
 
     //Success
-    return Response(res, 200, 'Success!', { Instructor });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { Instructor }
+    );
   } catch (error) {
     console.log(error);
     return Response(res, 500, 'Fail To Find!', { error });
