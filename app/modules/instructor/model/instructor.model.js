@@ -30,22 +30,32 @@ module.exports = (connection, Sequelize) => {
       },
       cv: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
         get() {
-          const storedValue = this.getDataValue('cv');
-          if (storedValue) {
-            let path = `${HOST}` + `${PORT}` + '/' + storedValue;
-            return path;
-          } else return null;
+          let fieldFilesPaths = this.getDataValue('cv');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
         },
       },
       img: {
         type: Sequelize.STRING(255),
+        defaultValue: '',
         get() {
-          const storedValue = this.getDataValue('img');
-          if (storedValue) {
-            let path = `${HOST}` + `${PORT}` + '/' + storedValue;
-            return path;
-          } else return null;
+          let fieldFilesPaths = this.getDataValue('img');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
         },
       },
       userId: {

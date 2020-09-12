@@ -19,7 +19,7 @@ exports.generateRandomToken = ({
   });
 };
 
-exports.sendSignupCerificationEmail = async (token, receiverEmail) => {
+exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   let testAccount = await nodemailer.createTestAccount();

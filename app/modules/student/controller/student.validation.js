@@ -11,8 +11,9 @@ addStudentValidation = async (req, res, next) => {
   let schema = Joi.object({
     name: Joi.string().trim().min(3).max(30).required(),
     mobile: Joi.string().trim().alphanum().required(),
-    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
+    email: Joi.string().trim().email().required(),
     academicYearId: Joi.number().integer().required(),
+    username: Joi.string().alphanum().trim().min(3).max(30).required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),
   });
@@ -24,7 +25,7 @@ addStudentValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -34,7 +35,9 @@ addStudentValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------
@@ -58,7 +61,6 @@ updateStudentValidation = async (req, res, next) => {
   let schema = Joi.object({
     name: Joi.string().trim().min(3).max(30).required(),
     mobile: Joi.string().trim().alphanum().required(),
-    email: Joi.string().trim().email({ minDomainSegments: 3 }).required(),
     academicYearId: Joi.number().integer().required(),
     password: Joi.string().min(5).max(30).required(),
     'g-recaptcha-response': Joi.any(),
@@ -71,7 +73,7 @@ updateStudentValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  let isValidEmailResult = await helper
+  /*let isValidEmailResult = await helper
     .validateEmailDomain(req.body.email)
     .catch((err) => {
       console.log(err);
@@ -81,7 +83,9 @@ updateStudentValidation = async (req, res, next) => {
 
   if (isValidEmailResult.isValidEmail) {
     return next();
-  }
+  }*/
+
+  return next();
 };
 
 //----------------------------------------------------------

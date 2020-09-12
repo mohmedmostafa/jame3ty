@@ -32,4 +32,18 @@ module.exports = function (app) {
     [UserValidation.verifyEmailValidation],
     AuthController.verifyEmail
   );
+
+  app.post(
+    '/api/auth/sendVerificationCode',
+    upload.none(),
+    [UserValidation.sendVerificationCodeValidation],
+    AuthController.sendVerificationCode
+  );
+
+  app.post(
+    '/api/auth/forgotPassword',
+    upload.none(),
+    [UserValidation.forgotPasswordValidation],
+    AuthController.forgotPassword
+  );
 };

@@ -36,6 +36,17 @@ exports.addStudent = async (req, res) => {
     //Check if not Unique
     let user = await db_User.findOne({
       where: {
+        username: req.body.username,
+      },
+    });
+
+    if (user) {
+      onErrorDeleteFiles(req);
+      return Response(res, 409, 'Username already exists!', {});
+    }
+
+    user = await db_User.findOne({
+      where: {
         email: req.body.email,
       },
     });
@@ -88,7 +99,7 @@ exports.addStudent = async (req, res) => {
       //Save User to DB
       const user = await db_User.create(
         {
-          username: req.body.email,
+          username: req.body.username,
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
           isVerified: 0,
@@ -137,9 +148,15 @@ exports.addStudent = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupCerificationEmail(result.randomToken, req.body.email)
+      .sendSignupVerificationEmail(result.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
+        return Response(
+          res,
+          502,
+          'Failed to Send Verification Code to ' + req.body.email,
+          { err }
+        );
       });
 
     //Success
@@ -310,34 +327,7 @@ exports.updateStudent = async (req, res) => {
 
     //--------------------
     //Check if not Unique
-    let user = await db_User.findOne({
-      where: {
-        email: req.body.email,
-        id: { [Op.ne]: student.user.id },
-      },
-    });
-
-    if (user) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
     let stu = await db_Student.findOne({
-      where: {
-        email: req.body.email,
-        id: {
-          [Op.ne]: req.params.id,
-        },
-      },
-    });
-
-    if (stu) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
-    //
-    stu = await db_Student.findOne({
       where: {
         mobile: req.body.mobile,
         id: {
@@ -367,7 +357,7 @@ exports.updateStudent = async (req, res) => {
       //Save User to DB
       const userUpdated = await db_User.update(
         {
-          username: req.body.email ? req.body.email : student.email,
+          username: req.body.username ? req.body.username : student.username,
           email: req.body.email ? req.body.email : student.email,
           password: req.body.password
             ? bcrypt.hashSync(req.body.password, 8)

@@ -37,34 +37,6 @@ exports.updateUser = async (req, res) => {
       return Response(res, 404, 'User Not Found!', {});
     }
 
-    //--------------------
-    //Check if not Unique
-    let user = await db_User.findOne({
-      where: {
-        username: req.body.username,
-        id: {
-          [Op.ne]: req.params.id,
-        },
-      },
-    });
-
-    if (user) {
-      return Response(res, 409, 'Username already exists!', {});
-    }
-
-    user = await db_User.findOne({
-      where: {
-        email: req.body.email,
-        id: {
-          [Op.ne]: req.params.id,
-        },
-      },
-    });
-
-    if (user) {
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
     //find admin roles data from db
     const roles = await db_Role.findAll({
       where: {

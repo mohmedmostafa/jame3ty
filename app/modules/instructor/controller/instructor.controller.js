@@ -56,7 +56,7 @@ exports.addInstructor = async (req, res) => {
     //Check if not Unique
     let userF = await db_User.findOne({
       where: {
-        username: req.body.email,
+        username: req.body.username,
       },
     });
 
@@ -101,6 +101,25 @@ exports.addInstructor = async (req, res) => {
       return Response(res, 409, 'Mobile already exists!', {});
     }
     //--------------------
+    //Create Attachment String
+    if (req.files.img) {
+      let field_1 = [];
+      req.files['img'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.img = field_1.join();
+    }
+
+    //Create Attachment String
+    if (req.files.file) {
+      let field_1 = [];
+      req.files['file'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.file = field_1.join();
+    }
 
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
@@ -115,8 +134,8 @@ exports.addInstructor = async (req, res) => {
           bio: req.body.bio,
           mobile: req.body.mobile,
           email: req.body.email,
-          img: req.files['img'] ? req.files['img'][0].path : null,
-          cv: req.files['file'] ? req.files['file'][0].path : null,
+          img: req.body.img,
+          cv: req.body.file,
         },
         { transaction: t }
       );
@@ -124,7 +143,7 @@ exports.addInstructor = async (req, res) => {
       const user = await db_User.create(
         {
           email: req.body.email,
-          username: req.body.email,
+          username: req.body.username,
           password: bcrypt.hashSync(req.body.password, 8),
           isVerified: 0,
           lastVerificationCodeSend: randomToken,
@@ -150,9 +169,15 @@ exports.addInstructor = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupCerificationEmail(instructor.randomToken, req.body.email)
+      .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
       .catch((err) => {
         console.error(err.message);
+        return Response(
+          res,
+          502,
+          'Failed to Send Verification Code to ' + req.body.email,
+          { err }
+        );
       });
 
     //Success
@@ -189,46 +214,7 @@ exports.updateInstructor = async (req, res) => {
 
     //--------------------
     //Check if not Unique
-    let user = await db_User.findOne({
-      where: {
-        email: req.body.email,
-        id: { [Op.ne]: Instructor.user.id },
-      },
-    });
-
-    if (user) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
-    user = await db_User.findOne({
-      where: {
-        username: req.body.email,
-        id: { [Op.ne]: Instructor.user.id },
-      },
-    });
-
-    if (user) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Username already exists!', {});
-    }
-
     let inst = await db_Instructor.findOne({
-      where: {
-        email: req.body.email,
-        id: {
-          [Op.ne]: req.params.id,
-        },
-      },
-    });
-
-    if (inst) {
-      onErrorDeleteFiles(req);
-      return Response(res, 409, 'Email already exists!', {});
-    }
-
-    //
-    inst = await db_Instructor.findOne({
       where: {
         mobile: req.body.mobile,
         id: {
@@ -241,7 +227,27 @@ exports.updateInstructor = async (req, res) => {
       onErrorDeleteFiles(req);
       return Response(res, 409, 'Mobile already exists!', {});
     }
+
     //--------------------
+    //Create Attachment String
+    if (req.files.img) {
+      let field_1 = [];
+      req.files['img'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.img = field_1.join();
+    }
+
+    //Create Attachment String
+    if (req.files.file) {
+      let field_1 = [];
+      req.files['file'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+      req.body.file = field_1.join();
+    }
 
     //Do Update
     const instructor = await db_connection.transaction(async (t) => {
@@ -252,35 +258,52 @@ exports.updateInstructor = async (req, res) => {
           bio: req.body.bio ? req.body.name_en : Instructor.bio,
           mobile: req.body.mobile ? req.body.mobile : Instructor.mobile,
           email: req.body.email ? req.body.email : Instructor.email,
-          img: req.files['img'] ? req.files['img'][0].path : Instructor.img,
-          cv: req.files['file'] ? req.files['file'][0].path : Instructor.cv,
+          //img: req.files['img'] ? req.files['img'][0].path : Instructor.img,
+          img: req.body.img ? req.body.img : Instructor.getDataValue('img'),
+          //cv: req.files['file'] ? req.files['file'][0].path : Instructor.cv,
+          cv: req.body.file ? req.body.file : Instructor.getDataValue('cv'),
         },
         { where: { id: req.params.id } },
         { transaction: t }
       );
-      //delete file
-      if (Instructor.img) {
-        unlinkAsync(Instructor.getDataValue('img'));
+
+      if (_Instructor && req.body.img) {
+        let imgStr = Instructor.getDataValue('img');
+        if (imgStr.length > 0) {
+          let locations = imgStr.split(',');
+          console.log(locations);
+          locations.forEach((loc) => {
+            deleteFile(loc);
+          });
+        }
       }
 
-      if (Instructor.cv) {
-        unlinkAsync(Instructor.getDataValue('cv'));
+      if (_Instructor && req.body.file) {
+        let imgStr = Instructor.getDataValue('cv');
+        if (imgStr.length > 0) {
+          let locations = imgStr.split(',');
+          console.log(locations);
+          locations.forEach((loc) => {
+            deleteFile(loc);
+          });
+        }
       }
-
-      let User = await db_User.findByPk(Instructor.userId);
 
       _User = await db_User.update(
         {
-          username: req.body.email ? req.body.email : User.email,
-          password: req.body.password 
+          username: req.body.username
+            ? req.body.username
+            : Instructor.user.username,
+          password: req.body.password
             ? bcrypt.hashSync(req.body.password, 8)
-            : User.password,
-          email: req.body.email ? req.body.email : User.email,
+            : Instructor.user.password,
+          email: req.body.email ? req.body.email : Instructor.email,
         },
         { where: { id: Instructor.userId } },
         { transaction: t }
       );
     });
+
     //Success
     return Response(res, 200, 'Success!', [_Instructor, _User]);
   } catch (error) {
