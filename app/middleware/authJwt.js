@@ -1,8 +1,8 @@
 const {
   Response,
   ValidateResponse,
+  ResponseConstants,
 } = require('../common/response/response.handler');
-const { ResponseConstants } = require('./response.constants');
 
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');

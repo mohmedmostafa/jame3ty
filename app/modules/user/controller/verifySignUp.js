@@ -2,8 +2,8 @@ const Joi = require('joi');
 const {
   Response,
   ValidateResponse,
+  ResponseConstants,
 } = require('../../../common/response/response.handler');
-const { ResponseConstants } = require('./response.constants');
 
 const db = require('../..');
 const db_User = db.User;
