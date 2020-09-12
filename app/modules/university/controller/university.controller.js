@@ -1,5 +1,5 @@
 const db = require('../../../modules');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../common/response/response.handler');
 
 const Op = db.Sequelize.Op;
 const db_University = db.University;

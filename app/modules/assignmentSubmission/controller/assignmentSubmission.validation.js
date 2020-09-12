@@ -1,6 +1,10 @@
 const Joi = require('joi');
-const { ValidateResponse } = require('../../../common/response.handler');
-const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
+const {
+  onErrorDeleteFiles,
+} = require('../../../common/attachmentsUpload/multerConfig');
 const db = require('../..');
 
 //----------------------------------------------------------
@@ -30,7 +34,9 @@ updateAssignmentSubmissionValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -47,7 +53,9 @@ deleteAssignmentSubmissionAttachmentValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -74,7 +82,9 @@ deleteAssignmentSubmissionValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -121,7 +131,9 @@ listAssignmentSubmissionByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

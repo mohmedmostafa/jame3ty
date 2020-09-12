@@ -4,7 +4,7 @@ const email = require('../../../common/email');
 const moment = require('moment');
 const db = require('../../../modules');
 const config = require('../../../config/auth.config');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../common/response/response.handler');
 const { JWT_SECRET_KEY } = require('../../../../app/config/env.config');
 
 const db_connection = db.connection;
@@ -97,7 +97,10 @@ exports.signin = async (req, res) => {
   await db_User
     .findAll({
       where: {
-        username: req.body.username,
+        [Op.or]: {
+          username: req.body.username,
+          email: req.body.username,
+        },
       },
       include: [
         {

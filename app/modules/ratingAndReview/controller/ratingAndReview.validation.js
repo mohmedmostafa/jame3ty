@@ -1,5 +1,7 @@
 const Joi = require('joi');
-const { ValidateResponse } = require('../../../common/response.handler');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const db = require('../../');
 
 //----------------------------------------------------------
@@ -30,7 +32,9 @@ updateRatingAndReviewValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -76,7 +80,9 @@ listRatingAndReviewByIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -93,7 +99,9 @@ listRatingAndReviewByCourseIdValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 
@@ -123,7 +131,9 @@ deleteRatingAndReviewValidation = (req, res, next) => {
 
     const { error } = schemaParam.validate(req.params);
     if (error) {
-    return ValidateResponse(res, error.details[0].message, {path:error.details[0].path[0]});
+      return ValidateResponse(res, error.details[0].message, {
+        path: error.details[0].path[0],
+      });
     }
   }
 

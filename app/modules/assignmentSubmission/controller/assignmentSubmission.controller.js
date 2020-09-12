@@ -1,9 +1,9 @@
 const db = require('../..');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
   deleteFile,
-} = require('../../../common/multerConfig');
+} = require('../../../common/attachmentsUpload/multerConfig');
 const moment = require('moment');
 const { Sequelize } = require('../..');
 

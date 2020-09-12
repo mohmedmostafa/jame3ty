@@ -1,9 +1,9 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
-const { ValidateResponse } = require('../../common/response.handler');
+const { ValidateResponse } = require('../../common/response/response.handler');
 const GroupValidation = require('./controller/group.validation');
 const GroupController = require('./controller/group.controller');
-const FileUploader = require('../../common/multerConfig');
+const FileUploader = require('../../common/attachmentsUpload/multerConfig');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {

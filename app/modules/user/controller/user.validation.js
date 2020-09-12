@@ -1,14 +1,18 @@
 const Joi = require('joi');
 const helper = require('../../../common/helper');
-const { ValidateResponse } = require('../../../common/response.handler');
-const { onErrorDeleteFiles } = require('../../../common/multerConfig');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
+const {
+  onErrorDeleteFiles,
+} = require('../../../common/attachmentsUpload/multerConfig');
 
 const db = require('../..');
 
 //----------------------------------------------------------
 signinValidation = async (req, res, next) => {
   const schema = Joi.object({
-    username: Joi.string().alphanum().trim().min(3).max(30).required(),
+    username: Joi.string().trim().min(3).max(30).required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
@@ -20,9 +24,8 @@ signinValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.username)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       return ValidateResponse(res, 'Email domain is not valid', {});
     });
@@ -51,9 +54,8 @@ signupValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
       return ValidateResponse(res, 'Email domain is not valid', {});
@@ -99,9 +101,8 @@ updateUserValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
       return ValidateResponse(res, 'email domain is not valid', {});
@@ -181,9 +182,8 @@ verifyEmailValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
       return ValidateResponse(res, 'Email domain is not valid', {});

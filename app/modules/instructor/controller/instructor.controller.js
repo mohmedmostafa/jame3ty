@@ -1,6 +1,8 @@
 const db = require('../../../modules');
-const { Response } = require('../../../common/response.handler');
-const { ValidateResponse } = require('../../../common/response.handler');
+const {
+  Response,
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
@@ -10,7 +12,7 @@ const moment = require('moment');
 const {
   onErrorDeleteFiles,
   deleteFile,
-} = require('../../../common/multerConfig');
+} = require('../../../common/attachmentsUpload/multerConfig');
 
 const request = require('request');
 const { PORT, HOST } = require('../../../config/env.config');
@@ -210,7 +212,7 @@ exports.updateInstructor = async (req, res) => {
       return Response(res, 404, 'Instructor Not Found!', {});
     }
 
-    console.log(req.body.password ?true:false,"dsasasdasd");
+    console.log(req.body.password ? true : false, 'dsasasdasd');
 
     //--------------------
     //Check if not Unique
@@ -404,7 +406,7 @@ exports.listInstructor = async (req, res) => {
 
   //Query
   let searchKey = req.query.searchKey ? req.query.searchKey : '';
-   
+
   //check if
   const userData = await helper.getUserdata(req, res).catch((err) => {
     return Response(res, 500, 'Error in Retrieve some data', {
@@ -427,17 +429,17 @@ exports.listInstructor = async (req, res) => {
         [Op.or]: [
           {
             name_ar: {
-              [Op.substring]:searchKey,
+              [Op.substring]: searchKey,
             },
           },
           {
             name_en: {
-              [Op.substring]:searchKey,
+              [Op.substring]: searchKey,
             },
           },
           {
             mobile: {
-              [Op.substring]:searchKey,
+              [Op.substring]: searchKey,
             },
           },
         ],

@@ -1,7 +1,7 @@
 const { AuthJwt } = require('../../middleware');
 const RatingAndReviewValidation = require('./controller/ratingAndReview.validation');
 const RatingAndReviewController = require('./controller/ratingAndReview.controller');
-const { upload } = require('../../common/multerConfig');
+const { upload } = require('../../common/attachmentsUpload/multerConfig');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {

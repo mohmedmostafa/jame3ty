@@ -38,39 +38,4 @@ function getUserdata(req, res) {
   return result;
 }
 
-//Email Valdiation
-let validDomains = [
-  '@aou.edu.om',
-  '@arabou.edu.kw',
-  '@aou.edu.kw',
-  '@aou.edu.jo',
-  '@aou.edu.lb',
-  '@arabou.edu.sa',
-  '@aou.edu.jo',
-  '@aou.edu.eg',
-];
-
-function validateEmailDomain(email) {
-  return new Promise((resolve, reject) => {
-    for (let i in validDomains) {
-      if (
-        email.indexOf(
-          validDomains[i],
-          email.length - validDomains[i].length
-        ) !== -1
-      ) {
-        console.log('Valid Email and Domain');
-        resolve({ isValidEmail: 1 });
-        return;
-      }
-    }
-
-    //
-    console.log('Invalid Email');
-    reject({ isValidEmail: 0 });
-    return;
-  });
-}
-
 module.exports.getUserdata = getUserdata;
-module.exports.validateEmailDomain = validateEmailDomain;

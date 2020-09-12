@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
+//-------------------------------------------------
+//Generate random token
 exports.generateRandomToken = ({
   stringBase = 'base64',
   byteLength = 48,
@@ -19,6 +21,8 @@ exports.generateRandomToken = ({
   });
 };
 
+//-------------------------------------------------
+//Send token/code to Email
 exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
@@ -50,4 +54,40 @@ exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
   // Preview only available when sending through an Ethereal account
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+};
+
+//---------------------------------------------
+//Email Domain Validation
+//Email Valdiation
+let validDomains = [
+  '@aou.edu.om',
+  '@arabou.edu.kw',
+  '@aou.edu.kw',
+  '@aou.edu.jo',
+  '@aou.edu.lb',
+  '@arabou.edu.sa',
+  '@aou.edu.jo',
+  '@aou.edu.eg',
+];
+
+exports.validateEmailDomain = (email) => {
+  return new Promise((resolve, reject) => {
+    for (let i in validDomains) {
+      if (
+        email.indexOf(
+          validDomains[i],
+          email.length - validDomains[i].length
+        ) !== -1
+      ) {
+        console.log('Valid Email and Domain');
+        resolve({ isValidEmail: 1 });
+        return;
+      }
+    }
+
+    //
+    console.log('Invalid Email');
+    reject({ isValidEmail: 0 });
+    return;
+  });
 };

@@ -1,7 +1,7 @@
 const AuthController = require('../user/controller/auth.controller');
 const VerifySignUp = require('./controller/verifySignUp');
 const UserValidation = require('./controller/user.validation');
-const { upload } = require('../../common/multerConfig');
+const { upload } = require('../../common/attachmentsUpload/multerConfig');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {

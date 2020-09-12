@@ -1,5 +1,5 @@
 const db = require('../../../modules');
-const { Response } = require('../../../common/response.handler');
+const { Response } = require('../../../common/response/response.handler');
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
 const helper = require('../../../common/helper');
