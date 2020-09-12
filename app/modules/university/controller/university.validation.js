@@ -1,5 +1,7 @@
 const Joi = require('joi');
-const { ValidateResponse } = require('../../../response/response.handler');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const db = require('../..');
 
 //----------------------------------------------------------
@@ -90,7 +92,6 @@ listUniversityValidation = (req, res, next) => {
     numPerPage: Joi.number().integer().greater(0).required(),
     page: Joi.number().integer().greater(0).required(),
     searchKey: Joi.string().allow('', null).required(),
-    
   });
 
   const { error } = schema.validate(req.query);

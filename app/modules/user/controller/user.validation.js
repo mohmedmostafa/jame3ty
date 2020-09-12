@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const helper = require('../../../common/helper');
-const { ValidateResponse } = require('../../../response/response.handler');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -22,9 +24,8 @@ signinValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.username)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       return ValidateResponse(res, 'Email domain is not valid', {});
     });
@@ -53,9 +54,8 @@ signupValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
       return ValidateResponse(res, 'Email domain is not valid', {});
@@ -101,9 +101,8 @@ updateUserValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
       return ValidateResponse(res, 'email domain is not valid', {});
@@ -183,9 +182,8 @@ verifyEmailValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       //onErrorDeleteFiles(req);
       return ValidateResponse(res, 'Email domain is not valid', {});

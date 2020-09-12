@@ -3,7 +3,7 @@ const InstructorValidation = require('./controller/instructor.validation');
 const InstructorController = require('./controller/instructor.controller');
 const FileUploader = require('../../common/attachmentsUpload/multerConfig');
 const multer = require('multer');
-const { ValidateResponse } = require('../../response/response.handler');
+const { ValidateResponse } = require('../../common/response/response.handler');
 
 module.exports = function (app, Uploader) {
   app.use(function (req, res, next) {

@@ -2,13 +2,13 @@ const fs = require('fs');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
 //
-const { ValidateResponse } = require('../../response/response.handler');
+const { ValidateResponse } = require('../../common/response/response.handler');
 const multer = require('multer');
 const path = require('path');
 const {
   valid_mim_types_constants,
   valid_form_data_param_names_constants,
-} = require('./multerconstants');
+} = require('./multerConstants');
 
 const maxSize = 500 * 1024 * 1024;
 

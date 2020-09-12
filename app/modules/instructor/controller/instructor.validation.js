@@ -1,6 +1,8 @@
 const Joi = require('joi');
-const helper = require('../../../common/helper');
-const { ValidateResponse } = require('../../../response/response.handler');
+const { validateEmailDomain } = require('../../../common/email');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -33,9 +35,8 @@ addInstructorValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       onErrorDeleteFiles(req);
       return ValidateResponse(res, 'email domain is not valid', {});
@@ -82,13 +83,13 @@ updateInstructorValidation = async (req, res, next) => {
   console.log('m6');
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       onErrorDeleteFiles(req);
       return ValidateResponse(res, 'Email domain is not valid', {});
-    });
+    }
+  );
 
   if (isValidEmailResult.isValidEmail) {
     return next();

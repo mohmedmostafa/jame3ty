@@ -1,5 +1,7 @@
 const Joi = require('joi');
-const { ValidateResponse } = require('../../../response/response.handler');
+const {
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -27,9 +29,8 @@ addStudentValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       onErrorDeleteFiles(req);
       return ValidateResponse(res, 'Email domain is not valid', {});
@@ -75,9 +76,8 @@ updateStudentValidation = async (req, res, next) => {
   }
 
   //Email Domain Validation
-  /*let isValidEmailResult = await helper
-    .validateEmailDomain(req.body.email)
-    .catch((err) => {
+  /*let isValidEmailResult = await validateEmailDomain(req.body.email).catch(
+    (err) => {
       console.log(err);
       onErrorDeleteFiles(req);
       return ValidateResponse(res, 'email domain is not valid', {});

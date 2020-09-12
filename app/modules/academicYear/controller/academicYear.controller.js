@@ -1,5 +1,5 @@
 const db = require('../..');
-const { Response } = require('../../../response/response.handler');
+const { Response } = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
   deleteFile,

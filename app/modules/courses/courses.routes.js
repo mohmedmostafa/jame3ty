@@ -1,6 +1,6 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
-const { ValidateResponse } = require('../../response/response.handler');
+const { ValidateResponse } = require('../../common/response/response.handler');
 const CourseValidation = require('./controller/courses.validation');
 const CourseController = require('./controller/courses.controller');
 const FileUploader = require('../../common/attachmentsUpload/multerConfig');

@@ -1,6 +1,8 @@
 const db = require('../..');
-const { Response } = require('../../../response/response.handler');
-const { ValidateResponse } = require('../../../response/response.handler');
+const {
+  Response,
+  ValidateResponse,
+} = require('../../../common/response/response.handler');
 const helper = require('../../../common/helper');
 const email = require('../../../common/email');
 const {
