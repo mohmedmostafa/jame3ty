@@ -4,10 +4,11 @@ const email = require('../../../common/email');
 const moment = require('moment');
 const db = require('../../../modules');
 const config = require('../../../config/auth.config');
-const { Response } = require('../../../common/response/response.handler');
 const {
+  Response,
   ResponseConstants,
-} = require('../../../common/response/response.constants');
+} = require('../../../common/response/response.handler');
+
 const { JWT_SECRET_KEY } = require('../../../../app/config/env.config');
 
 const db_connection = db.connection;

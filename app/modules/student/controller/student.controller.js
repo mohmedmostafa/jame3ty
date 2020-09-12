@@ -2,10 +2,8 @@ const db = require('../..');
 const {
   Response,
   ValidateResponse,
-} = require('../../../common/response/response.handler');
-const {
   ResponseConstants,
-} = require('../../../common/response/response.constants');
+} = require('../../../common/response/response.handler');
 
 const helper = require('../../../common/helper');
 const email = require('../../../common/email');

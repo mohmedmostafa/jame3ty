@@ -2,10 +2,8 @@ const db = require('../../../modules');
 const {
   Response,
   ValidateResponse,
-} = require('../../../common/response/response.handler');
-const {
   ResponseConstants,
-} = require('../../../common/response/response.constants');
+} = require('../../../common/response/response.handler');
 
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');

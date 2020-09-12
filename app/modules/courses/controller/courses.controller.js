@@ -2,10 +2,8 @@ const db = require('../..');
 const {
   Response,
   ValidateResponse,
-} = require('../../../common/response/response.handler');
-const {
   ResponseConstants,
-} = require('../../../common/response/response.constants');
+} = require('../../../common/response/response.handler');
 
 const {
   onErrorDeleteFiles,
