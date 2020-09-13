@@ -68,7 +68,7 @@ listlessonDiscussionCommentsValidation = (req, res, next) => {
     page: Joi.number().integer().greater(0).required(),
     lessonId: Joi.number().integer(),
   });
-
+  
   const { error } = schema.validate(req.query);
   if (error) {
     return ValidateResponse(res, error.details[0].message, {

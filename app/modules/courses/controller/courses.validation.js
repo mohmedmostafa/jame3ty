@@ -55,7 +55,7 @@ addCourseValidation = (req, res, next) => {
     //One Group Schedule Schema
     let groupScheduleSchema = Joi.object().keys({
       day: Joi.string().trim().required(),
-      time: Joi.date().iso().required(),
+      time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required,
     });
 
     //Course with Group Body Validation

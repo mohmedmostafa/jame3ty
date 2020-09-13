@@ -298,6 +298,7 @@ exports.listDepartment = async (req, res) => {
 
 function listDepartment_NOPagination(req, db_Department) {
   return new Promise(async (resolve, reject) => {
+    let facultyId=req.query.facultyId?req.query.facultyId:'%%';
     await db_Department
       .findAll({
         where: {
@@ -319,7 +320,8 @@ function listDepartment_NOPagination(req, db_Department) {
             model: db_AcademicYear,
           },
           {
-            model: db_Faculty,
+            model: db_Faculty, where: {id:{[Op.like]:facultyId}}
+
           },
         ],
       })
