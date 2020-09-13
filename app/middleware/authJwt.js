@@ -18,6 +18,19 @@ verifyToken = (req, res, next) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
       ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+        .AUTHORIZATION_NOT_FOUND,
+      {}
+    );
+  }
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ').length < 2
+  ) {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
         .BEARER_TOKEN_NOT_FOUND,
       {}
     );
@@ -36,7 +49,7 @@ verifyToken = (req, res, next) => {
           res,
           ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
           ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
-            .BEARER_TOKEN_INCORRECT,
+            .BEARER_TOKEN_INVALID,
           {}
         );
       }
