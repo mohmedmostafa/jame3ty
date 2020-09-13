@@ -45,11 +45,9 @@ exports.addCourse = async (req, res) => {
   }
 
   //Get instructor for the uer in the token
-  const instructor = await db_Instructor.findOne({
-    where: {
-      userId: req.userId,
-    },
-  });
+  const instructor = await db_Instructor.findByPk(
+    parseInt(req.body.instructorId)
+  );
 
   if (!instructor) {
     onErrorDeleteFiles(req);
