@@ -1,10 +1,13 @@
 const Joi = require('joi');
 const {
   ValidateResponse,
+  ResponseConstants,
 } = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
 } = require('../../../common/attachmentsUpload/multerConfig');
+const { Joi_messages } = require('../../../common/validation/joi.constants');
+
 const db = require('../../');
 
 //----------------------------------------------------------
@@ -12,38 +15,76 @@ addCourseValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      method: Joi.number().integer().min(0).max(1).required(),
-    });
+      method: Joi.number()
+        .integer()
+        .min(0)
+        .max(1)
+        .required()
+        .messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
       onErrorDeleteFiles(req);
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
   //Course Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
-    code: Joi.string().allow('', null),
-    desc: Joi.string().trim().min(5).required(),
-    prerequisiteText: Joi.string().trim().min(5).required(),
-    whatYouWillLearn: Joi.string().trim().min(5).required(),
-    numOfLessons: Joi.number().integer().positive().min(1).required(),
-    numOfHours: Joi.number().positive().required(),
-    price: Joi.number().positive().required(),
+    name_ar: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    name_en: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    code: Joi.string().allow('', null).messages(Joi_messages),
+    desc: Joi.string().trim().min(5).required().messages(Joi_messages),
+    prerequisiteText: Joi.string()
+      .trim()
+      .min(5)
+      .required()
+      .messages(Joi_messages),
+    whatYouWillLearn: Joi.string()
+      .trim()
+      .min(5)
+      .required()
+      .messages(Joi_messages),
+    numOfLessons: Joi.number()
+      .integer()
+      .positive()
+      .min(1)
+      .required()
+      .messages(Joi_messages),
+    numOfHours: Joi.number().positive().required().messages(Joi_messages),
+    price: Joi.number().positive().required().messages(Joi_messages),
     priceBeforeDiscount: Joi.number()
       .positive()
       .min(Joi.ref('price'))
-      .required(),
-    startDate: Joi.date().iso().required(),
-    type: Joi.number().integer().min(0).max(1).required(),
-    subjectId: Joi.number().integer().required(),
-    instructorId: Joi.number().integer().required(),
-  });
+      .required()
+      .messages(Joi_messages),
+    startDate: Joi.date().iso().required().messages(Joi_messages),
+    type: Joi.number()
+      .integer()
+      .min(0)
+      .max(1)
+      .required()
+      .messages(Joi_messages),
+    subjectId: Joi.number().integer().required().messages(Joi_messages),
+    instructorId: Joi.number().integer().required().messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   //Only when param = 1 which means Live Streaming
   if (req.params.method === '1') {
@@ -54,10 +95,15 @@ addCourseValidation = (req, res, next) => {
     }
 
     //One Group Schedule Schema
-    let groupScheduleSchema = Joi.object().keys({
-      day: Joi.string().trim().required(),
-      time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required,
-    });
+    let groupScheduleSchema = Joi.object()
+      .options({ abortEarly: false })
+      .keys({
+        day: Joi.string().trim().required().messages(Joi_messages),
+        time: Joi.string()
+          .regex(/^([0-9]{2})\:([0-9]{2})$/)
+          .required()
+          .messages(Joi_messages),
+      });
 
     //Course with Group Body Validation
     schema = schema.keys({
@@ -79,9 +125,15 @@ addCourseValidation = (req, res, next) => {
   console.log(req.body);
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
     onErrorDeleteFiles(req);
-    return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
@@ -92,14 +144,19 @@ updateCourseValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().required(),
-    });
+      id: Joi.number().integer().required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
@@ -107,27 +164,63 @@ updateCourseValidation = (req, res, next) => {
 
   //Course Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
-    code: Joi.string().allow('', null),
-    desc: Joi.string().trim().min(5).required(),
-    prerequisiteText: Joi.string().trim().min(5).required(),
-    whatYouWillLearn: Joi.string().trim().min(5).required(),
-    numOfLessons: Joi.number().integer().positive().min(1).required(),
-    numOfHours: Joi.number().positive().required(),
-    price: Joi.number().positive().required(),
+    name_ar: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    name_en: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    code: Joi.string().allow('', null).messages(Joi_messages),
+    desc: Joi.string().trim().min(5).required().messages(Joi_messages),
+    prerequisiteText: Joi.string()
+      .trim()
+      .min(5)
+      .required()
+      .messages(Joi_messages),
+    whatYouWillLearn: Joi.string()
+      .trim()
+      .min(5)
+      .required()
+      .messages(Joi_messages),
+    numOfLessons: Joi.number()
+      .integer()
+      .positive()
+      .min(1)
+      .required()
+      .messages(Joi_messages),
+    numOfHours: Joi.number().positive().required().messages(Joi_messages),
+    price: Joi.number().positive().required().messages(Joi_messages),
     priceBeforeDiscount: Joi.number()
       .positive()
       .min(Joi.ref('price'))
-      .required(),
-    startDate: Joi.date().iso().required(),
-    type: Joi.number().integer().min(0).max(1).required(),
-    subjectId: Joi.number().integer().required(),
-  });
+      .required()
+      .messages(Joi_messages),
+    startDate: Joi.date().iso().required().messages(Joi_messages),
+    type: Joi.number()
+      .integer()
+      .min(0)
+      .max(1)
+      .required()
+      .messages(Joi_messages),
+    subjectId: Joi.number().integer().required().messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
@@ -138,14 +231,19 @@ deleteCourseValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).required(),
-    });
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
@@ -156,18 +254,41 @@ deleteCourseValidation = (req, res, next) => {
 listCourseValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
-    doPagination: Joi.number().integer().valid(1, 0).default(1),
-    numPerPage: Joi.number().integer().greater(0).required(),
-    page: Joi.number().integer().greater(0).required(),
-    searchKey: Joi.string().allow('', null).required(),
-    method: Joi.string().trim().valid('1', '0', 'both').required(),
-    startFrom: Joi.date().iso().required(),
-    startTo: Joi.date().iso().greater(Joi.ref('startFrom')).required(),
-  });
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
+    method: Joi.string()
+      .trim()
+      .valid('1', '0', 'both')
+      .required()
+      .messages(Joi_messages),
+    startFrom: Joi.date().iso().required().messages(Joi_messages),
+    startTo: Joi.date()
+      .iso()
+      .greater(Joi.ref('startFrom'))
+      .required()
+      .messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
   }
 
   return next();
@@ -177,16 +298,35 @@ listCourseValidation = (req, res, next) => {
 listCourseNoDateValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
-    doPagination: Joi.number().integer().valid(1, 0).default(1),
-    numPerPage: Joi.number().integer().greater(0).required(),
-    page: Joi.number().integer().greater(0).required(),
-    searchKey: Joi.string().allow('', null).required(),
-    method: Joi.string().trim().valid('1', '0', 'both').required(),
-  });
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
+    method: Joi.string()
+      .trim()
+      .valid('1', '0', 'both')
+      .required()
+      .messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
   }
 
   return next();
@@ -197,29 +337,53 @@ listCourseNoDateByDepartmentValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      departmentId: Joi.number().integer().required(),
-    });
+      departmentId: Joi.number().integer().required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
   //Body Validation
   const schema = Joi.object({
-    doPagination: Joi.number().integer().valid(1, 0).default(1),
-    numPerPage: Joi.number().integer().greater(0).required(),
-    page: Joi.number().integer().greater(0).required(),
-    searchKey: Joi.string().allow('', null).required(),
-    method: Joi.string().trim().valid('1', '0', 'both').required(),
-  });
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
+    method: Joi.string()
+      .trim()
+      .valid('1', '0', 'both')
+      .required()
+      .messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
   }
 
   return next();
@@ -230,14 +394,19 @@ listCourseByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).required(),
-    });
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 

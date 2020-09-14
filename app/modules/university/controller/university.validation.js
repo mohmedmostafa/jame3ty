@@ -1,6 +1,9 @@
 const Joi = require('joi');
+const { Joi_messages } = require('../../../common/validation/joi.constants');
+
 const {
   ValidateResponse,
+  ResponseConstants,
 } = require('../../../common/response/response.handler');
 const db = require('../..');
 
@@ -13,23 +16,52 @@ addUniversityValidation = (req, res, next) => {
   }
 
   //One faculty Schema
-  let facultySchema = Joi.object().keys({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
-  });
+  let facultySchema = Joi.object()
+    .options({ abortEarly: false })
+    .keys({
+      faculty_name_ar: Joi.string()
+        .trim()
+        .min(3)
+        .max(30)
+        .required()
+        .messages(Joi_messages),
+      faculty_name_en: Joi.string()
+        .trim()
+        .min(3)
+        .max(30)
+        .required()
+        .messages(Joi_messages),
+    });
 
   //AcademicYear Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
-    faculties: Joi.array().items(facultySchema),
-  });
+    name_ar: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    name_en: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    faculties: Joi.array().items(facultySchema).messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   console.log(req.body);
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
@@ -40,26 +72,48 @@ updateUniversityValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().required(),
-    });
+      id: Joi.number().integer().required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
   //Body Validation
   const schema = Joi.object({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
-  });
+    name_ar: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    name_en: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
@@ -70,14 +124,19 @@ listUniversityByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).required(),
-    });
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
@@ -88,15 +147,30 @@ listUniversityByIdValidation = (req, res, next) => {
 listUniversityValidation = (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
-    doPagination: Joi.number().integer().valid(1, 0).default(1),
-    numPerPage: Joi.number().integer().greater(0).required(),
-    page: Joi.number().integer().greater(0).required(),
-    searchKey: Joi.string().allow('', null).required(),
-  });
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
   }
 
   return next();
@@ -107,14 +181,19 @@ deleteUniversityValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().required(),
-    });
+      id: Joi.number().integer().required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
