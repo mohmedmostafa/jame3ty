@@ -1,6 +1,9 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
-const { ValidateResponse } = require('../../common/response/response.handler');
+const {
+  ValidateResponse,
+  ResponseConstants,
+} = require('../../common/response/response.handler');
 const AssignmentSubmissionValidation = require('./controller/assignmentSubmission.validation');
 const AssignmentSubmissionController = require('./controller/assignmentSubmission.controller');
 const FileUploader = require('../../common/attachmentsUpload/multerConfig');
@@ -24,32 +27,12 @@ module.exports = function (app) {
   app.post(
     '/api/addAssignmentSubmission',
     (req, res, next) => {
-      upload_addAssignmentSubmission(req, res, (err) => {
-        if (req.fileVaildMimTypesError) {
-          return ValidateResponse(res, err, req.fileVaildMimTypesError);
-        }
-
-        //If Unexpected field ERROR
-        if (
-          err instanceof multer.MulterError &&
-          err.message === 'Unexpected field'
-        ) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(
-            res,
-            err,
-            FileUploader.validForm_DataParamNames()
-          );
-        }
-
-        //Other Errors
-        if (err) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(res, err, {});
-        }
-
-        return next();
-      });
+      FileUploader.validateFileAfterUpdate(
+        req,
+        res,
+        next,
+        upload_addAssignmentSubmission
+      );
     },
     [
       AssignmentSubmissionValidation.addAssignmentSubmissionValidation,
@@ -114,32 +97,12 @@ module.exports = function (app) {
   app.post(
     '/api/updateAssignmentSubmission/:id',
     (req, res, next) => {
-      upload_updateAssignmentSubmission(req, res, (err) => {
-        if (req.fileVaildMimTypesError) {
-          return ValidateResponse(res, err, req.fileVaildMimTypesError);
-        }
-
-        //If Unexpected field ERROR
-        if (
-          err instanceof multer.MulterError &&
-          err.message === 'Unexpected field'
-        ) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(
-            res,
-            err,
-            FileUploader.validForm_DataParamNames()
-          );
-        }
-
-        //Other Errors
-        if (err) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(res, err, {});
-        }
-
-        return next();
-      });
+      FileUploader.validateFileAfterUpdate(
+        req,
+        res,
+        next,
+        upload_updateAssignmentSubmission
+      );
     },
     [
       AssignmentSubmissionValidation.updateAssignmentSubmissionValidation,

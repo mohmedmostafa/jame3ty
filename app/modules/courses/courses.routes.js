@@ -1,6 +1,9 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
-const { ValidateResponse } = require('../../common/response/response.handler');
+const {
+  ValidateResponse,
+  ResponseConstants,
+} = require('../../common/response/response.handler');
 const CourseValidation = require('./controller/courses.validation');
 const CourseController = require('./controller/courses.controller');
 const FileUploader = require('../../common/attachmentsUpload/multerConfig');
@@ -30,32 +33,7 @@ module.exports = function (app) {
   app.post(
     '/api/addCourse/:method',
     (req, res, next) => {
-      upload_addCourse(req, res, (err) => {
-        if (req.fileVaildMimTypesError) {
-          return ValidateResponse(res, err, req.fileVaildMimTypesError);
-        }
-
-        //If Unexpected field ERROR
-        if (
-          err instanceof multer.MulterError &&
-          err.message === 'Unexpected field'
-        ) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(
-            res,
-            err,
-            FileUploader.validForm_DataParamNames()
-          );
-        }
-
-        //Other Errors
-        if (err) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(res, err, {});
-        }
-
-        return next();
-      });
+      FileUploader.validateFileAfterUpdate(req, res, next, upload_addCourse);
     },
     [
       CourseValidation.addCourseValidation,
@@ -90,32 +68,7 @@ module.exports = function (app) {
   app.post(
     '/api/updateCourse/:id',
     (req, res, next) => {
-      upload_updateCourse(req, res, (err) => {
-        if (req.fileVaildMimTypesError) {
-          return ValidateResponse(res, err, req.fileVaildMimTypesError);
-        }
-
-        //If Unexpected field ERROR
-        if (
-          err instanceof multer.MulterError &&
-          err.message === 'Unexpected field'
-        ) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(
-            res,
-            err,
-            FileUploader.validForm_DataParamNames()
-          );
-        }
-
-        //Other Errors
-        if (err) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(res, err, {});
-        }
-
-        return next();
-      });
+      FileUploader.validateFileAfterUpdate(req, res, next, upload_updateCourse);
     },
     [
       CourseValidation.updateCourseValidation,

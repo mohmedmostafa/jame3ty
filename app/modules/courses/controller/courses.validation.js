@@ -42,6 +42,7 @@ addCourseValidation = (req, res, next) => {
     startDate: Joi.date().iso().required(),
     type: Joi.number().integer().min(0).max(1).required(),
     subjectId: Joi.number().integer().required(),
+    instructorId: Joi.number().integer().required(),
   });
 
   //Only when param = 1 which means Live Streaming

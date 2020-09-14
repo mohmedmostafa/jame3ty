@@ -1,7 +1,9 @@
 const Joi = require('joi');
 const {
   ValidateResponse,
+  ResponseConstants,
 } = require('../../../common/response/response.handler');
+const { joi_messages } = require('../../../common/validation/joi.constants');
 const {
   onErrorDeleteFiles,
 } = require('../../../common/attachmentsUpload/multerConfig');
@@ -17,23 +19,49 @@ addAcademicYearValidation = (req, res, next) => {
 
   //One subjects Schema
   let subjectsSchema = Joi.object().keys({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
+    name_ar: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(joi_messages),
+    name_en: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(joi_messages),
   });
 
   //AcademicYear Body Validation
   let schema = Joi.object({
-    name_ar: Joi.string().trim().min(3).max(30).required(),
-    name_en: Joi.string().trim().min(3).max(30).required(),
-    departmentId: Joi.number().integer().required(),
-    subjects: Joi.array().items(subjectsSchema),
+    name_ar: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(joi_messages),
+    name_en: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(joi_messages),
+    departmentId: Joi.number().integer().required().messages(joi_messages),
+    subjects: Joi.array().items(subjectsSchema).messages(joi_messages),
   });
 
   console.log(req.body);
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_BAD_DATA,
+      error.details[0].message
+    );
   }
 
   return next();

@@ -1,6 +1,9 @@
 const multer = require('multer');
 const { AuthJwt } = require('../../middleware');
-const { ValidateResponse } = require('../../common/response/response.handler');
+const {
+  ValidateResponse,
+  ResponseConstants,
+} = require('../../common/response/response.handler');
 const StudentValidation = require('./controller/student.validation');
 const StudentController = require('./controller/student.controller');
 const FileUploader = require('../../common/attachmentsUpload/multerConfig');
@@ -24,32 +27,7 @@ module.exports = function (app) {
   app.post(
     '/api/addStudent',
     (req, res, next) => {
-      upload_addStudent(req, res, (err) => {
-        if (req.fileVaildMimTypesError) {
-          return ValidateResponse(res, err, req.fileVaildMimTypesError);
-        }
-
-        //If Unexpected field ERROR
-        if (
-          err instanceof multer.MulterError &&
-          err.message === 'Unexpected field'
-        ) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(
-            res,
-            err,
-            FileUploader.validForm_DataParamNames()
-          );
-        }
-
-        //Other Errors
-        if (err) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(res, err, {});
-        }
-
-        return next();
-      });
+      FileUploader.validateFileAfterUpdate(req, res, next, upload_addStudent);
     },
     [
       StudentValidation.addStudentValidation,
@@ -80,32 +58,12 @@ module.exports = function (app) {
   app.post(
     '/api/updateStudent/:id',
     (req, res, next) => {
-      upload_updateStudent(req, res, (err) => {
-        if (req.fileVaildMimTypesError) {
-          return ValidateResponse(res, err, req.fileVaildMimTypesError);
-        }
-
-        //If Unexpected field ERROR
-        if (
-          err instanceof multer.MulterError &&
-          err.message === 'Unexpected field'
-        ) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(
-            res,
-            err,
-            FileUploader.validForm_DataParamNames()
-          );
-        }
-
-        //Other Errors
-        if (err) {
-          FileUploader.onErrorDeleteFiles(req);
-          return ValidateResponse(res, err, {});
-        }
-
-        return next();
-      });
+      FileUploader.validateFileAfterUpdate(
+        req,
+        res,
+        next,
+        upload_updateStudent
+      );
     },
     [
       StudentValidation.updateStudentValidation,
@@ -148,3 +106,43 @@ module.exports = function (app) {
     StudentController.listStudentByUserId
   );
 };
+
+/*
+(req, res, next) => {
+      upload_addStudent(req, res, (err) => {
+        if (req.fileVaildMimTypesError) {
+          return ValidateResponse(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+              .FILE_EXTENSION_INVALID,
+            [
+              ResponseConstants.ERROR_MESSAGES.FILE_EXTENSION_INVALID,
+              req.fileVaildMimTypesError,
+              err,
+            ]
+          );
+        }
+
+        //If Unexpected field ERROR
+        if (
+          err instanceof multer.MulterError &&
+          err.message === 'Unexpected field'
+        ) {
+          FileUploader.onErrorDeleteFiles(req);
+          return ValidateResponse(
+            res,
+            err,
+            FileUploader.validForm_DataParamNames()
+          );
+        }
+
+        //Other Errors
+        if (err) {
+          FileUploader.onErrorDeleteFiles(req);
+          return ValidateResponse(res, err, {});
+        }
+
+        return next();
+      });
+    },
+*/

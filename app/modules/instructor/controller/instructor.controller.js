@@ -70,8 +70,7 @@ exports.addInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        //'Username already exists!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.USERNAME_EXISTS
       );
     }
 
@@ -88,8 +87,7 @@ exports.addInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        // 'Email already exists!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.EMAIL_EXISTS
       );
     }
 
@@ -106,8 +104,7 @@ exports.addInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        //'Email already exists!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.EMAIL_EXISTS
       );
     }
 
@@ -124,8 +121,7 @@ exports.addInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        // 'Mobile already exists!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.MOBILE_EXISTS
       );
     }
     //--------------------
@@ -202,23 +198,30 @@ exports.addInstructor = async (req, res) => {
         console.error(err.message);
         return Response(
           res,
-          502,
-          'Failed to Send Verification Code to ' + req.body.email,
-          { err }
+          ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.code,
+          ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.type
+            .VERIFICATION_EMAIL_SEND_FAILED,
+          ResponseConstants.ERROR_MESSAGES.VERIFICATION_EMAIL_SEND_FAILED
         );
       });
 
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { instructor }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Add', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -239,12 +242,13 @@ exports.updateInstructor = async (req, res) => {
     });
 
     if (!Instructor) {
+      console.log('!instructor');
       onErrorDeleteFiles(req);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -267,8 +271,7 @@ exports.updateInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        //'Mobile already exists!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.MOBILE_EXISTS
       );
     }
 
@@ -353,12 +356,18 @@ exports.updateInstructor = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      [_Instructor, _User]
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Update!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -378,11 +387,12 @@ exports.deleteInstructor = async (req, res) => {
     });
 
     if (!Instructor) {
+      console.log('!instructor');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -393,10 +403,7 @@ exports.deleteInstructor = async (req, res) => {
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
           .RESOURCE_HAS_DEPENDENTS,
-        //"Can't Delete. The Instructor has courses created",
-        {
-          Instructor,
-        }
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
       );
     }
 
@@ -406,10 +413,7 @@ exports.deleteInstructor = async (req, res) => {
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
           .RESOURCE_HAS_DEPENDENTS,
-        // "Can't Delete. The Instructor has group created",
-        {
-          Instructor,
-        }
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
       );
     }
 
@@ -446,12 +450,18 @@ exports.deleteInstructor = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      [Instructor, role, user]
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
 
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -470,9 +480,14 @@ exports.listInstructor = async (req, res) => {
 
   //check if
   const userData = await helper.getUserdata(req, res).catch((err) => {
-    return Response(res, 500, 'Error in Retrieve some data', {
-      err,
-    });
+    console.log(err);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   });
   console.log(userData);
 
@@ -485,7 +500,7 @@ exports.listInstructor = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
       ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-      {}
+      ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
     );
   }
 
@@ -563,7 +578,13 @@ exports.listInstructor = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 //---------------------------------------------------------------
@@ -581,19 +602,24 @@ exports.listInstructorById = async (req, res) => {
     });
 
     if (!Instructor) {
+      console.log('!instructor');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
     const userData = await helper.getUserdata(req, res).catch((err) => {
       console.log(err);
-      return Response(res, 500, 'Error in Retrieve some data', {
-        err,
-      });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
     });
 
     if (
@@ -604,7 +630,7 @@ exports.listInstructorById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
         ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        {}
+        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
       );
     }
 
@@ -617,6 +643,12 @@ exports.listInstructorById = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };

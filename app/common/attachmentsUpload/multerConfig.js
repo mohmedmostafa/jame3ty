@@ -2,7 +2,10 @@ const fs = require('fs');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
 //
-const { ValidateResponse } = require('../../common/response/response.handler');
+const {
+  ValidateResponse,
+  ResponseConstants,
+} = require('../../common/response/response.handler');
 const multer = require('multer');
 const path = require('path');
 
@@ -137,10 +140,7 @@ function fieldsFileFilter(req, file, cb) {
     if (VaildMimTypes.indexOf(file.mimetype) === -1) {
       req.fileVaildMimTypesError = file;
 
-      return cb(
-        `File Extension Not Valid, Only Accept { ${VaildMimTypes} }`,
-        false
-      );
+      return cb({ VaildMimTypes }, false);
     }
 
     return cb(null, true);
@@ -176,8 +176,13 @@ function validateFieldMimTypesAndCreatePaths(
 
         return ValidateResponse(
           res,
-          'File Extension Not Valid, Only Accept: ' + VaildMimTypes,
-          { file }
+          ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+            .FILE_EXTENSION_INVALID,
+          [
+            ResponseConstants.ERROR_MESSAGES.FILE_EXTENSION_INVALID,
+            VaildMimTypes,
+            file,
+          ]
         );
       } else {
         let fileUrl = file.path.replace(/\\/g, '/').substring('public'.length);
@@ -212,28 +217,52 @@ function onErrorDeleteFiles(req) {
 }
 
 function validateFileAfterUpdate_(req, res, next, upload_callback) {
-  console.log('m1');
   upload_callback(req, res, (err) => {
-    console.log('m2');
+    //If file ext invalid
     if (req.fileVaildMimTypesError) {
-      return ValidateResponse(res, err, req.fileVaildMimTypesError);
+      this.onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .FILE_EXTENSION_INVALID,
+        [
+          ResponseConstants.ERROR_MESSAGES.FILE_EXTENSION_INVALID,
+          req.fileVaildMimTypesError,
+          err,
+        ]
+      );
     }
-    //If Unexpected field ERROR
+
+    //If Unexpected form-data field ERROR
     if (
       err instanceof multer.MulterError &&
       err.message === 'Unexpected field'
     ) {
       this.onErrorDeleteFiles(req);
-      return ValidateResponse(res, err, this.validForm_DataParamNames());
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .UNEXPECTED_FIELD,
+        [
+          ResponseConstants.ERROR_MESSAGES.UNEXPECTED_FIELD,
+          { VaildFormDataParamNames: exports.validForm_DataParamNames() },
+          err,
+        ]
+      );
     }
 
     //Other Errors
     if (err) {
-      console.log('m4', err);
+      console.log(err);
       //this.onErrorDeleteFiles(req);
-      return ValidateResponse(res, err, {});
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .MULTER_UNEXPECTED_ERROR,
+        [ResponseConstants.ERROR_MESSAGES.MULTER_UNEXPECTED_ERROR, err]
+      );
     }
-    console.log('m3');
+
     return next();
   });
 }
