@@ -26,8 +26,7 @@ checkDuplicateUsernameOrEmail = async (req, res, next) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        //'Failed! Username is already in use!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.USERNAME_EXISTS
       );
     }
 
@@ -43,14 +42,19 @@ checkDuplicateUsernameOrEmail = async (req, res, next) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-        //  'Failed! Email is already in use!',
-        {}
+        ResponseConstants.ERROR_MESSAGES.EMAIL_EXISTS
       );
     }
 
     return next();
   } catch (error) {
-    return Response(res, 500, 'Fail to Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -93,10 +97,7 @@ checkRolesExisted = async (req, res, next) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.INVALID_ROLE,
-      {
-        allValidRoles: allValidRolesNames,
-        matchedRoles: matchedRolesNames,
-      }
+      ResponseConstants.ERROR_MESSAGES.INVALID_ROLE
     );
   }
 

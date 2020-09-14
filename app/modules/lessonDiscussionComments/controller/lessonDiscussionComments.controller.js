@@ -18,29 +18,39 @@ const db_User = db.User;
 exports.addlessonDiscussionComments = async (req, res) => {
   const user = await db_User.findByPk(req.body.userId);
   console.log('test', user);
-  if (!user)
+  if (!user) {
+    console.log('!user');
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
+  }
 
   //add post
   if (req.body.lessonId) {
     const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-    if (!lesson)
+    if (!lesson) {
+      console.log('!lesson');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
+    }
 
     const post = await addPost(req, user, lesson).catch((err) => {
       console.log(err);
-      return Response(res, 500, 'Fail to Insert!', { err });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
     });
     return Response(
       res,
@@ -55,18 +65,26 @@ exports.addlessonDiscussionComments = async (req, res) => {
       req.body.lessonDiscussionId
     );
 
-    if (!lessonDiscussion)
+    if (!lessonDiscussion) {
+      console.log('!lessonDiscussion');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
+    }
 
     const comment = await addComment(req, user, lessonDiscussion).catch(
       (err) => {
         console.log(err);
-        return Response(res, 500, 'Fail to Insert!', { err });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       }
     );
     return Response(
@@ -143,37 +161,42 @@ exports.updatelessonDiscussionComments = async (req, res) => {
     );
 
     if (!lessonDiscussionComments) {
+      console.log('!lessonDiscussion');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
     //get user model
     const user = await db_User.findByPk(req.body.userId);
 
-    if (!user)
+    if (!user) {
+      console.log('!user');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
+    }
 
     //get lesson model
     const lessonDiscussion = await db_lessonDiscussion.findByPk(
       req.body.lessonDiscussionId
     );
 
-    if (!lessonDiscussion)
+    if (!lessonDiscussion) {
+      console.log('!lessonDiscussion');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
+    }
 
     const comment = await db_connection.transaction(async (t) => {
       //Do Update
@@ -195,11 +218,17 @@ exports.updatelessonDiscussionComments = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { _lessonDiscussionComments }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -209,35 +238,40 @@ exports.updatelessonDiscussion = async (req, res) => {
     let lessonDiscussion = await db_lessonDiscussion.findByPk(req.params.id);
 
     if (!lessonDiscussion) {
+      console.log('!lessonDiscussion');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
     //get user model
     const user = await db_User.findByPk(req.body.userId);
     console.log('test', user);
-    if (!user)
+    if (!user) {
+      console.log('!user');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
+    }
 
     //get lesson model
     const lesson = await db_lesson.findByPk(req.body.lessonId);
 
-    if (!lesson)
+    if (!lesson) {
+      console.log('!lesson');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
+    }
 
     const post = await db_connection.transaction(async (t) => {
       //Do Update
@@ -257,11 +291,17 @@ exports.updatelessonDiscussion = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { _lessonDiscussion }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -274,11 +314,12 @@ exports.deletelessonDiscussionComments = async (req, res) => {
     });
 
     if (!lessonDiscussionComments) {
+      console.log('!lessonDiscussionComments');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -292,11 +333,17 @@ exports.deletelessonDiscussionComments = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { lessonDiscussionComments }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -309,11 +356,12 @@ exports.deletelessonDiscussion = async (req, res) => {
     });
 
     if (!lessonDiscussion) {
+      console.log('!lessonDiscussion');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -337,11 +385,17 @@ exports.deletelessonDiscussion = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { _lessonDiscussion }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -404,7 +458,13 @@ exports.listlessonDiscussionComments = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -419,11 +479,12 @@ exports.listlessonDiscussionById = async (req, res) => {
     });
 
     if (!lessonDiscussion) {
+      console.log('!lessonDiscussion');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -435,7 +496,13 @@ exports.listlessonDiscussionById = async (req, res) => {
       { lessonDiscussion }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -446,11 +513,12 @@ exports.listlessonDiscussionCommentsById = async (req, res) => {
     });
 
     if (!lessonDiscussionComments) {
+      console.log('!lessonDiscussionComments');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -462,6 +530,12 @@ exports.listlessonDiscussionCommentsById = async (req, res) => {
       { lessonDiscussionComments }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };

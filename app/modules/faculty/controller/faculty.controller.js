@@ -19,11 +19,12 @@ exports.addFaculty = async (req, res) => {
     );
 
     if (!university) {
+      console.log('!university');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -37,13 +38,19 @@ exports.addFaculty = async (req, res) => {
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { faculty }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Add', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -55,11 +62,12 @@ exports.updateFaculty = async (req, res) => {
     faculty = faculty.get({ plain: true });
 
     if (!faculty) {
+      console.log('!faculty');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -71,11 +79,12 @@ exports.updateFaculty = async (req, res) => {
       );
 
       if (!university) {
+        console.log('!university');
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
         );
       }
     }
@@ -97,11 +106,17 @@ exports.updateFaculty = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { faculty }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -119,11 +134,12 @@ exports.deleteFaculty = async (req, res) => {
     });
 
     if (!faculty) {
+      console.log('!faculty');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -136,10 +152,7 @@ exports.deleteFaculty = async (req, res) => {
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
           .RESOURCE_HAS_DEPENDENTS,
-        //"Can't Delete. Has Childs",
-        {
-          faculty,
-        }
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
       );
     }
 
@@ -153,11 +166,17 @@ exports.deleteFaculty = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { faculty }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -178,11 +197,12 @@ exports.listFacultyById = async (req, res) => {
     });
 
     if (!faculty) {
+      console.log('!faculty');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -195,7 +215,13 @@ exports.listFacultyById = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -224,7 +250,13 @@ exports.listFaculty = async (req, res) => {
       },
     })
     .catch((error) => {
-      return Response(res, 500, 'Fail to Count!', { error });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
     });
   numRows = parseInt(numRows);
 
@@ -267,7 +299,13 @@ exports.listFaculty = async (req, res) => {
       { result }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -300,9 +338,7 @@ function listFaculty_DoPagination(
         include: [
           {
             model: db_Department,
-          }, 
-          
-          
+          },
         ],
         order: [[{ model: db_University }, 'name_ar', 'DESC']],
         offset: skip,

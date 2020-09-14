@@ -35,12 +35,13 @@ exports.addCourse = async (req, res) => {
   const subject = await db_Subject.findByPk(parseInt(req.body.subjectId));
 
   if (!subject) {
+    console.log('!subject');
     onErrorDeleteFiles(req);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
   }
 
@@ -50,12 +51,13 @@ exports.addCourse = async (req, res) => {
   );
 
   if (!instructor) {
+    console.log('!instructor');
     onErrorDeleteFiles(req);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
   }
 
@@ -119,14 +121,20 @@ async function addRecordedLessonsCourse(req, res, instructor) {
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { course }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Add', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 }
 
@@ -192,13 +200,19 @@ async function addLiveStreamingCourse(req, res, instructor) {
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { course }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to add', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 }
 
@@ -219,11 +233,12 @@ exports.deleteCourse = async (req, res) => {
     });
 
     if (!course) {
+      console.log('!course');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
     //course = course.get({ plain: true });
@@ -237,8 +252,7 @@ exports.deleteCourse = async (req, res) => {
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
           .RESOURCE_HAS_DEPENDENTS,
-        //"Can't delete the course, The Course has subscription!",
-        { course }
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
       );
     }
 
@@ -275,11 +289,17 @@ exports.deleteCourse = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { course }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -351,11 +371,12 @@ exports.listCourseById = async (req, res) => {
     });
 
     if (!course) {
+      console.log('!course');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -368,7 +389,13 @@ exports.listCourseById = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -388,12 +415,13 @@ exports.updateCourse = async (req, res) => {
     });
 
     if (!course) {
+      console.log('!course');
       onErrorDeleteFiles(req);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -414,8 +442,9 @@ exports.updateCourse = async (req, res) => {
         onErrorDeleteFiles(req);
         return ValidateResponse(
           res,
-          "Startdate isn't valid, it must be before all start dates of all groups",
-          { minStartDateGroup }
+          ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+            .UNACCEPTABLE_DATE,
+          ResponseConstants.ERROR_MESSAGES.UNACCEPTABLE_DATE_COURSE_STARTDATE
         );
       }
     }
@@ -500,12 +529,18 @@ exports.updateCourse = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      {}
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -562,7 +597,13 @@ exports.listCourse = async (req, res) => {
       { data }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -610,7 +651,13 @@ function listCourse_DoPagination_Method_Both(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -772,7 +819,13 @@ function listCourse_DoPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -934,7 +987,13 @@ function listCourse_NOPagination_Method_Both(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -1094,7 +1153,13 @@ function listCourse_NOPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -1269,7 +1334,13 @@ exports.listCourseNoDate = async (req, res) => {
       { data }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -1313,7 +1384,13 @@ function listCourseNoDate_DoPagination_Method_Both(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -1466,7 +1543,13 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -1619,7 +1702,13 @@ function listCourseNoDate_NOPagination_Method_Both(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -1770,7 +1859,13 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -1893,11 +1988,12 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
   });
 
   if (!dept) {
+    console.log('!department');
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
   }
 
@@ -1945,7 +2041,13 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
       { data }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -1977,7 +2079,13 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     console.log(numRows);
     numRows = parseInt(numRows.count);
@@ -2154,7 +2262,13 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     console.log(numRows);
     numRows = parseInt(numRows.count);
@@ -2332,7 +2446,13 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     console.log(numRows);
     numRows = parseInt(numRows.count);
@@ -2507,7 +2627,13 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     console.log(numRows);
     numRows = parseInt(numRows.count);

@@ -35,12 +35,13 @@ exports.addLesson = async (req, res) => {
     });
 
     if (!course) {
+      console.log('!course');
       onErrorDeleteFiles(req);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -62,13 +63,14 @@ exports.addLesson = async (req, res) => {
       });
 
       if (!course) {
+        console.log('!course');
         onErrorDeleteFiles(req);
         //'Course with that group Not Found!'
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
         );
       }
     }
@@ -112,14 +114,20 @@ exports.addLesson = async (req, res) => {
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { lesson }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Add!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -134,11 +142,12 @@ exports.deleteLesson = async (req, res) => {
     });
 
     if (!lesson) {
+      console.log('!lesson');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -166,11 +175,17 @@ exports.deleteLesson = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { deletedLesson }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -185,11 +200,12 @@ exports.deleteAttachment = async (req, res) => {
     });
 
     if (!lesson) {
+      console.log('!lesson');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -221,8 +237,9 @@ exports.deleteAttachment = async (req, res) => {
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
-          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          { lesson }
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type
+            .NO_ATTACHMENTS_FOUND,
+          ResponseConstants.ERROR_MESSAGES.NO_ATTACHMENTS_FOUND
         );
       }
     } else {
@@ -230,8 +247,8 @@ exports.deleteAttachment = async (req, res) => {
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
-        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        { lesson }
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.NO_ATTACHMENTS_FOUND,
+        ResponseConstants.ERROR_MESSAGES.NO_ATTACHMENTS_FOUND
       );
     }
 
@@ -240,11 +257,17 @@ exports.deleteAttachment = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { lesson }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete Attachment!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ATTACHMENT_DELETION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ATTACHMENT_DELETION_FAILED
+    );
   }
 };
 
@@ -266,11 +289,12 @@ exports.listLessonById = async (req, res) => {
     });
 
     if (!lesson) {
+      console.log('!lesson');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -283,7 +307,13 @@ exports.listLessonById = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -296,12 +326,13 @@ exports.updateLesson = async (req, res) => {
     });
 
     if (!lesson) {
+      console.log('!lesson');
       onErrorDeleteFiles(req);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -311,12 +342,13 @@ exports.updateLesson = async (req, res) => {
     });
 
     if (!course) {
+      console.log('!course');
       onErrorDeleteFiles(req);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -338,13 +370,14 @@ exports.updateLesson = async (req, res) => {
       });
 
       if (!course) {
+        console.log('!course');
         onErrorDeleteFiles(req);
         //'Course with that group Not Found!'
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
         );
       }
     }
@@ -415,12 +448,18 @@ exports.updateLesson = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { updatedLesson }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -477,7 +516,13 @@ exports.listLesson = async (req, res) => {
       { data }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -520,7 +565,13 @@ function listLesson_DoPagination_Type_Both(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -622,7 +673,13 @@ function listLesson_DoPagination_Type_1_or_0(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -719,7 +776,13 @@ function listLesson_NOPagination_Type_Both(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 
@@ -814,7 +877,13 @@ function listLesson_NOPagination_Type_1_or_0(
         },
       })
       .catch((error) => {
-        return Response(res, 500, 'Fail to Count!', { error });
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
       });
     numRows = parseInt(numRows);
 

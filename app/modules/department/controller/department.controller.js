@@ -32,11 +32,12 @@ exports.addDepartment = async (req, res) => {
     const faculty = await db_Faculty.findByPk(parseInt(req.body.facultyId));
 
     if (!faculty) {
+      console.log('!faculty');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -84,13 +85,19 @@ exports.addDepartment = async (req, res) => {
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { result }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Add!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -108,11 +115,12 @@ exports.deleteDepartment = async (req, res) => {
     });
 
     if (!department) {
+      console.log('!department');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -122,10 +130,7 @@ exports.deleteDepartment = async (req, res) => {
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
           .RESOURCE_HAS_DEPENDENTS,
-        //"Can't delete the department. It has childs",
-        {
-          department,
-        }
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
       );
     }
 
@@ -139,11 +144,17 @@ exports.deleteDepartment = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { deletedDepartment }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -164,11 +175,12 @@ exports.listDepartmentById = async (req, res) => {
     });
 
     if (!department) {
+      console.log('!department');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -181,7 +193,13 @@ exports.listDepartmentById = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -194,11 +212,12 @@ exports.updateDepartment = async (req, res) => {
     });
 
     if (!department) {
+      console.log('!department');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -215,11 +234,17 @@ exports.updateDepartment = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      {}
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Udpate!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -248,7 +273,13 @@ exports.listDepartment = async (req, res) => {
       },
     })
     .catch((error) => {
-      return Response(res, 500, 'Fail to Count!', { error });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
     });
   numRows = parseInt(numRows);
 
@@ -292,13 +323,19 @@ exports.listDepartment = async (req, res) => {
       { result }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
 function listDepartment_NOPagination(req, db_Department) {
   return new Promise(async (resolve, reject) => {
-    let facultyId=req.query.facultyId?req.query.facultyId:'%%';
+    let facultyId = req.query.facultyId ? req.query.facultyId : '%%';
     await db_Department
       .findAll({
         where: {
@@ -320,8 +357,8 @@ function listDepartment_NOPagination(req, db_Department) {
             model: db_AcademicYear,
           },
           {
-            model: db_Faculty, where: {id:{[Op.like]:facultyId}}
-
+            model: db_Faculty,
+            where: { id: { [Op.like]: facultyId } },
           },
         ],
       })

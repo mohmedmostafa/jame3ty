@@ -31,8 +31,7 @@ exports.signup = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
       ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-      //  'Username already exists!',
-      {}
+      ResponseConstants.ERROR_MESSAGES.USERNAME_EXISTS
     );
   }
 
@@ -47,8 +46,7 @@ exports.signup = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
       ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type.RESOURCE_CONFLICT,
-      // 'Email already exists!',
-      {}
+      ResponseConstants.ERROR_MESSAGES.EMAIL_EXISTS
     );
   }
 
@@ -91,24 +89,31 @@ exports.signup = async (req, res) => {
     await email
       .sendSignupVerificationEmail(user.randomToken, req.body.email)
       .catch((err) => {
-        console.error(err.message);
+        console.error(err);
         return Response(
           res,
-          502,
-          'Failed to Send Verification Code to ' + req.body.email,
-          { err }
+          ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.code,
+          ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.type
+            .VERIFICATION_EMAIL_SEND_FAILED,
+          ResponseConstants.ERROR_MESSAGES.VERIFICATION_EMAIL_SEND_FAILED
         );
       });
 
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { user }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
-    return Response(res, 500, 'Fail to add the new user!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -136,7 +141,7 @@ exports.signin = async (req, res) => {
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.USER_NOT_EXISTS
         );
       } else {
         //Focus on the desired data
@@ -209,7 +214,13 @@ exports.signin = async (req, res) => {
     .catch((err) => {
       //Error
       console.log(err);
-      return Response(res, 500, err.message, {});
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .INTERNAL_SERVER_ERROR,
+        ResponseConstants.ERROR_MESSAGES.INTERNAL_SERVER_ERROR
+      );
     });
 };
 
@@ -224,12 +235,13 @@ exports.verifyEmail = async (req, res) => {
     .then(async (user) => {
       //If Email not found
       if (!user) {
+        console.log('!user');
         //'Email Not found!'
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.USER_NOT_EXISTS
         );
       } else {
         //If account already verified
@@ -239,12 +251,18 @@ exports.verifyEmail = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
             ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type
               .EMAIL_ALREADY_VERIFIED,
-            {}
+            ResponseConstants.ERROR_MESSAGES.EMAIL_ALREADY_VERIFIED
           );
         } else {
           //If Code is expired
           if (moment().isAfter(user.lasVerificationCodeExpireAt)) {
-            return Response(res, 410, 'Verification code is expired!', {});
+            return Response(
+              res,
+              ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+              ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+                .EXPIRED_VERIFICATION_CODE,
+              ResponseConstants.ERROR_MESSAGES.EXPIRED_VERIFICATION_CODE
+            );
           } else {
             if (req.body.code != user.lastVerificationCodeSend) {
               return Response(
@@ -252,7 +270,7 @@ exports.verifyEmail = async (req, res) => {
                 ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
                 ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
                   .VERIFICATION_CODE_INCORRECT,
-                {}
+                ResponseConstants.ERROR_MESSAGES.VERIFICATION_CODE_INCORRECT
               );
             } else {
               await db_User
@@ -261,9 +279,10 @@ exports.verifyEmail = async (req, res) => {
                   console.log(error);
                   return Response(
                     res,
-                    500,
-                    'Fail to Verify Email!' + req.body.email,
-                    { error }
+                    ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+                    ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+                      .ORM_OPERATION_FAILED,
+                    ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
                   );
                 })
                 .then((result) => {
@@ -271,7 +290,7 @@ exports.verifyEmail = async (req, res) => {
                     res,
                     ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
                     ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-                    { result }
+                    ResponseConstants.ERROR_MESSAGES.SUCCESS
                   );
                 });
             }
@@ -292,12 +311,13 @@ exports.sendVerificationCode = async (req, res) => {
     .then(async (user) => {
       //If Email not found
       if (!user) {
+        console.log('!user');
         //'Email Not found!'
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.USER_NOT_EXISTS
         );
       } else {
         //const randomToken = await email.generateRandomToken({ byteLength: 10 });
@@ -319,9 +339,10 @@ exports.sendVerificationCode = async (req, res) => {
             console.error(err.message);
             return Response(
               res,
-              502,
-              'Failed to Send Verification Code to ' + req.body.email,
-              { err }
+              ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.code,
+              ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.type
+                .VERIFICATION_EMAIL_SEND_FAILED,
+              ResponseConstants.ERROR_MESSAGES.VERIFICATION_EMAIL_SEND_FAILED
             );
           })
           .then((result) => {
@@ -330,7 +351,7 @@ exports.sendVerificationCode = async (req, res) => {
               ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
               ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type
                 .VERIFICATION_CODE_SENT,
-              {}
+              ResponseConstants.ERROR_MESSAGES.VERIFICATION_CODE_SENT
             );
           });
       }
@@ -348,12 +369,13 @@ exports.forgotPassword = async (req, res) => {
     .then(async (user) => {
       //If Email not found
       if (!user) {
+        console.log('!user');
         //Email Not Found
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          {}
+          ResponseConstants.ERROR_MESSAGES.USER_NOT_EXISTS
         );
       } else {
         //If account not verified yet
@@ -368,7 +390,13 @@ exports.forgotPassword = async (req, res) => {
         } else {
           //If Code is expired
           if (moment().isAfter(user.lasVerificationCodeExpireAt)) {
-            return Response(res, 410, 'Verification code is expired!', {});
+            return Response(
+              res,
+              ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+              ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+                .EXPIRED_VERIFICATION_CODE,
+              ResponseConstants.ERROR_MESSAGES.EXPIRED_VERIFICATION_CODE
+            );
           } else {
             if (req.body.code != user.lastVerificationCodeSend) {
               return Response(
@@ -376,7 +404,7 @@ exports.forgotPassword = async (req, res) => {
                 ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
                 ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
                   .VERIFICATION_CODE_INCORRECT,
-                {}
+                ResponseConstants.ERROR_MESSAGES.VERIFICATION_CODE_INCORRECT
               );
             } else {
               db_User
@@ -386,9 +414,13 @@ exports.forgotPassword = async (req, res) => {
                 )
                 .catch((error) => {
                   console.log(error);
-                  return Response(res, 500, 'Fail to Change Password!', {
-                    error,
-                  });
+                  return Response(
+                    res,
+                    ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+                    ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+                      .ORM_OPERATION_FAILED,
+                    ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+                  );
                 })
                 .then((result) => {
                   return Response(

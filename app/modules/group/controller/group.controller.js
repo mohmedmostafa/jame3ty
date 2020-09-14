@@ -31,13 +31,14 @@ exports.addGroup = async (req, res) => {
   });
 
   if (!course) {
+    console.log('!course');
     //onErrorDeleteFiles(req);
     //'Course Not Found or Not Live Streaming'
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
   }
 
@@ -45,8 +46,9 @@ exports.addGroup = async (req, res) => {
   if (moment(req.body.startDateGroup) < moment(course.startDate)) {
     return ValidateResponse(
       res,
-      'Start Date of the Group must be greater than start date of the Course which belongs to!',
-      { course }
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .UNACCEPTABLE_DATE,
+      ResponseConstants.ERROR_MESSAGES.UNACCEPTABLE_DATE_GROUP_STARTDATE
     );
   }
 
@@ -58,11 +60,12 @@ exports.addGroup = async (req, res) => {
   });
 
   if (!instructor) {
+    console.log('!instructor');
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
   }
 
@@ -104,12 +107,18 @@ exports.addGroup = async (req, res) => {
     //Success
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { group }
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
-    return Response(res, 500, 'Fail to add', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -141,13 +150,14 @@ exports.updateGroup = async (req, res) => {
     });
 
     if (!course) {
+      console.log('!course');
       //onErrorDeleteFiles(req);
       //'Course with that group is Not Found or Not Live Streaming'
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -155,8 +165,9 @@ exports.updateGroup = async (req, res) => {
     if (moment(req.body.startDateGroup) < moment(course.startDate)) {
       return ValidateResponse(
         res,
-        'Start Date of the Group must be greater than start date of the Course which belongs to!',
-        { course }
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .UNACCEPTABLE_DATE,
+        ResponseConstants.ERROR_MESSAGES.UNACCEPTABLE_DATE_GROUP_STARTDATE
       );
     }
 
@@ -166,9 +177,10 @@ exports.updateGroup = async (req, res) => {
     ) {
       return ValidateResponse(
         res,
-        "The max number of students per group can't be less than the current number of student subsciptions for that group!, Count of registered students = " +
-          course.groups[0].courseSubscribes.length,
-        { course }
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .UNACCEPTABLE_NUMBER,
+        ResponseConstants.ERROR_MESSAGES
+          .UNACCEPTABLE_MAX_STUDENT_NUMBER_IN_GROUP
       );
     }
 
@@ -226,11 +238,17 @@ exports.updateGroup = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { group }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -254,11 +272,12 @@ exports.deleteGroup = async (req, res) => {
     });
 
     if (!group) {
+      console.log('!group');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
     //course = course.get({ plain: true });
@@ -272,8 +291,7 @@ exports.deleteGroup = async (req, res) => {
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
         ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
           .RESOURCE_HAS_DEPENDENTS,
-        //"Can't delete the group, The Course Group has subscription!",
-        { group }
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
       );
     }
 
@@ -287,11 +305,17 @@ exports.deleteGroup = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { group }
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -305,11 +329,12 @@ exports.listGroupByCourseId = async (req, res) => {
   });
 
   if (!course) {
+    console.log('!course');
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      {}
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
     );
   }
 
@@ -326,7 +351,13 @@ exports.listGroupByCourseId = async (req, res) => {
       },
     })
     .catch((error) => {
-      return Response(res, 500, 'Fail to Count!', { error });
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
     });
   numRows = parseInt(numRows);
 
@@ -383,7 +414,13 @@ exports.listGroupByCourseId = async (req, res) => {
       { result }
     );
   } catch (error) {
-    return Response(res, 500, 'Fail To Find!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
@@ -512,11 +549,12 @@ exports.listGroupById = async (req, res) => {
     });
 
     if (!group) {
+      console.log('!group');
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        {}
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
       );
     }
 
@@ -529,6 +567,12 @@ exports.listGroupById = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return Response(res, 500, 'Fail to Delete!', { error });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
