@@ -535,6 +535,7 @@ exports.listStudent = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
