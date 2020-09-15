@@ -341,8 +341,11 @@ function listFaculty_DoPagination(
           {
             model: db_Department,
           },
+          {
+            model: db_University,
+            where: { id: { [Op.like]: universityId } },
+          },
         ],
-        order: [[{ model: db_University }, 'name_ar', 'DESC']],
         offset: skip,
         limit: _limit,
       })
@@ -386,7 +389,6 @@ function listFaculty_NOPagination(req, db_Faculty, db_Department) {
             where: { id: { [Op.like]: universityId } },
           },
         ],
-        order: [[{ model: db_University }, 'name_ar', 'DESC']],
       })
       .catch((err) => {
         console.log(err);

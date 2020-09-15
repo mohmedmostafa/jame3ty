@@ -266,10 +266,10 @@ exports.listSubject = async (req, res) => {
     let data;
     if (doPagination) {
       //Do Pagination
-      data = await listSubject_DoPagination(req, db_Subject, skip, _limit);
+      data = await listSubject_DoPagination(req, skip, _limit);
     } else {
       //Do Pagination
-      data = await listSubject_NOPagination(req, db_Subject);
+      data = await listSubject_NOPagination(req);
     }
 
     let result = {
@@ -300,7 +300,7 @@ exports.listSubject = async (req, res) => {
   }
 };
 
-function listSubject_NOPagination(req, db_Subject) {
+function listSubject_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     let yearId = req.query.yearId ? req.query.yearId : '%%';
     await db_Subject
@@ -339,7 +339,7 @@ function listSubject_NOPagination(req, db_Subject) {
   });
 }
 
-function listSubject_DoPagination(req, db_AcademicYear, skip, _limit) {
+function listSubject_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_Subject
       .findAll({
