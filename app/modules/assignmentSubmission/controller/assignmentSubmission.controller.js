@@ -56,15 +56,15 @@ exports.addAssignmentSubmission = async (req, res) => {
     }
 
     //Get Student Id based on user id from token
-    let student = await db_Student.findOne({
-      where: { userId: parseInt(req.userId) },
-    });
+    // let student = await db_Student.findOne({
+    //   where: { userId: parseInt(req.userId) },
+    // });
 
     //Save to DB
     let assignmentSubmission = db_AssignmentSubmission.create({
       submissionDate: moment.utc(req.body.submissionDate),
       attachments: req.body.attachments,
-      studentId: student.id,
+      studentId: parseInt(req.body.studentId),
       lessonId: parseInt(req.body.lessonId),
     });
 
@@ -275,14 +275,14 @@ exports.listAssignmentSubmissionById = async (req, res) => {
 exports.updateAssignmentSubmission = async (req, res) => {
   try {
     //Get Student Id based on user id from token
-    let student = await db_Student.findOne({
-      where: { userId: parseInt(req.userId) },
-    });
+    // let student = await db_Student.findOne({
+    //   where: { userId: parseInt(req.userId) },
+    // });
 
     //Check if the Lesson is found
     let assignmentSubmission = await db_AssignmentSubmission.findOne({
       where: {
-        [Op.and]: [{ id: parseInt(req.params.id) }, { studentId: student.id }],
+        [Op.and]: [{ id: parseInt(req.params.id) }],
       },
     });
 

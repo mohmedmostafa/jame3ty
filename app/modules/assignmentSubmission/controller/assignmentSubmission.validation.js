@@ -16,6 +16,7 @@ addAssignmentSubmissionValidation = (req, res, next) => {
   let schema = Joi.object({
     submissionDate: Joi.date().iso().required().messages(Joi_messages),
     lessonId: Joi.number().integer().required().messages(Joi_messages),
+    studentId: Joi.number().integer().required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);

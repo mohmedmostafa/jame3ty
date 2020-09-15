@@ -1,4 +1,9 @@
 module.exports.Joi_messages = {
+  'date.greater': JSON.stringify({
+    key: `{#key}`,
+    en: `must be greater than {#ref}.`,
+    ar: `يجب ان يكون اكبر من {#ref}`,
+  }),
   'date.format': JSON.stringify({
     key: `{#key}`,
     en: `must be iso date.`,
