@@ -92,6 +92,10 @@ db.lessonDiscussionComment = require('../modules/lessonDiscussionComments/model/
   connection,
   Sequelize
 );
+db.Payment = require('../modules/courseSubscribe/model/payment.model')(
+  connection,
+  Sequelize
+);
 
 //-----------------------
 //Relations
@@ -171,11 +175,10 @@ db.Instructor.hasMany(db.Group, {
 db.Group.belongsTo(db.Instructor);
 //
 //
-db.Instructor.belongsTo(db.User,{onDelete:'CASCADE', hooks: true 
-});
+db.Instructor.belongsTo(db.User, { onDelete: 'CASCADE', hooks: true });
 db.User.hasOne(db.Instructor, {
-  foreignKey: 'userId',}
-  );
+  foreignKey: 'userId',
+});
 //
 //
 db.Student.belongsTo(db.User);
@@ -250,5 +253,9 @@ db.CourseSubscribe.hasMany(db.RatingAndReview, {
 db.RatingAndReview.belongsTo(db.CourseSubscribe);
 //
 //
+db.CourseSubscribe.hasMany(db.Payment, {
+  foreignKey: 'courseSubscribeId',
+});
+db.Payment.belongsTo(db.CourseSubscribe);
 
 module.exports = db;

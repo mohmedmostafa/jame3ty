@@ -22,7 +22,6 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.use('/public', express.static('public'));
 app.set('view engine', 'ejs');
 // check route
@@ -46,6 +45,7 @@ require('./app/modules/lesson/lesson.routes')(app);
 require('./app/modules/assignmentSubmission/assignmentSubmission.routes')(app);
 require('./app/modules/student/student.routes')(app);
 require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
+require('./app/modules/courseSubscribe/courseSubscribe.routes')(app);
 
 // set port, listen for requests
 app.listen(process.env.PORT || PORT, () => {

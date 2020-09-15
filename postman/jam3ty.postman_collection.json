@@ -278,7 +278,7 @@
 								},
 								{
 									"key": "faculties",
-									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
+									"value": "[{\"faculty_name_ar\":\"math3\",\"faculty_name_en\":\"math3\"},{\"faculty_name_ar\":\"phsyics3\", \"faculty_name_en\":\"phsyics3\"}]",
 									"type": "text"
 								}
 							],
@@ -1014,7 +1014,7 @@
 								},
 								{
 									"key": "instructorId",
-									"value": "2",
+									"value": "3",
 									"type": "text"
 								},
 								{
@@ -1030,33 +1030,28 @@
 								{
 									"key": "nameGroup",
 									"value": "Java G1",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
 									"value": "15",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "startDateGroup",
 									"value": "2020-09-25",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "endDateGroup",
 									"value": "2020-10-20",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "groupSchedule",
-									"value": "[{\"day\":\"Friday1\",\"time\":\"2020-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"2020-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"2020-11-05T08:15:30-05:00\"}]",
+									"value": "[{\"day\":\"Friday1\",\"time\":\"05:00\"},{\"day\":\"Friday2\",\"time\":\"05:00\"},{\"day\":\"Friday3\",\"time\":\"05:00\"}]",
 									"description": "Array of JSON Objects => As String",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								}
 							],
 							"options": {
@@ -1064,13 +1059,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/addCourse/0",
+							"raw": "{{url}}api/addCourse/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"addCourse",
-								"0"
+								"1"
 							]
 						}
 					},
@@ -2190,7 +2185,7 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "www",
+									"value": "لالالالالالالا",
 									"type": "text"
 								},
 								{
@@ -2205,7 +2200,7 @@
 								},
 								{
 									"key": "academicyears",
-									"value": "[{\"name_ar\":\"1th\",\"name_en\":\"1th\",\"subjects\":[{\"name_ar\":\"math1\",\"name_en\":\"math1\"},{\"name_ar\":\"phsyics1\", \"name_en\":\"phsyics1\"}]},{\"name_ar\":\"2th\",\"name_en\":\"2th\",\"subjects\":[{\"name_ar\":\"math2\",\"name_en\":\"math2\"},{\"name_ar\":\"phsyics2\",\"name_en\":\"phsyics2\"}]}]",
+									"value": "[{\"academic_name_ar\":\"1th\",\"academic_name_en\":\"1th\",\"subjects\":[{\"subject_name_ar\":\"math1\",\"subject_name_en\":\"math1\"},{\"subject_name_ar\":\"phsyics1\", \"subject_name_en\":\"phsyics1\"}]},{\"academic_name_ar\":\"2th\",\"academic_name_en\":\"2th\",\"subjects\":[{\"subject_name_ar\":\"math2\",\"subject_name_en\":\"math2\"},{\"subject_name_ar\":\"phsyics2\",\"subject_name_en\":\"phsyics2\"}]}]",
 									"type": "text"
 								}
 							],
@@ -2393,17 +2388,18 @@
 								},
 								{
 									"key": "name_en",
-									"value": "1111111111111111111111111111111111111111111111111111111111111",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "departmentId",
-									"value": "184",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "subjects",
-									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
+									"value": "[{\"subject_name_ar\":\"math3\",\"subject_name_en\":\"math3\"},{\"subject_name_ar\":\"phsyics3\", \"subject_name_en\":\"phsyics3\"}]",
+									"description": "[] or [{....},{...},....]",
 									"type": "text"
 								}
 							],
@@ -2463,12 +2459,12 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "wwwdd",
+									"value": "cc",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "wwwss",
+									"value": "",
 									"type": "text"
 								}
 							],
@@ -2833,7 +2829,7 @@
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": "/C:/Users/Farag/Documents/test.exe"
+									"src": []
 								}
 							],
 							"options": {
@@ -3133,7 +3129,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/download.jpeg"
+									"src": "/C:/Users/Farag/Pictures/q.mp4"
 								},
 								{
 									"key": "academicYearId",
@@ -3302,7 +3298,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listStudent?doPagination=1&numPerPage=10&page=1&searchKey=sa",
+							"raw": "{{url}}api/listStudent?doPagination=0&numPerPage=10&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -3312,7 +3308,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -3324,7 +3320,7 @@
 								},
 								{
 									"key": "searchKey",
-									"value": "sa"
+									"value": ""
 								}
 							]
 						}
@@ -3825,12 +3821,12 @@
 	],
 	"variable": [
 		{
-			"id": "485e0071-d00f-444e-b2ed-27ee7d3e6884",
+			"id": "d97a46a9-e46f-4421-98aa-83198d70213c",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "71b5673d-c0bb-4054-b516-502ca182eb51",
+			"id": "60496302-7e49-4d25-81d8-d42da56878c7",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNTk5ODc2MTc2LCJleHAiOjE1OTk5NjI1NzZ9.VyUugkJ-ttdhOiPgKaAVoZwocZ2pzEtxMEPpcW6Mlfg"
 		}

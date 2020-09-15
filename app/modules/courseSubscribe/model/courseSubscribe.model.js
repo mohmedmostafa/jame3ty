@@ -16,6 +16,15 @@ module.exports = (connection, Sequelize) => {
           key: 'id',
         },
       },
+      courseId: {
+        type: Sequelize.INTEGER,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        references: {
+          model: 'courses',
+          key: 'id',
+        },
+      },
       groupId: {
         type: Sequelize.INTEGER,
         onUpdate: 'CASCADE',
@@ -26,13 +35,12 @@ module.exports = (connection, Sequelize) => {
           key: 'id',
         },
       },
-      courseId: {
-        type: Sequelize.INTEGER,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        references: {
-          model: 'courses',
-          key: 'id',
+      details: {
+        type: Sequelize.BLOB,
+        allowNull: false,
+        defaultValue: '',
+        get() {
+          return this.getDataValue('details').toString('utf8');
         },
       },
       createdAt: {

@@ -176,7 +176,7 @@ exports.signin = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
               .INVALID_PASSWORD,
-            {}
+            ResponseConstants.ERROR_MESSAGES.INVALID_PASSWORD
           );
         }
 
@@ -187,7 +187,7 @@ exports.signin = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
               .EMAIL_UNVERIFIED,
-            {}
+            ResponseConstants.ERROR_MESSAGES.EMAIL_UNVERIFIED
           );
         }
 
@@ -385,7 +385,7 @@ exports.forgotPassword = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
               .EMAIL_UNVERIFIED,
-            {}
+            ResponseConstants.ERROR_MESSAGES.EMAIL_UNVERIFIED
           );
         } else {
           //If Code is expired

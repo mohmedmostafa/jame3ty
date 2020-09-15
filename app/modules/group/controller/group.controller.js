@@ -55,7 +55,7 @@ exports.addGroup = async (req, res) => {
   //Get instructor for the uer in the token
   const instructor = await db_Instructor.findOne({
     where: {
-      userId: req.userId,
+      id: req.body.instructorId,
     },
   });
 

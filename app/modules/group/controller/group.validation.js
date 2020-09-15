@@ -50,6 +50,7 @@ addGroupValidation = (req, res, next) => {
       .items(groupScheduleSchema)
       .messages(Joi_messages),
     courseId: Joi.number().integer().required().messages(Joi_messages),
+    instructorId: Joi.number().integer().required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   console.log(req.body);
