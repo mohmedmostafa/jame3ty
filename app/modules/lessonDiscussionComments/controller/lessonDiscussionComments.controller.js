@@ -687,7 +687,7 @@ function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
 
 function listlessonDiscussionByCourseId_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
-    await db_lessonDiscussion
+    await db_Course
       .findAll({
         where: {
           id: req.params.courseId,
