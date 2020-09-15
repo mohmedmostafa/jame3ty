@@ -258,6 +258,7 @@ exports.listRatingAndReview = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -354,6 +355,7 @@ function listRatingAndReview_DoPagination(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -388,6 +390,7 @@ function listRatingAndReview_NOPagination(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

@@ -183,6 +183,7 @@ exports.listUser = async (req, res) => {
       { data }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -220,6 +221,7 @@ exports.listUserById = async (req, res) => {
       { User }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,

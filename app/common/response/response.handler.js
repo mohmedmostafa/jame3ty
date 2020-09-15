@@ -1,7 +1,10 @@
 const { Sequelize } = require('../../modules/index');
 
 exports.Response = (res, statusCode, message, data) => {
-  if (statusCode == exports.ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code)
+  if (
+    statusCode === exports.ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code ||
+    statusCode === exports.ResponseConstants.HTTP_STATUS_CODES.CREATED.code
+  )
     return res.status(statusCode).send({
       status: true,
       statusCode: statusCode,
@@ -56,6 +59,7 @@ exports.ResponseConstants = {
         SUCCESS: 'SUCCESS',
         EMAIL_ALREADY_VERIFIED: 'EMAIL_ALREADY_VERIFIED',
         VERIFICATION_CODE_SENT: 'VERIFICATION_CODE_SENT',
+        UPAYMENT_COMPLETED_SUCCESSFULLY: 'UPAYMENT_COMPLETED_SUCCESSFULLY',
       },
     },
     CREATED: {
@@ -71,6 +75,8 @@ exports.ResponseConstants = {
       type: {
         BAD_REQUEST: 'BAD_REQUEST',
         EXPIRED_VERIFICATION_CODE: 'EXPIRED_VERIFICATION_CODE',
+        UPAYMENT_PROCESS_FAILED: 'UPAYMENT_PROCESS_FAILED',
+        UPAYMENT_PROCESS_CANCELED: 'UPAYMENT_PROCESS_CANCELED',
       },
     },
     UNAUTHORIZED: {
@@ -83,6 +89,7 @@ exports.ResponseConstants = {
         EMAIL_UNVERIFIED: 'EMAIL_UNVERIFIED',
         INVALID_PASSWORD: 'INVALID_PASSWORD',
         VERIFICATION_CODE_INCORRECT: 'VERIFICATION_CODE_INCORRECT',
+        SIGNIN_REQUIRED: 'SIGNIN REQUIRED',
       },
     },
     PAYMENT_REQUIRED: {
@@ -111,6 +118,7 @@ exports.ResponseConstants = {
         HAS_MANY_ROLES: 'HAS_MANY_ROLES',
         RESOURCE_CONFLICT: 'RESOURCE_CONFLICT',
         RESOURCE_HAS_DEPENDENTS: 'RESOURCE_HAS_DEPENDENTS',
+        ALREADY_SUBSCRIBED: 'ALREADY_SUBSCRIBED',
       },
     },
     UNPROCESSABLE_ENTITY: {
@@ -141,11 +149,97 @@ exports.ResponseConstants = {
       code: '502',
       type: {
         VERIFICATION_EMAIL_SEND_FAILED: 'VERIFICATION_EMAIL_SEND_FAILED',
+        UPAYMENTS_GATEWAY_ACCESS_FAILED: 'UPAYMENTS_GATEWAY_ACCESS_FAILED',
       },
     },
   },
   //Error MSGs
   ERROR_MESSAGES: {
+    UPAYMENTS_GATEWAY_NOT_TEST_CREDENTIALS: {
+      en: 'Accessing sandbox using live parameters or wrong parameter value',
+      ar: 'Accessing sandbox using live parameters or wrong parameter value',
+    },
+    UPAYMENTS_GATEWAY_MERCHANT_ID_MISSING: {
+      en: 'merchant_id field is missing/empty',
+      ar: 'merchant_id field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_USERNAME_MISSING: {
+      en: 'username field is missing/empty',
+      ar: 'username field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_PASSWORD_MISSING: {
+      en: 'password field is missing/empty',
+      ar: 'password field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_API_KEY_MISSING: {
+      en: 'api_key field is missing/empty',
+      ar: 'api_key field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_TOTAL_PRICE_MISSING: {
+      en: 'total_price field is missing/empty',
+      ar: 'total_price field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_TOTAL_PRICE_GREATER_ZERO: {
+      en: 'total_price is 0 or less than 0',
+      ar: 'total_price is 0 or less than 0',
+    },
+    UPAYMENTS_GATEWAY_ORDER_ID_MISSING: {
+      en: 'order_id field is missing/empty',
+      ar: 'order_id field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_ERROR_URL_MISSING: {
+      en: 'error_url field is missing/empty',
+      ar: 'error_url field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_SUCCESS_URL_MISSING: {
+      en: 'success_url field is missing/empty',
+      ar: 'success_url field is missing/empty',
+    },
+    UPAYMENTS_GATEWAY_NOT_AUTHORISED_USER: {
+      en: 'merchant not found',
+      ar: 'merchant not found',
+    },
+    UPAYMENTS_GATEWAY_PASSWORD_WRONG: {
+      en: 'password is wrong',
+      ar: 'password is wrong',
+    },
+    UPAYMENTS_GATEWAY_INVALID_API_KEY: {
+      en: 'api_key field is invalid',
+      ar: 'api_key field is invalid',
+    },
+    UPAYMENTS_GATEWAY_INVALID_CURRENCY_CODE: {
+      en: 'currency not supported',
+      ar: 'currency not supported',
+    },
+    SIGNIN_REQUIRED: {
+      en: 'Sign-in required.',
+      ar: 'يلزم تسجيل الدخول',
+    },
+    ALREADY_SUBSCRIBED: {
+      en:
+        'you are already subscribed to this coursePayment gateway unavailable now.',
+      ar: 'أنت مشترك بالفعل بهذه الدوره',
+    },
+    UPAYMENTS_GATEWAY_ACCESS_FAILED: {
+      en: 'Payment gateway unavailable now.',
+      ar: 'بوابة الدفع غير متوفرة الآن.',
+    },
+    PAYMENT_FAIL: {
+      en: 'Payment process failed.',
+      ar: 'عمليه دفع فاشله.',
+    },
+    UPAYMENT_PROCESS_CANCELED: {
+      en: 'Payment process canceled.',
+      ar: 'تم الغاء عمليه الدفع.',
+    },
+    UPAYMENT_PROCESS_FAILED: {
+      en: 'Payment process failed.',
+      ar: 'عمليه دفع فاشله.',
+    },
+    UPAYMENT_COMPLETED_SUCCESSFULLY: {
+      en: 'Payment completed successfully.',
+      ar: 'عمليه دفع ناجحه.',
+    },
     AUTHORIZATION_NOT_FOUND: {
       en: 'Authorization not found in headers.',
       ar: 'التفويض غير موجود.',
@@ -287,6 +381,14 @@ exports.ResponseConstants = {
     VERIFICATION_EMAIL_SEND_FAILED: {
       en: 'Send verification email failed.',
       ar: 'فشل إرسال ايميل التحقق',
+    },
+    INVALID_PASSWORD: {
+      en: 'Password Incorrect.',
+      ar: 'رمز الدخول غير صحيح.',
+    },
+    EMAIL_UNVERIFIED: {
+      en: 'Email Unverified.',
+      ar: 'لم يتم تأكيد الايميل بعد.',
     },
   },
 };

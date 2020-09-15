@@ -265,6 +265,7 @@ exports.listAcademicYear = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -315,6 +316,7 @@ exports.listAcademicYear = async (req, res) => {
       { result }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -356,6 +358,7 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -394,6 +397,7 @@ function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

@@ -243,6 +243,7 @@ exports.listSubject = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -288,6 +289,7 @@ exports.listSubject = async (req, res) => {
       { result }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -328,6 +330,7 @@ function listSubject_NOPagination(req, db_Subject) {
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -366,6 +369,7 @@ function listSubject_DoPagination(req, db_AcademicYear, skip, _limit) {
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

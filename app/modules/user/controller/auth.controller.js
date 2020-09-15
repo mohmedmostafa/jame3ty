@@ -107,6 +107,7 @@ exports.signup = async (req, res) => {
       ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -176,7 +177,7 @@ exports.signin = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
               .INVALID_PASSWORD,
-            {}
+            ResponseConstants.ERROR_MESSAGES.INVALID_PASSWORD
           );
         }
 
@@ -187,7 +188,7 @@ exports.signin = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
               .EMAIL_UNVERIFIED,
-            {}
+            ResponseConstants.ERROR_MESSAGES.EMAIL_UNVERIFIED
           );
         }
 
@@ -336,6 +337,7 @@ exports.sendVerificationCode = async (req, res) => {
         await email
           .sendSignupVerificationEmail(randomToken, req.body.email)
           .catch((err) => {
+            console.log(err);
             console.error(err.message);
             return Response(
               res,
@@ -385,7 +387,7 @@ exports.forgotPassword = async (req, res) => {
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
             ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
               .EMAIL_UNVERIFIED,
-            {}
+            ResponseConstants.ERROR_MESSAGES.EMAIL_UNVERIFIED
           );
         } else {
           //If Code is expired

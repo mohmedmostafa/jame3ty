@@ -43,7 +43,7 @@ exports.addGroup = async (req, res) => {
   }
 
   //Check startDate of Group - Must be greater than Course Start Date which belongs to.
-  if (moment(req.body.startDateGroup) < moment(course.startDate)) {
+  if (moment.utc(req.body.startDateGroup) < moment.utc(course.startDate)) {
     return ValidateResponse(
       res,
       ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
@@ -55,7 +55,7 @@ exports.addGroup = async (req, res) => {
   //Get instructor for the uer in the token
   const instructor = await db_Instructor.findOne({
     where: {
-      userId: req.userId,
+      id: req.body.instructorId,
     },
   });
 
@@ -77,7 +77,7 @@ exports.addGroup = async (req, res) => {
         {
           name: req.body.nameGroup,
           maxNumOfStudents: req.body.maxNumOfStudentsGroup,
-          startDate: req.body.startDateGroup,
+          startDate: moment.utc(req.body.startDateGroup),
           endDate: req.body.endDateGroup,
           courseId: course.id,
           instructorId: instructor.id,
@@ -112,6 +112,7 @@ exports.addGroup = async (req, res) => {
       ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -162,7 +163,7 @@ exports.updateGroup = async (req, res) => {
     }
 
     //Check startDate of Group - Must be greater than Course Start Date which belongs to.
-    if (moment(req.body.startDateGroup) < moment(course.startDate)) {
+    if (moment.utc(req.body.startDateGroup) < moment.utc(course.startDate)) {
       return ValidateResponse(
         res,
         ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
@@ -194,8 +195,8 @@ exports.updateGroup = async (req, res) => {
             ? req.body.maxNumOfStudentsGroup
             : course.groups[0].maxNumOfStudents,
           startDate: req.body.startDateGroup
-            ? req.body.startDateGroup
-            : course.groups[0].startDate,
+            ? moment.utc(req.body.startDateGroup)
+            : moment.utc(course.groups[0].startDate),
           endDate: req.body.endDateGroup
             ? req.body.endDateGroup
             : course.groups[0].endDate,
@@ -351,6 +352,7 @@ exports.listGroupByCourseId = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -414,6 +416,7 @@ exports.listGroupByCourseId = async (req, res) => {
       { result }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -437,7 +440,7 @@ function listGroupByCourseId_DoPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findOne({
+      .findِAll({
         where: {
           courseId: req.params.courseId,
         },
@@ -464,6 +467,7 @@ function listGroupByCourseId_DoPagination(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -484,7 +488,7 @@ function listGroupByCourseId_NOPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findOne({
+      .findِAll({
         where: {
           courseId: req.params.courseId,
         },
@@ -509,6 +513,7 @@ function listGroupByCourseId_NOPagination(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

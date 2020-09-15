@@ -1,4 +1,9 @@
 module.exports.Joi_messages = {
+  'date.format': JSON.stringify({
+    key: `{#key}`,
+    en: `must be iso date.`,
+    ar: `التاريخ غير مقبول او غير صالح.`,
+  }),
   'any.only': JSON.stringify({
     key: `{#key}`,
     en: `must be one of {#valids}.`,

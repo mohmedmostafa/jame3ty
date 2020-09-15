@@ -8,10 +8,12 @@ const { ref, date } = require('joi');
 const { User } = require('../../../modules');
 
 const Op = db.Sequelize.Op;
+const QueryTypes = db.Sequelize.QueryTypes;
 const db_connection = db.connection;
 const db_lessonDiscussionComments = db.lessonDiscussionComment;
 const db_lessonDiscussion = db.LessonDiscussion;
 const db_lesson = db.Lesson;
+const db_Course = db.Course;
 const db_User = db.User;
 
 //---------------------------------------------------------------
@@ -496,6 +498,7 @@ exports.listlessonDiscussionById = async (req, res) => {
       { lessonDiscussion }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -530,6 +533,7 @@ exports.listlessonDiscussionCommentsById = async (req, res) => {
       { lessonDiscussionComments }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -539,3 +543,199 @@ exports.listlessonDiscussionCommentsById = async (req, res) => {
     );
   }
 };
+
+//---------------------------------------------------------------
+exports.listlessonDiscussionByCourseId = async (req, res) => {
+  //Check if the Dept is already exsits
+  let course = await db_Course.findOne({
+    where: {
+      id: req.params.courseId,
+    },
+  });
+
+  if (!course) {
+    console.log('!course');
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+    );
+  }
+
+  //
+  const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Count all rows
+  const sql =
+    'select count(*) as count from lessonDiscussions ld \
+  inner join lessons les on les.id = ld.lessonId \
+  inner join courses cr on cr.id = les.courseId \
+  where cr.id = ? and ld.text like ? ';
+
+  let numRows = await db_connection
+    .query(sql, {
+      replacements: [req.params.courseId, `%${req.query.searchKey}%`],
+      logging: console.log,
+      raw: true,
+      plain: true,
+      type: QueryTypes.SELECT,
+    })
+    .catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+  console.log(numRows);
+  numRows = parseInt(numRows.count);
+
+  //Total num of valid pages
+  let numPages = Math.ceil(numRows / numPerPage);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
+
+  //Query
+  try {
+    let data;
+    if (doPagination) {
+      data = await listlessonDiscussionByCourseId_DoPagination(
+        req,
+        skip,
+        _limit
+      );
+    } else {
+      data = await listlessonDiscussionByCourseId_NOPagination(req);
+    }
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    //Success
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
+  }
+};
+
+function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
+  return new Promise(async (resolve, reject) => {
+    await db_Course
+      .findAll({
+        where: {
+          id: req.params.courseId,
+        },
+        include: [
+          {
+            model: db_lesson,
+            required: true,
+            include: [
+              {
+                model: db_lessonDiscussion,
+                required: true,
+                text: {
+                  [Op.substring]: req.query.searchKey,
+                },
+                include: [
+                  {
+                    model: db_User,
+                  },
+                  {
+                    model: db_lessonDiscussionComments,
+                    include: [
+                      {
+                        model: db_User,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listlessonDiscussionByCourseId_NOPagination(req) {
+  return new Promise(async (resolve, reject) => {
+    await db_Course
+      .findAll({
+        where: {
+          id: req.params.courseId,
+        },
+        include: [
+          {
+            model: db_lesson,
+            required: true,
+            include: [
+              {
+                model: db_lessonDiscussion,
+                required: true,
+                text: {
+                  [Op.substring]: req.query.searchKey,
+                },
+                include: [
+                  {
+                    model: db_User,
+                  },
+                  {
+                    model: db_lessonDiscussionComments,
+                    include: [
+                      {
+                        model: db_User,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}

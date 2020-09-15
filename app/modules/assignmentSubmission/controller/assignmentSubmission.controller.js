@@ -62,7 +62,7 @@ exports.addAssignmentSubmission = async (req, res) => {
 
     //Save to DB
     let assignmentSubmission = db_AssignmentSubmission.create({
-      submissionDate: req.body.submissionDate,
+      submissionDate: moment.utc(req.body.submissionDate),
       attachments: req.body.attachments,
       studentId: student.id,
       lessonId: parseInt(req.body.lessonId),
@@ -365,7 +365,7 @@ exports.listAssignmentSubmission = async (req, res) => {
         },
       },
     })
-    .catch((error) => {
+    .catch((error) => {console.log(error);
       return Response(res, ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
         .ORM_OPERATION_FAILED,
@@ -414,6 +414,7 @@ exports.listAssignmentSubmission = async (req, res) => {
     return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, { result });
   } catch (error) {
+    console.log(error);
     return Response(res, ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
         .ORM_OPERATION_FAILED,
@@ -450,7 +451,7 @@ function listRatingAndReview_DoPagination(
         offset: skip,
         limit: _limit,
       })
-      .catch((err) => {
+      .catch((err) => {console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -484,7 +485,7 @@ function listRatingAndReview_NOPagination(
           },
         ],
       })
-      .catch((err) => {
+      .catch((err) => {console.log(err);
         return reject(err);
       })
       .then((data) => {

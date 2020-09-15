@@ -68,7 +68,6 @@ verifyToken = (req, res, next) => {
         );
       }
       req.userId = decoded.id;
-      console.log('m7');
       next();
       return;
     });
@@ -77,174 +76,237 @@ verifyToken = (req, res, next) => {
 
 //---------------------------------------
 isAdmin = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'admin') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'admin') {
+            next();
+            return;
+          }
         }
-      }
 
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
 isInstructor = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'instructor') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'instructor') {
+            next();
+            return;
+          }
         }
-      }
 
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
 isInstructorOrAdmin = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'instructor') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'instructor') {
+            next();
+            return;
+          }
+
+          if (roles[i].name_en === 'admin') {
+            next();
+            return;
+          }
         }
 
-        if (roles[i].name_en === 'admin') {
-          next();
-          return;
-        }
-      }
-
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
 isInstructorOrStudent = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'instructor') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'instructor') {
+            next();
+            return;
+          }
+
+          if (roles[i].name_en === 'student') {
+            next();
+            return;
+          }
         }
 
-        if (roles[i].name_en === 'student') {
-          next();
-          return;
-        }
-      }
-
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
 isStudent = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'student') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'student') {
+            next();
+            return;
+          }
         }
-      }
 
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
 isStudentorOrAdmin = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'student') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'student') {
+            next();
+            return;
+          }
+
+          if (roles[i].name_en === 'admin') {
+            next();
+            return;
+          }
         }
 
-        if (roles[i].name_en === 'admin') {
-          next();
-          return;
-        }
-      }
-
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
 isInstructorOrStudentorOrAdmin = (req, res, next) => {
-  db.User.findByPk(req.userId).then((user) => {
-    user.getRoles().then((roles) => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name_en === 'student') {
-          next();
-          return;
+  if (req.userId) {
+    db.User.findByPk(req.userId).then((user) => {
+      user.getRoles().then((roles) => {
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name_en === 'student') {
+            next();
+            return;
+          }
+
+          if (roles[i].name_en === 'admin') {
+            next();
+            return;
+          }
+
+          if (roles[i].name_en === 'instructor') {
+            next();
+            return;
+          }
         }
 
-        if (roles[i].name_en === 'admin') {
-          next();
-          return;
-        }
-
-        if (roles[i].name_en === 'instructor') {
-          next();
-          return;
-        }
-      }
-
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-        ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-        ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-      );
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+          ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+          ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+        );
+      });
     });
-  });
+  } else {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+      ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+    );
+  }
 };
 
 //---------------------------------------
