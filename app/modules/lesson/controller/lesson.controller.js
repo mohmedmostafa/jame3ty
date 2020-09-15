@@ -94,6 +94,7 @@ exports.addLesson = async (req, res) => {
 
     if (req.body.isLiveStreaming === '0') {
       req.body.liveStreamingInfo = null;
+      req.body.liveStreamingTime = null;
     }
 
     //Save to DB
@@ -104,6 +105,7 @@ exports.addLesson = async (req, res) => {
       type: req.body.type,
       isLiveStreaming: req.body.isLiveStreaming,
       liveStreamingInfo: req.body.liveStreamingInfo,
+      liveStreamingTime: moment.utc(req.body.liveStreamingTime),
       isAssostatedWithGroup: req.body.isAssostatedWithGroup,
       groupId: req.body.groupId,
       courseId: req.body.courseId,
@@ -411,6 +413,7 @@ exports.updateLesson = async (req, res) => {
 
     if (req.body.isLiveStreaming === '0') {
       req.body.liveStreamingInfo = null;
+      req.body.liveStreamingTime = null;
     }
 
     console.log(req.body);
@@ -428,6 +431,9 @@ exports.updateLesson = async (req, res) => {
         liveStreamingInfo: req.body.liveStreamingInfo
           ? req.body.liveStreamingInfo
           : lesson.liveStreamingInfo,
+        liveStreamingTime: req.body.liveStreamingTime
+          ? moment.utc(req.body.liveStreamingTime)
+          : moment.utc(lesson.liveStreamingTime),
         isAssostatedWithGroup: req.body.isAssostatedWithGroup
           ? req.body.isAssostatedWithGroup
           : lesson.isAssostatedWithGroup,

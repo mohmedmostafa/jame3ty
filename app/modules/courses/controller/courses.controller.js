@@ -109,7 +109,7 @@ async function addRecordedLessonsCourse(req, res, instructor) {
       numOfHours: req.body.numOfHours,
       price: req.body.price,
       priceBeforeDiscount: req.body.priceBeforeDiscount,
-      startDate: req.body.startDate,
+      startDate: moment.utc(req.body.startDate),
       type: req.body.type,
       method: req.params.method,
       img: req.body.img ? req.body.img : '',
@@ -156,7 +156,7 @@ async function addLiveStreamingCourse(req, res, instructor) {
           numOfHours: req.body.numOfHours,
           price: req.body.price,
           priceBeforeDiscount: req.body.priceBeforeDiscount,
-          startDate: req.body.startDate,
+          startDate: moment.utc(req.body.startDate),
           type: req.body.type,
           method: req.params.method,
           img: req.body.img ? req.body.img : '',
@@ -172,8 +172,8 @@ async function addLiveStreamingCourse(req, res, instructor) {
         {
           name: req.body.nameGroup,
           maxNumOfStudents: req.body.maxNumOfStudentsGroup,
-          startDate: req.body.startDateGroup,
-          endDate: req.body.endDateGroup,
+          startDate: moment.utc(req.body.startDateGroup),
+          endDate: moment.utc(req.body.endDateGroup),
           courseId: course.id,
           instructorId: instructor.id,
         },
@@ -439,7 +439,9 @@ exports.updateCourse = async (req, res) => {
       });
       minStartDateGroup = minStartDateGroup.get({ plain: true });
 
-      if (moment(req.body.startDate).isAfter(minStartDateGroup.minStartDate)) {
+      if (
+        moment.utc(req.body.startDate).isAfter(minStartDateGroup.minStartDate)
+      ) {
         onErrorDeleteFiles(req);
         return ValidateResponse(
           res,
@@ -493,7 +495,9 @@ exports.updateCourse = async (req, res) => {
         priceBeforeDiscount: req.body.priceBeforeDiscount
           ? req.body.priceBeforeDiscount
           : course.priceBeforeDiscount,
-        startDate: req.body.startDate ? req.body.startDate : course.startDate,
+        startDate: req.body.startDate
+          ? moment.utc(req.body.startDate)
+          : moment.utc(course.startDate),
         type: req.body.type ? req.body.type : course.type,
         subjectId: req.body.subjectId ? req.body.subjectId : course.subjectId,
         img: req.body.img ? req.body.img : course.getDataValue('img'),
@@ -646,7 +650,10 @@ function listCourse_DoPagination_Method_Both(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -697,7 +704,10 @@ function listCourse_DoPagination_Method_Both(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -816,7 +826,10 @@ function listCourse_DoPagination_Method_1_or_0(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -865,7 +878,10 @@ function listCourse_DoPagination_Method_1_or_0(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -986,7 +1002,10 @@ function listCourse_NOPagination_Method_Both(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -1037,7 +1056,10 @@ function listCourse_NOPagination_Method_Both(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -1154,7 +1176,10 @@ function listCourse_NOPagination_Method_1_or_0(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
@@ -1203,7 +1228,10 @@ function listCourse_NOPagination_Method_1_or_0(
             },
             {
               startDate: {
-                [Op.between]: [req.query.startFrom, req.query.startTo],
+                [Op.between]: [
+                  moment.utc(req.query.startFrom),
+                  moment.utc(req.query.startTo),
+                ],
               },
             },
           ],
