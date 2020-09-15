@@ -1,5 +1,19 @@
-//
-module.exports.joi_messages = {
+module.exports.Joi_messages = {
+  'any.only': JSON.stringify({
+    key: `{#key}`,
+    en: `must be one of {#valids}.`,
+    ar: `يجب ان يكون ضمن القيم الاتيه {#valids}`,
+  }),
+  'object.unknown': JSON.stringify({
+    key: `{#key}`,
+    en: `is not allowed.`,
+    ar: `غير مسموح به.`,
+  }),
+  'array.base': JSON.stringify({
+    key: `{#key}`,
+    en: `must be an array of json objects.`,
+    ar: `يجب ان يكون array of json objects.`,
+  }),
   'string.base': JSON.stringify({
     key: `{#key}`,
     en: `must be a string.`,

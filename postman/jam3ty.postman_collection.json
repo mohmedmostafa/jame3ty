@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "88bc10db-e45f-43af-818d-2398076e87f8",
+		"_postman_id": "5e74ad66-717d-4559-948f-a71ad72d3e25",
 		"name": "jam3ty",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -29,7 +29,7 @@
 								},
 								{
 									"key": "email",
-									"value": "Sara@yahoo.com",
+									"value": "Hafsa@gmail.com",
 									"type": "text"
 								},
 								{
@@ -60,17 +60,17 @@
 							"query": [
 								{
 									"key": "username",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "email",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "password",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -88,12 +88,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "farag",
+									"value": "wahba9090@yahoo.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "1234567890",
+									"value": "123456",
 									"type": "text"
 								}
 							],
@@ -148,15 +148,18 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "farag@gmail.com",
+									"value": "sera@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "784894",
+									"value": "849954",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/auth/verifyEmail",
@@ -194,7 +197,10 @@
 									"value": "732610",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/auth/forgotPassword",
@@ -219,10 +225,13 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "farag@gmail.com",
+									"value": "wahba@gmail.com",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/auth/sendVerificationCode",
@@ -272,7 +281,10 @@
 									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addUniversity",
@@ -310,7 +322,10 @@
 									"value": "Modern Kewiet Uni",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateUniversity/1",
@@ -406,7 +421,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listUniversityById/1",
@@ -456,7 +474,10 @@
 									"value": "1",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addFaculty",
@@ -499,7 +520,10 @@
 									"value": "1",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateFaculty/2",
@@ -595,7 +619,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listFacultyById/1",
@@ -851,7 +878,7 @@
 								},
 								{
 									"key": "searchKey",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -921,62 +948,63 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "الحnn",
+									"value": "جافا",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "lawnn",
+									"value": "Java",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "1",
+									"value": "101",
 									"type": "text"
 								},
 								{
 									"key": "desc",
-									"value": "ssssss",
+									"value": "Java Java Java",
 									"type": "text"
 								},
 								{
 									"key": "prerequisiteText",
-									"value": "ssssss",
+									"value": "Java Java Java",
 									"type": "text"
 								},
 								{
 									"key": "whatYouWillLearn",
-									"value": "ssssss",
+									"value": "Java Java Java",
 									"type": "text"
 								},
 								{
 									"key": "numOfLessons",
-									"value": "12",
+									"value": "14",
 									"type": "text"
 								},
 								{
 									"key": "numOfHours",
-									"value": "1.5",
+									"value": "50",
 									"type": "text"
 								},
 								{
 									"key": "price",
-									"value": "19.9",
+									"value": "100",
 									"type": "text"
 								},
 								{
 									"key": "priceBeforeDiscount",
-									"value": "99",
+									"value": "100",
 									"type": "text"
 								},
 								{
 									"key": "startDate",
-									"value": "1994-11-05",
+									"value": "2020-09-20",
 									"type": "text"
 								},
 								{
 									"key": "type",
 									"value": "0",
+									"description": "0:Subject | 1:Assignment",
 									"type": "text"
 								},
 								{
@@ -985,51 +1013,64 @@
 									"type": "text"
 								},
 								{
+									"key": "instructorId",
+									"value": "2",
+									"type": "text"
+								},
+								{
 									"key": "img",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Pictures/2.jpeg"
 								},
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Pictures/q.mp4"
 								},
 								{
 									"key": "nameGroup",
-									"value": "ggggg",
-									"type": "text"
+									"value": "Java G1",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
-									"value": "13",
-									"type": "text"
+									"value": "15",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "startDateGroup",
-									"value": "1994-11-06",
-									"type": "text"
+									"value": "2020-09-25",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "endDateGroup",
-									"value": "1994-11-07",
-									"type": "text"
+									"value": "2020-10-20",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "groupSchedule",
-									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1998-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1984-11-05T08:15:30-05:00\"}]",
+									"value": "[{\"day\":\"Friday1\",\"time\":\"2020-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"2020-11-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"2020-11-05T08:15:30-05:00\"}]",
 									"description": "Array of JSON Objects => As String",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
-							"raw": "{{url}}api/addCourse/1",
+							"raw": "{{url}}api/addCourse/0",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"addCourse",
-								"1"
+								"0"
 							]
 						}
 					},
@@ -1075,7 +1116,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listCourse?doPagination=1&numPerPage=1&page=1&searchKey=&method=both&startFrom=1992-11-05 00:00:00.000&startTo=2000-11-05 23:59:59.000",
@@ -1136,7 +1180,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listCourseById/3",
@@ -1246,7 +1293,10 @@
 									"type": "file",
 									"src": []
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateCourse/1",
@@ -1277,7 +1327,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listCourseNoDate?doPagination=1&numPerPage=1&page=1&searchKey=&method=both",
@@ -1330,7 +1383,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=1&numPerPage=1&page=2&searchKey&method=both",
@@ -1356,7 +1412,7 @@
 								},
 								{
 									"key": "searchKey",
-									"value": null
+									"value": ""
 								},
 								{
 									"key": "method",
@@ -1419,7 +1475,10 @@
 									"value": "3",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addGroup",
@@ -1473,7 +1532,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listGroupByCourseId/2?doPagination=0&numPerPage=10&page=1&searchKey=",
@@ -1522,7 +1584,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listGroupById/10",
@@ -1582,7 +1647,10 @@
 									"value": "13",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateGroup/13",
@@ -1746,7 +1814,7 @@
 							"query": [
 								{
 									"key": "",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -2009,7 +2077,7 @@
 							"query": [
 								{
 									"key": "",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -2040,7 +2108,7 @@
 							"query": [
 								{
 									"key": "",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -2140,7 +2208,10 @@
 									"value": "[{\"name_ar\":\"1th\",\"name_en\":\"1th\",\"subjects\":[{\"name_ar\":\"math1\",\"name_en\":\"math1\"},{\"name_ar\":\"phsyics1\", \"name_en\":\"phsyics1\"}]},{\"name_ar\":\"2th\",\"name_en\":\"2th\",\"subjects\":[{\"name_ar\":\"math2\",\"name_en\":\"math2\"},{\"name_ar\":\"phsyics2\",\"name_en\":\"phsyics2\"}]}]",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addDepartment",
@@ -2202,7 +2273,10 @@
 									"value": "wwwss",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateDepartment/17",
@@ -2233,7 +2307,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listDepartmentById/17",
@@ -2282,7 +2359,7 @@
 								},
 								{
 									"key": "searchKey",
-									"value": null
+									"value": ""
 								}
 							]
 						}
@@ -2311,17 +2388,17 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "3th",
+									"value": "",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "3th",
+									"value": "1111111111111111111111111111111111111111111111111111111111111",
 									"type": "text"
 								},
 								{
 									"key": "departmentId",
-									"value": "18",
+									"value": "184",
 									"type": "text"
 								},
 								{
@@ -2329,7 +2406,10 @@
 									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addAcademicYear",
@@ -2391,7 +2471,10 @@
 									"value": "wwwss",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateAcademicYear/6",
@@ -2422,7 +2505,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listAcademicYearById/6",
@@ -2513,7 +2599,10 @@
 									"value": "8",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addSubject",
@@ -2575,7 +2664,10 @@
 									"value": "wwwss",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateSubject/6",
@@ -2606,7 +2698,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listSubjectById/8",
@@ -2738,14 +2833,12 @@
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": [
-										"/C:/Users/Farag/Pictures/1.PNG",
-										"/C:/Users/Farag/Pictures/2.jpeg",
-										"/C:/Users/Farag/Pictures/2.PNG",
-										"/C:/Users/Farag/Pictures/3.PNG"
-									]
+									"src": "/C:/Users/Farag/Documents/test.exe"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addLesson",
@@ -2799,7 +2892,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listLessonById/13",
@@ -2830,7 +2926,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listLesson?doPagination=1&numPerPage=1&page=1&searchKey=&type=1",
@@ -2939,7 +3038,10 @@
 									"type": "file",
 									"src": []
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateLesson/13",
@@ -2973,7 +3075,10 @@
 									"value": "public/files/compressed/ic_account_circle_black_48dp-1598834764024-.zip",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/deleteLessonAttachment/13",
@@ -3007,28 +3112,28 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Aliiiii",
+									"value": "sera",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01020047317",
+									"value": "01028847317",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "farag",
+									"value": "sera",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "farag@gmail.com",
+									"value": "sera@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Pictures/download.jpeg"
 								},
 								{
 									"key": "academicYearId",
@@ -3157,7 +3262,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listStudentById/1",
@@ -3188,7 +3296,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listStudent?doPagination=1&numPerPage=10&page=1&searchKey=sa",
@@ -3236,7 +3347,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listStudentByUserId/8",
@@ -3291,7 +3405,10 @@
 									"value": "1",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addRatingAndReview",
@@ -3329,7 +3446,10 @@
 									"value": "3",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateRatingAndReview/1",
@@ -3403,7 +3523,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listRatingAndReviewById/3",
@@ -3525,7 +3648,10 @@
 									"value": "1",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/addAssignmentSubmission",
@@ -3582,7 +3708,10 @@
 									"value": "public/vedio/q-1599004224241-.mp4",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/deleteAssignmentSubmissionAttachment/6",
@@ -3613,7 +3742,10 @@
 						],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/listAssignmentSubmissionById/6",
@@ -3647,7 +3779,10 @@
 									"type": "file",
 									"src": "/C:/Users/Farag/Pictures/3.PNG"
 								}
-							]
+							],
+							"options": {
+								"formdata": {}
+							}
 						},
 						"url": {
 							"raw": "{{url}}api/updateAssignmentSubmission/6",
@@ -3670,7 +3805,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "2c041464-2f14-43f6-925e-11a8c29696d5",
+				"id": "52728c99-16f0-41d6-a184-e16816313bf4",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3680,7 +3815,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "088d5050-2bb5-493b-93ce-b1ccb37446e6",
+				"id": "362dfeac-2af8-4e13-bc0a-c958e183a347",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3690,14 +3825,14 @@
 	],
 	"variable": [
 		{
-			"id": "0bb6d81a-cf02-439f-9ce9-b326966e1f75",
+			"id": "485e0071-d00f-444e-b2ed-27ee7d3e6884",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "3d7334e0-a1a8-402f-a5c8-0f95c501b4a3",
+			"id": "71b5673d-c0bb-4054-b516-502ca182eb51",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNTk5NjEyNzg4LCJleHAiOjE1OTk2OTkxODh9.U5wneP1uwOOrC6SkbX9WLuedxhFGDYJlVJ3FZO_q7Ew"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNTk5ODc2MTc2LCJleHAiOjE1OTk5NjI1NzZ9.VyUugkJ-ttdhOiPgKaAVoZwocZ2pzEtxMEPpcW6Mlfg"
 		}
 	],
 	"protocolProfileBehavior": {}

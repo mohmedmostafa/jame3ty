@@ -535,6 +535,7 @@ exports.listStudent = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -609,52 +610,56 @@ function listStudent_DoPagination(
   _limit
 ) {
   return new Promise(async (resolve, reject) => {
-    await db_Student
+    await db_User
       .findAll({
-        where: {
-          [Op.or]: [
-            {
-              name: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-            {
-              email: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-          ],
-        },
         include: [
           {
-            model: db_User,
-          },
-          {
-            model: db_AcademicYear,
+            model: db_Student,
+            required: true,
+            where: {
+              [Op.or]: [
+                {
+                  name: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  email: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
             include: [
               {
-                model: db_Department,
+                model: db_AcademicYear,
                 include: [
                   {
-                    model: db_Faculty,
+                    model: db_Department,
                     include: [
                       {
-                        model: db_University,
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
                       },
                     ],
                   },
                 ],
               },
+              {
+                model: db_CourseSubscribe,
+              },
             ],
-          },
-          {
-            model: db_CourseSubscribe,
           },
         ],
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -670,46 +675,49 @@ function listStudent_NOPagination(
   db_CourseSubscribe
 ) {
   return new Promise(async (resolve, reject) => {
-    await db_Student
+    await db_User
       .findAll({
-        where: {
-          [Op.or]: [
-            {
-              name: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-            {
-              email: {
-                [Op.substring]: req.query.searchKey,
-              },
-            },
-          ],
-        },
         include: [
           {
-            model: db_User,
-          },
-          {
-            model: db_AcademicYear,
+            model: db_Student,
+            required: true,
+            where: {
+              [Op.or]: [
+                {
+                  name: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  email: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
             include: [
               {
-                model: db_Department,
+                model: db_AcademicYear,
                 include: [
                   {
-                    model: db_Faculty,
+                    model: db_Department,
                     include: [
                       {
-                        model: db_University,
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
                       },
                     ],
                   },
                 ],
               },
+              {
+                model: db_CourseSubscribe,
+              },
             ],
-          },
-          {
-            model: db_CourseSubscribe,
           },
         ],
       })

@@ -471,7 +471,7 @@ exports.listLesson = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      if (req.query.method != 'both') {
+      if (req.query.type != 'both') {
         //Do Pagination & Type 1 or 0
         data = await listLesson_DoPagination_Type_1_or_0(
           req,
@@ -489,7 +489,7 @@ exports.listLesson = async (req, res) => {
         );
       }
     } else {
-      if (req.query.method != 'both') {
+      if (req.query.type != 'both') {
         //NO Pagination & Type 1 or 0
         data = await listLesson_NOPagination_Type_1_or_0(
           req,

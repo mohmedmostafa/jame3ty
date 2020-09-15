@@ -1,6 +1,9 @@
 const Joi = require('joi');
+const { Joi_messages } = require('../../../common/validation/joi.constants');
+
 const {
   ValidateResponse,
+  ResponseConstants,
 } = require('../../../common/response/response.handler');
 const {
   onErrorDeleteFiles,
@@ -16,30 +19,51 @@ addGroupValidation = (req, res, next) => {
   }
 
   //One Group Schedule Schema
-  let groupScheduleSchema = Joi.object().keys({
-    day: Joi.string().trim().required(),
-    time: Joi.date().iso().required(),
-  });
+  let groupScheduleSchema = Joi.object()
+    .options({ abortEarly: false })
+    .keys({
+      day: Joi.string().trim().required().messages(Joi_messages),
+      time: Joi.date().iso().required().messages(Joi_messages),
+    });
 
   //Course Body Validation
   const schema = Joi.object({
-    nameGroup: Joi.string().trim().min(3).max(30).required(),
-    maxNumOfStudentsGroup: Joi.number().integer().positive().min(1).required(),
-    startDateGroup: Joi.date().iso().required(),
+    nameGroup: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    maxNumOfStudentsGroup: Joi.number()
+      .integer()
+      .positive()
+      .min(1)
+      .required()
+      .messages(Joi_messages),
+    startDateGroup: Joi.date().iso().required().messages(Joi_messages),
     endDateGroup: Joi.date()
       .greater(Joi.ref('startDateGroup'))
       .iso()
-      .required(),
-    groupSchedule: Joi.array().items(groupScheduleSchema),
-    courseId: Joi.number().integer().required(),
-  });
+      .required()
+      .messages(Joi_messages),
+    groupSchedule: Joi.array()
+      .items(groupScheduleSchema)
+      .messages(Joi_messages),
+    courseId: Joi.number().integer().required().messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   console.log(req.body);
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
-    //onErrorDeleteFiles(req);
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
@@ -54,30 +78,51 @@ updateGroupValidation = (req, res, next) => {
   }
 
   //One Group Schedule Schema
-  let groupScheduleSchema = Joi.object().keys({
-    day: Joi.string().trim().required(),
-    time: Joi.date().iso().required(),
-  });
+  let groupScheduleSchema = Joi.object()
+    .options({ abortEarly: false })
+    .keys({
+      day: Joi.string().trim().required().messages(Joi_messages),
+      time: Joi.date().iso().required().messages(Joi_messages),
+    });
 
   //Course Body Validation
   const schema = Joi.object({
-    nameGroup: Joi.string().trim().min(3).max(30).required(),
-    maxNumOfStudentsGroup: Joi.number().integer().positive().min(1).required(),
-    startDateGroup: Joi.date().iso().required(),
+    nameGroup: Joi.string()
+      .trim()
+      .min(3)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
+    maxNumOfStudentsGroup: Joi.number()
+      .integer()
+      .positive()
+      .min(1)
+      .required()
+      .messages(Joi_messages),
+    startDateGroup: Joi.date().iso().required().messages(Joi_messages),
     endDateGroup: Joi.date()
       .greater(Joi.ref('startDateGroup'))
       .iso()
-      .required(),
-    groupSchedule: Joi.array().items(groupScheduleSchema),
-    courseId: Joi.number().integer().required(),
-  });
+      .required()
+      .messages(Joi_messages),
+    groupSchedule: Joi.array()
+      .items(groupScheduleSchema)
+      .messages(Joi_messages),
+    courseId: Joi.number().integer().required().messages(Joi_messages),
+  }).options({ abortEarly: false });
 
   console.log(req.body);
 
   const { error } = schema.validate(req.body);
+  console.log(error);
   if (error) {
-    //onErrorDeleteFiles(req);
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
@@ -88,14 +133,19 @@ deleteGroupValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).required(),
-    });
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
@@ -107,30 +157,50 @@ listGroupByCourseIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      courseId: Joi.number().integer().min(1).required(),
-    });
+      courseId: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 
   //Body Validation
   const schema = Joi.object({
-    doPagination: Joi.number().integer().valid(1, 0).default(1),
-    numPerPage: Joi.number().integer().greater(0).required(),
-    page: Joi.number().integer().greater(0).required(),
-    searchKey: Joi.string().allow('', null).required(),
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
     //startFrom: Joi.date().iso().required(),
     //startTo: Joi.date().iso().greater(Joi.ref('startFrom')).required(),
-  });
+  }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);
+  console.log(error);
   if (error) {
-    return ValidateResponse(res, error.details[0].message, {});
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
   }
 
   return next();
@@ -141,14 +211,19 @@ listGroupByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
     const schemaParam = Joi.object({
-      id: Joi.number().integer().min(1).required(),
-    });
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
 
     const { error } = schemaParam.validate(req.params);
+    console.log(error);
     if (error) {
-      return ValidateResponse(res, error.details[0].message, {
-        path: error.details[0].path[0],
-      });
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
     }
   }
 

@@ -60,8 +60,8 @@ exports.addDepartment = async (req, res) => {
         //Add academicyears Info
         var year = await db_AcademicYear.create(
           {
-            name_ar: academicyear.name_ar,
-            name_en: academicyear.name_en,
+            name_ar: academicyear.academic_name_ar,
+            name_en: academicyear.academic_name_en,
             departmentId: department.id,
           },
           { transaction: t }

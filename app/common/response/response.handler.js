@@ -1,5 +1,52 @@
 const { Sequelize } = require('../../modules/index');
 
+exports.Response = (res, statusCode, message, data) => {
+  if (statusCode == exports.ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code)
+    return res.status(statusCode).send({
+      status: true,
+      statusCode: statusCode,
+      message: message,
+      data: data,
+    });
+  else {
+    //check id the error from ORM
+    if (data.error instanceof Sequelize.UniqueConstraintError) {
+      return res.status(statusCode).send({
+        status: false,
+        statusCode: statusCode,
+        message: data.error.errors[0].message,
+        data: { path: data.error.errors[0].path },
+      });
+    }
+    return res.status(statusCode).send({
+      status: false,
+      statusCode: statusCode,
+      message: message,
+      data: data,
+    });
+  }
+};
+
+exports.ValidateResponse = (res, message, data) => {
+  const code =
+    exports.ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.code;
+
+  const response = {
+    status: false,
+    statusCode: code,
+    message: message,
+    data: data,
+  };
+
+  return res.status(code).send(response);
+};
+
+/*
+exports.Response = (statusCode, message, data) => {
+  return { statusCode: statusCode, message: message, data: data };
+};
+*/
+
 exports.ResponseConstants = {
   //HTTP Status Codes
   HTTP_STATUS_CODES: {
@@ -69,7 +116,10 @@ exports.ResponseConstants = {
     UNPROCESSABLE_ENTITY: {
       code: '422',
       type: {
-        JOI_VALIDATION_BAD_DATA: 'JOI_VALIDATION_BAD_DATA',
+        JOI_VALIDATION_INVALID_DATA: 'JOI_VALIDATION_INVALID_DATA',
+        JOI_VALIDATION_INVALID_URL_PARAM: 'JOI_VALIDATION_INVALID_URL_PARAM',
+        JOI_VALIDATION_INVALID_QUERY_PARAM:
+          'JOI_VALIDATION_INVALID_QUERY_PARAM',
         FILE_EXTENSION_INVALID: 'FILE_EXTENSION_INVALID',
         UNEXPECTED_FIELD: 'UNEXPECTED_FIELD',
         MULTER_UNEXPECTED_ERROR: 'MULTER_UNEXPECTED_ERROR',
@@ -240,50 +290,3 @@ exports.ResponseConstants = {
     },
   },
 };
-
-exports.Response = (res, statusCode, message, data) => {
-  if (statusCode == exports.ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code)
-    return res.status(statusCode).send({
-      status: true,
-      statusCode: statusCode,
-      message: message,
-      data: data,
-    });
-  else {
-    //check id the error from ORM
-    if (data.error instanceof Sequelize.UniqueConstraintError) {
-      return res.status(statusCode).send({
-        status: false,
-        statusCode: statusCode,
-        message: data.error.errors[0].message,
-        data: { path: data.error.errors[0].path },
-      });
-    }
-    return res.status(statusCode).send({
-      status: false,
-      statusCode: statusCode,
-      message: message,
-      data: data,
-    });
-  }
-};
-
-exports.ValidateResponse = (res, message, data) => {
-  const code =
-    exports.ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.code;
-
-  const response = {
-    status: false,
-    statusCode: code,
-    message: message,
-    data: data,
-  };
-
-  return res.status(code).send(response);
-};
-
-/*
-exports.Response = (statusCode, message, data) => {
-  return { statusCode: statusCode, message: message, data: data };
-};
-*/
