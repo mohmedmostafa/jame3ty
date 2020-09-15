@@ -1467,12 +1467,12 @@
 								},
 								{
 									"key": "courseId",
-									"value": "3",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "instructorId",
-									"value": "2",
+									"value": "1",
 									"type": "text"
 								}
 							],
@@ -2853,6 +2853,11 @@
 									"type": "text"
 								},
 								{
+									"key": "liveStreamingTime",
+									"value": "2020-02-31T22:55:02.907Z",
+									"type": "text"
+								},
+								{
 									"key": "isAssostatedWithGroup",
 									"value": "1",
 									"description": "0 or 1",
@@ -3025,12 +3030,12 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "sssrr",
+									"value": "sssrrبب",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "sssrr",
+									"value": "sssrrبب",
 									"type": "text"
 								},
 								{
@@ -3040,7 +3045,7 @@
 								},
 								{
 									"key": "type",
-									"value": "0",
+									"value": "1",
 									"description": "0:Assignment | 1:Visual Lesson",
 									"type": "text"
 								},
@@ -3052,7 +3057,12 @@
 								},
 								{
 									"key": "liveStreamingInfo",
-									"value": "www",
+									"value": "wwwss",
+									"type": "text"
+								},
+								{
+									"key": "liveStreamingTime",
+									"value": "2020-01-31T22:55:02.907Z",
 									"type": "text"
 								},
 								{
@@ -3063,12 +3073,12 @@
 								},
 								{
 									"key": "groupId",
-									"value": "11",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "courseId",
-									"value": "13",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -3087,13 +3097,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateLesson/13",
+							"raw": "{{url}}api/updateLesson/4",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateLesson",
-								"13"
+								"4"
 							]
 						}
 					},
@@ -3912,17 +3922,17 @@
 	],
 	"variable": [
 		{
-			"id": "2859c6d4-8e99-4cf5-b767-b1e6e21b0ea6",
+			"id": "136c9dd4-7ef1-41e2-aa85-dfc1a630750a",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "e3dfb4db-90a3-49db-8d69-1e45bf246974",
+			"id": "dcdd3514-87ac-41a1-ac5f-77bdff690254",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNjAwMTY0NzYxLCJleHAiOjE2MDAyNTExNjF9.4QK98rc_tZGPoJzXy5AtH4b4lbnItSWIEvj7dkXWSAE"
 		},
 		{
-			"id": "172f4d51-b117-44ca-b621-d796dde2b974",
+			"id": "3e0ff28f-4ddb-4193-8c4d-afca281242ca",
 			"value": ""
 		}
 	],
