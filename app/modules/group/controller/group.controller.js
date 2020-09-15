@@ -488,7 +488,7 @@ function listGroupByCourseId_NOPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findِAll({
+      .findAll({
         where: {
           courseId: req.params.courseId,
         },
