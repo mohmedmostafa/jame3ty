@@ -62,7 +62,7 @@ exports.addAssignmentSubmission = async (req, res) => {
 
     //Save to DB
     let assignmentSubmission = db_AssignmentSubmission.create({
-      submissionDate: req.body.submissionDate,
+      submissionDate: moment.utc(req.body.submissionDate),
       attachments: req.body.attachments,
       studentId: student.id,
       lessonId: parseInt(req.body.lessonId),
