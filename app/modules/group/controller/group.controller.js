@@ -111,7 +111,8 @@ exports.addGroup = async (req, res) => {
       ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
       ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
-  } catch (error) {console.log(error);
+  } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -414,7 +415,8 @@ exports.listGroupByCourseId = async (req, res) => {
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
       { result }
     );
-  } catch (error) {console.log(error);
+  } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -438,7 +440,7 @@ function listGroupByCourseId_DoPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findOne({
+      .findِAll({
         where: {
           courseId: req.params.courseId,
         },
@@ -486,7 +488,7 @@ function listGroupByCourseId_NOPagination(
 ) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findOne({
+      .findِAll({
         where: {
           courseId: req.params.courseId,
         },
