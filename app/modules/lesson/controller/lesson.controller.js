@@ -516,6 +516,7 @@ exports.listLesson = async (req, res) => {
       { data }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -565,6 +566,7 @@ function listLesson_DoPagination_Type_Both(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -620,6 +622,7 @@ function listLesson_DoPagination_Type_Both(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -673,6 +676,7 @@ function listLesson_DoPagination_Type_1_or_0(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -726,6 +730,7 @@ function listLesson_DoPagination_Type_1_or_0(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -776,6 +781,7 @@ function listLesson_NOPagination_Type_Both(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -824,6 +830,7 @@ function listLesson_NOPagination_Type_Both(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -877,6 +884,7 @@ function listLesson_NOPagination_Type_1_or_0(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -928,6 +936,7 @@ function listLesson_NOPagination_Type_1_or_0(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 

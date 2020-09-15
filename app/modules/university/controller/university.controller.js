@@ -232,6 +232,7 @@ exports.listUniversity = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -280,6 +281,7 @@ exports.listUniversity = async (req, res) => {
       { result }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -332,6 +334,7 @@ function listUniversity_DoPagination(req, db_University, skip, _limit) {
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -380,6 +383,7 @@ function listUniversity_NOPagination(req, db_University) {
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

@@ -195,6 +195,7 @@ exports.addInstructor = async (req, res) => {
     await email
       .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
       .catch((err) => {
+        console.log(err);
         console.error(err.message);
         return Response(
           res,

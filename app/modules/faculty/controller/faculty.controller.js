@@ -250,6 +250,7 @@ exports.listFaculty = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -299,6 +300,7 @@ exports.listFaculty = async (req, res) => {
       { result }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -345,6 +347,7 @@ function listFaculty_DoPagination(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -386,6 +389,7 @@ function listFaculty_NOPagination(req, db_Faculty, db_Department) {
         order: [[{ model: db_University }, 'name_ar', 'DESC']],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

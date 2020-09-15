@@ -111,7 +111,7 @@ exports.addGroup = async (req, res) => {
       ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
       ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
-  } catch (error) {
+  } catch (error) {console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -351,6 +351,7 @@ exports.listGroupByCourseId = async (req, res) => {
       },
     })
     .catch((error) => {
+      console.log(error);
       return Response(
         res,
         ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -413,7 +414,7 @@ exports.listGroupByCourseId = async (req, res) => {
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
       { result }
     );
-  } catch (error) {
+  } catch (error) {console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -464,6 +465,7 @@ function listGroupByCourseId_DoPagination(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -509,6 +511,7 @@ function listGroupByCourseId_NOPagination(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

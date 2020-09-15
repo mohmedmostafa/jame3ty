@@ -174,6 +174,7 @@ exports.addStudent = async (req, res) => {
     await email
       .sendSignupVerificationEmail(result.randomToken, req.body.email)
       .catch((err) => {
+        console.log(err);
         console.error(err.message);
         return Response(
           res,
@@ -591,6 +592,7 @@ exports.listStudent = async (req, res) => {
       { result }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -722,6 +724,7 @@ function listStudent_NOPagination(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {

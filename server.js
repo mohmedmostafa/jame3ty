@@ -43,6 +43,9 @@ require('./app/modules/academicYear/academicYear.routes')(app);
 require('./app/modules/subject/subject.routes')(app);
 require('./app/modules/lesson/lesson.routes')(app);
 require('./app/modules/assignmentSubmission/assignmentSubmission.routes')(app);
+require('./app/modules/lessonDiscussionComments/lessonDiscussionComments.routes')(
+  app
+);
 require('./app/modules/student/student.routes')(app);
 require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
 require('./app/modules/courseSubscribe/courseSubscribe.routes')(app);

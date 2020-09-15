@@ -24,12 +24,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "sara90",
+									"value": "admin2",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Hafsa@gmail.com",
+									"value": "admin2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -88,7 +88,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "wahba9090@yahoo.com",
+									"value": "adminAll",
 									"type": "text"
 								},
 								{
@@ -148,12 +148,12 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "sera@gmail.com",
+									"value": "Hatem@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "849954",
+									"value": "772215",
 									"type": "text"
 								}
 							],
@@ -268,12 +268,12 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "جامعه fffالكويتddddddd",
+									"value": "جامعه قطر",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Kiweiffft dddUniversityddddd",
+									"value": "Qater",
 									"type": "text"
 								},
 								{
@@ -461,12 +461,12 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "الحقوق",
+									"value": "اداب",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "law",
+									"value": "Education",
 									"type": "text"
 								},
 								{
@@ -662,32 +662,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "inst",
+									"value": "Osama",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "inst",
+									"value": "Osama",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "insttttt",
+									"value": "Osama",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "011244732207622",
+									"value": "01100007622",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "arabi",
+									"value": "Osama",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "arabi@gmail.com",
+									"value": "Osama@gmail.com",
 									"type": "text"
 								},
 								{
@@ -948,12 +948,12 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "جافا",
+									"value": "Network  Groups",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Java",
+									"value": "Network  Groups",
 									"type": "text"
 								},
 								{
@@ -963,17 +963,17 @@
 								},
 								{
 									"key": "desc",
-									"value": "Java Java Java",
+									"value": "Network  Groups",
 									"type": "text"
 								},
 								{
 									"key": "prerequisiteText",
-									"value": "Java Java Java",
+									"value": "Network  Groups",
 									"type": "text"
 								},
 								{
 									"key": "whatYouWillLearn",
-									"value": "Java Java Java",
+									"value": "Network  Groups",
 									"type": "text"
 								},
 								{
@@ -983,17 +983,17 @@
 								},
 								{
 									"key": "numOfHours",
-									"value": "50",
+									"value": "40",
 									"type": "text"
 								},
 								{
 									"key": "price",
-									"value": "100",
+									"value": "60",
 									"type": "text"
 								},
 								{
 									"key": "priceBeforeDiscount",
-									"value": "100",
+									"value": "90",
 									"type": "text"
 								},
 								{
@@ -1014,37 +1014,37 @@
 								},
 								{
 									"key": "instructorId",
-									"value": "3",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/2.jpeg"
+									"src": []
 								},
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/q.mp4"
+									"src": []
 								},
 								{
 									"key": "nameGroup",
-									"value": "Java G1",
+									"value": "Network G1",
 									"type": "text"
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
-									"value": "15",
+									"value": "20",
 									"type": "text"
 								},
 								{
 									"key": "startDateGroup",
-									"value": "2020-09-25",
+									"value": "2020-11-25",
 									"type": "text"
 								},
 								{
 									"key": "endDateGroup",
-									"value": "2020-10-20",
+									"value": "2020-12-20",
 									"type": "text"
 								},
 								{
@@ -1441,22 +1441,22 @@
 							"formdata": [
 								{
 									"key": "nameGroup",
-									"value": "gggggfffff",
+									"value": "G33333",
 									"type": "text"
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
-									"value": "122",
+									"value": "10",
 									"type": "text"
 								},
 								{
 									"key": "startDateGroup",
-									"value": "1995-11-06 00:00:00.000",
+									"value": "2020-11-06 00:00:00.000",
 									"type": "text"
 								},
 								{
 									"key": "endDateGroup",
-									"value": "1995-11-07",
+									"value": "2020-11-07",
 									"type": "text"
 								},
 								{
@@ -1468,6 +1468,11 @@
 								{
 									"key": "courseId",
 									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "instructorId",
+									"value": "2",
 									"type": "text"
 								}
 							],
@@ -2162,6 +2167,48 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "{{url}}api/listlessonDiscussionByCourseId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/listlessonDiscussionByCourseId/1?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listlessonDiscussionByCourseId",
+								"1"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -2818,7 +2865,7 @@
 								},
 								{
 									"key": "courseId",
-									"value": "2",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -3108,28 +3155,28 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "sera",
+									"value": "Mohaned",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01028847317",
+									"value": "01020000317",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "sera",
+									"value": "Mohaned",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "sera@gmail.com",
+									"value": "Mohaned@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/q.mp4"
+									"src": []
 								},
 								{
 									"key": "academicYearId",
@@ -3795,6 +3842,50 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "courseSubscribe",
+			"item": [
+				{
+					"name": "/api/generatePaymentRequest",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "studentId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "courseId",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}api/generatePaymentRequest",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"generatePaymentRequest"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [
@@ -3821,14 +3912,18 @@
 	],
 	"variable": [
 		{
-			"id": "d97a46a9-e46f-4421-98aa-83198d70213c",
+			"id": "2859c6d4-8e99-4cf5-b767-b1e6e21b0ea6",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "60496302-7e49-4d25-81d8-d42da56878c7",
+			"id": "e3dfb4db-90a3-49db-8d69-1e45bf246974",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNTk5ODc2MTc2LCJleHAiOjE1OTk5NjI1NzZ9.VyUugkJ-ttdhOiPgKaAVoZwocZ2pzEtxMEPpcW6Mlfg"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNjAwMTY0NzYxLCJleHAiOjE2MDAyNTExNjF9.4QK98rc_tZGPoJzXy5AtH4b4lbnItSWIEvj7dkXWSAE"
+		},
+		{
+			"id": "172f4d51-b117-44ca-b621-d796dde2b974",
+			"value": ""
 		}
 	],
 	"protocolProfileBehavior": {}

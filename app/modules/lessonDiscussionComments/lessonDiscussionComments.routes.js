@@ -98,4 +98,15 @@ module.exports = function (app) {
     ],
     lessonDiscussionCommentsController.deletelessonDiscussion
   );
+
+  app.get(
+    '/api/listlessonDiscussionByCourseId/:courseId',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.listlessonDiscussionByCourseIdValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    lessonDiscussionCommentsController.listlessonDiscussionByCourseId
+  );
 };

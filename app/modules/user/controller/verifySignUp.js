@@ -48,6 +48,7 @@ checkDuplicateUsernameOrEmail = async (req, res, next) => {
 
     return next();
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,

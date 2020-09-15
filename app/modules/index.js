@@ -257,5 +257,15 @@ db.CourseSubscribe.hasMany(db.Payment, {
   foreignKey: 'courseSubscribeId',
 });
 db.Payment.belongsTo(db.CourseSubscribe);
+//
+db.Lesson.hasMany(db.LessonDiscussion, {
+  foreignKey: 'lessonId',
+});
+db.LessonDiscussion.belongsTo(db.Lesson);
+//
+db.LessonDiscussion.hasMany(db.lessonDiscussionComment, {
+  foreignKey: 'lessonDiscussionId',
+});
+db.lessonDiscussionComment.belongsTo(db.LessonDiscussion);
 
 module.exports = db;

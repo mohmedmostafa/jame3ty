@@ -205,6 +205,7 @@ async function addLiveStreamingCourse(req, res, instructor) {
       ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
   } catch (error) {
+    console.log(error);
     onErrorDeleteFiles(req);
     return Response(
       res,
@@ -597,6 +598,7 @@ exports.listCourse = async (req, res) => {
       { data }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -651,6 +653,7 @@ function listCourse_DoPagination_Method_Both(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -761,6 +764,7 @@ function listCourse_DoPagination_Method_Both(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -819,6 +823,7 @@ function listCourse_DoPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -927,6 +932,7 @@ function listCourse_DoPagination_Method_1_or_0(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -987,6 +993,7 @@ function listCourse_NOPagination_Method_Both(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1095,6 +1102,7 @@ function listCourse_NOPagination_Method_Both(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -1153,6 +1161,7 @@ function listCourse_NOPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1259,6 +1268,7 @@ function listCourse_NOPagination_Method_1_or_0(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -1334,6 +1344,7 @@ exports.listCourseNoDate = async (req, res) => {
       { data }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1384,6 +1395,7 @@ function listCourseNoDate_DoPagination_Method_Both(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1489,6 +1501,7 @@ function listCourseNoDate_DoPagination_Method_Both(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -1543,6 +1556,7 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1646,6 +1660,7 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -1702,6 +1717,7 @@ function listCourseNoDate_NOPagination_Method_Both(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1805,6 +1821,7 @@ function listCourseNoDate_NOPagination_Method_Both(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -1859,6 +1876,7 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
         },
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -1960,6 +1978,7 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -2041,6 +2060,7 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
       { data }
     );
   } catch (error) {
+    console.log(error);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -2079,6 +2099,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -2217,6 +2238,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -2262,6 +2284,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -2402,6 +2425,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
         limit: _limit,
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -2446,6 +2470,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -2582,6 +2607,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
@@ -2627,6 +2653,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
         type: QueryTypes.SELECT,
       })
       .catch((error) => {
+        console.log(error);
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
@@ -2765,6 +2792,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
         ],
       })
       .catch((err) => {
+        console.log(err);
         return reject(err);
       });
 
