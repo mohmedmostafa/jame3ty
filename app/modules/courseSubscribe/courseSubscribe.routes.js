@@ -21,7 +21,11 @@ module.exports = function (app) {
   app.post(
     '/api/generatePaymentRequest',
     FileUploader.upload.none(),
-    //[AuthJwt.VerifyToken, AuthJwt.isStudentorOrAdmin],
+    [
+      CourseSubscribeValidation.generatePaymentRequestValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isStudentorOrAdmin,
+    ],
     CourseSubscribeController.generatePaymentRequest
   );
 

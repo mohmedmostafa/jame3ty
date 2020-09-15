@@ -89,6 +89,7 @@ exports.ResponseConstants = {
         EMAIL_UNVERIFIED: 'EMAIL_UNVERIFIED',
         INVALID_PASSWORD: 'INVALID_PASSWORD',
         VERIFICATION_CODE_INCORRECT: 'VERIFICATION_CODE_INCORRECT',
+        SIGNIN_REQUIRED: 'SIGNIN REQUIRED',
       },
     },
     PAYMENT_REQUIRED: {
@@ -209,6 +210,10 @@ exports.ResponseConstants = {
     UPAYMENTS_GATEWAY_INVALID_CURRENCY_CODE: {
       en: 'currency not supported',
       ar: 'currency not supported',
+    },
+    SIGNIN_REQUIRED: {
+      en: 'Sign-in required.',
+      ar: 'يلزم تسجيل الدخول',
     },
     ALREADY_SUBSCRIBED: {
       en:
