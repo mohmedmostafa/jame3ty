@@ -67,7 +67,7 @@ app.listen(process.env.PORT || PORT, () => {
 //ٍSync DB Tables according to Models
 //force: true will drop the table if it already exists
 
-if (1) {
+if (0) {
   db.connection
     .query('SET FOREIGN_KEY_CHECKS = 0', null, { raw: true })
     .then(async (result) => {
