@@ -105,7 +105,7 @@ exports.generatePaymentRequest = async (req, res) => {
       courseId: req.body.courseId,
       details: JSON.stringify([course, student]),
     });
-    console.log(courseSubscribe);
+    console.log(studentCourseSubscribe);
   } else {
     //Update course details if all payment from student to course is
     let studentCourseSubscribePayment = await db_CourseSubscribe.findOne({
