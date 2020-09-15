@@ -664,7 +664,15 @@ function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
                 },
                 include: [
                   {
+                    model: db_User,
+                  },
+                  {
                     model: db_lessonDiscussionComments,
+                    include: [
+                      {
+                        model: db_User,
+                      },
+                    ],
                   },
                 ],
               },
@@ -705,7 +713,15 @@ function listlessonDiscussionByCourseId_NOPagination(req) {
                 },
                 include: [
                   {
+                    model: db_User,
+                  },
+                  {
                     model: db_lessonDiscussionComments,
+                    include: [
+                      {
+                        model: db_User,
+                      },
+                    ],
                   },
                 ],
               },
