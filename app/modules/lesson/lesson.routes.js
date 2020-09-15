@@ -32,7 +32,7 @@ module.exports = function (app) {
     [
       LessonValidation.addLessonValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     LessonController.addLesson
   );
@@ -43,7 +43,7 @@ module.exports = function (app) {
     [
       LessonValidation.deleteLessonValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     LessonController.deleteLesson
   );
@@ -54,7 +54,7 @@ module.exports = function (app) {
     [
       LessonValidation.deleteAttachmentValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     LessonController.deleteAttachment
   );

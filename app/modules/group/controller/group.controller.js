@@ -122,7 +122,6 @@ exports.addGroup = async (req, res) => {
   }
 };
 
-
 //---------------------------------------------------------------
 exports.updateGroup = async (req, res) => {
   try {
