@@ -112,6 +112,17 @@ module.exports = function (app) {
   );
 
   app.get(
+    '/api/listCourseNoDateByInstructor/:instructorId',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.listCourseNoDateByInstructorValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    CourseController.listCourseNoDateByInstructor
+  );
+
+  app.get(
     '/api/listCourseById/:id',
     FileUploader.upload.none(),
     [

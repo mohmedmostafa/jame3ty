@@ -2836,3 +2836,689 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
     return resolve(result);
   });
 }
+
+//---------------------------------------------------------------
+//List Course NO Date By Instructor
+//---------------------------------------------------------------
+exports.listCourseNoDateByInstructor = async (req, res) => {
+  //Check if the inst is already exsits
+  let instructor = await db_Instructor.findOne({
+    where: {
+      id: req.params.instructorId,
+    },
+  });
+
+  if (!instructor) {
+    console.log('!instructor');
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_INSTRUCTOR
+    );
+  }
+
+  //
+  const doPagination = parseInt(req.query.doPagination);
+
+  //Query
+  try {
+    let data;
+    if (doPagination) {
+      if (req.query.method != 'both') {
+        //Do Pagination & Method 1 or 0
+        data = await listCourseNoDateByInstructor_DoPagination_Method_1_or_0(
+          req,
+          res
+        );
+      } else {
+        //Do Pagination & Both
+        data = await listCourseNoDateByInstructor_DoPagination_Method_Both(
+          req,
+          res
+        );
+      }
+    } else {
+      if (req.query.method != 'both') {
+        //NO Pagination & Method 1 or 0
+        data = await listCourseNoDateByInstructor_NOPagination_Method_1_or_0(
+          req,
+          res
+        );
+      } else {
+        //NO Pagination & Method Both
+        data = await listCourseNoDateByInstructor_NOPagination_Method_Both(
+          req,
+          res
+        );
+      }
+    }
+
+    //Success
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
+  }
+};
+
+function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join instructors inst on inst.id = cr.instructorId \
+      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.instructorId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          req.query.method,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        console.log(error);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              id: req.params.instructorId,
+            },
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join instructors inst on inst.id = cr.instructorId \
+      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.instructorId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          1,
+          0,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        console.log(error);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              id: req.params.instructorId,
+            },
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
+          },
+        ],
+        offset: skip,
+        limit: _limit,
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join instructors inst on inst.id = cr.instructorId \
+      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.instructorId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          req.query.method,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        console.log(error);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: req.query.method,
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              id: req.params.instructorId,
+            },
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
+          },
+        ],
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
+  return new Promise(async (resolve, reject) => {
+    const doPagination = parseInt(req.query.doPagination);
+    const numPerPage = parseInt(req.query.numPerPage);
+    const page = parseInt(req.query.page);
+
+    //Count all rows
+    const sql =
+      'select count(*) as count from courses cr \
+      inner join instructors inst on inst.id = cr.instructorId \
+      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
+
+    let numRows = await connection
+      .query(sql, {
+        replacements: [
+          req.params.instructorId,
+          `%${req.query.searchKey}%`,
+          `%${req.query.searchKey}%`,
+          1,
+          0,
+        ],
+        logging: console.log,
+        raw: true,
+        plain: true,
+        type: QueryTypes.SELECT,
+      })
+      .catch((error) => {
+        console.log(error);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
+      });
+    console.log(numRows);
+    numRows = parseInt(numRows.count);
+
+    //Total num of valid pages
+    let numPages = Math.ceil(numRows / numPerPage);
+
+    //Calc skip or offset to be used in limit
+    let skip = (page - 1) * numPerPage;
+    let _limit = numPerPage;
+
+    //
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.substring]: req.query.searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              method: {
+                [Op.in]: ['0', '1'],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              id: req.params.instructorId,
+            },
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Department,
+                    include: [
+                      {
+                        model: db_Faculty,
+                        include: [
+                          {
+                            model: db_University,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
+          },
+        ],
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numRows,
+      numPerPage,
+      numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}

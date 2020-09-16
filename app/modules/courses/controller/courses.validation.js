@@ -99,10 +99,7 @@ addCourseValidation = (req, res, next) => {
       .options({ abortEarly: false })
       .keys({
         day: Joi.string().trim().required().messages(Joi_messages),
-        time: Joi.string()
-          .regex(/^([0-9]{2})\:([0-9]{2})$/)
-          .required()
-          .messages(Joi_messages),
+        time: Joi.date().iso().required().messages(Joi_messages),
       });
 
     //Course with Group Body Validation
@@ -390,6 +387,63 @@ listCourseNoDateByDepartmentValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+listCourseNoDateByInstructorValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      instructorId: Joi.number().integer().required().messages(Joi_messages),
+    }).options({ abortEarly: false });
+
+    const { error } = schemaParam.validate(req.params);
+    console.log(error);
+    if (error) {
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
+    }
+  }
+
+  //Body Validation
+  const schema = Joi.object({
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
+    method: Joi.string()
+      .trim()
+      .valid('1', '0', 'both')
+      .required()
+      .messages(Joi_messages),
+  }).options({ abortEarly: false });
+
+  const { error } = schema.validate(req.query);
+  console.log(error);
+  if (error) {
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 listCourseByIdValidation = (req, res, next) => {
   //URL Params Validation
   if (req.params) {
@@ -422,6 +476,7 @@ const CourseValidation = {
   updateCourseValidation: updateCourseValidation,
   listCourseNoDateValidation: listCourseNoDateValidation,
   listCourseNoDateByDepartmentValidation: listCourseNoDateByDepartmentValidation,
+  listCourseNoDateByInstructorValidation: listCourseNoDateByInstructorValidation,
 };
 
 module.exports = CourseValidation;
