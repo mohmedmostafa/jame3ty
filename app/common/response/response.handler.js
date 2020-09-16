@@ -324,6 +324,79 @@ exports.ResponseConstants = {
       en: 'Resource not found.',
       ar: 'المصدر غير موجود.',
     },
+    RESOURCE_NOT_FOUND_DEPARTMENT: {
+      en: 'Department not found.',
+      ar: 'القسم غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_GROUP: {
+      en: 'Group not found.',
+      ar: 'المجموعه غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_USER: {
+      en: 'User not found.',
+      ar: 'المستخدم غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_RATINGREVIEW: {
+      en: 'Rating and Review not found.',
+      ar: 'التقيم غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_ASSIGNMENTSUBMISSION: {
+      en: 'Assignment submission not found.',
+      ar: 'الواجب غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_LESSON: {
+      en: 'Lesson not found.',
+      ar: 'الدرس غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_LESSON_DISCUSSION: {
+      en: 'Lesson discussion not found.',
+      ar: 'المناقشه غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_LESSON_DISCUSSION_COMMENT: {
+      en: 'Lesson discussion comment not found.',
+      ar: 'التعليق غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_STUDENT: {
+      en: 'Student not found.',
+      ar: 'الطالب غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_SUBJECT: {
+      en: 'Subject not found.',
+      ar: 'المقرر او الماده غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_ACADEMICYEAR: {
+      en: 'Academic Year not found.',
+      ar: 'السنه الدراسيه غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_UNIVERSITY: {
+      en: 'University not found.',
+      ar: 'الكليه غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_FACULTY: {
+      en: 'Faculty not found.',
+      ar: 'الكليه غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_INSTRUCTOR: {
+      en: 'Instructor not found.',
+      ar: 'المحاضر غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_COURSE: {
+      en: 'Course not found.',
+      ar: 'الدوره غير موجود.',
+    },
+    RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND: {
+      en: 'Course with that group not found.',
+      ar: 'الدوره لهذه المجموعه غير موجوده',
+    },
+    RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND_OR_TYPE_NOT_LIVE_STREAMING: {
+      en:
+        'Course with that group not found or Course method is not live streaming.',
+      ar: 'الدوره لهذه المجموعه غير موجوده أو طريقه تدريس الدوره ليست بث مباشر',
+    },
+    RESOURCE_NOT_FOUND_OR_TYPE_NOT_LIVE_STREAMING: {
+      en: 'Resource not found or Course method is not live streaming.',
+      ar: 'المصدر غير موجود أو طريقه تدريس الكورس ليست بث مباشر.',
+    },
     NO_ATTACHMENTS_FOUND: {
       en: 'No attachemnts found.',
       ar: 'لا يوجد مرفقات.',

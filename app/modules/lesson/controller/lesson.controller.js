@@ -41,7 +41,7 @@ exports.addLesson = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
 
@@ -70,7 +70,8 @@ exports.addLesson = async (req, res) => {
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+          ResponseConstants.ERROR_MESSAGES
+            .RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND
         );
       }
     }
@@ -149,7 +150,7 @@ exports.deleteLesson = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_LESSON
       );
     }
 
@@ -207,7 +208,7 @@ exports.deleteAttachment = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_LESSON
       );
     }
 
@@ -296,7 +297,7 @@ exports.listLessonById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_LESSON
       );
     }
 
@@ -334,7 +335,7 @@ exports.updateLesson = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_LESSON
       );
     }
 
@@ -350,7 +351,7 @@ exports.updateLesson = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
 
@@ -379,7 +380,8 @@ exports.updateLesson = async (req, res) => {
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+          ResponseConstants.ERROR_MESSAGES
+            .RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND
         );
       }
     }

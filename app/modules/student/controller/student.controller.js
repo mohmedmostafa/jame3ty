@@ -223,7 +223,7 @@ exports.deleteStudent = async (req, res) => {
     // if (!student) {
     //   return Response(res, ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
     // ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type
-    // .RESOURCE_NOT_FOUND,{});
+    // .RESOURCE_NOT_FOUND_STUDENT,{});
     // }
 
     // //If Students Subscribe the course then can not delete it
@@ -298,7 +298,7 @@ exports.listStudentById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_USER
       );
     }
 
@@ -364,7 +364,7 @@ exports.listStudentByUserId = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_USER
       );
     }
 
@@ -409,7 +409,7 @@ exports.updateStudent = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_STUDENT
       );
     }
 

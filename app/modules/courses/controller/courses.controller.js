@@ -41,7 +41,7 @@ exports.addCourse = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_SUBJECT
     );
   }
 
@@ -57,7 +57,7 @@ exports.addCourse = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_INSTRUCTOR
     );
   }
 
@@ -239,7 +239,7 @@ exports.deleteCourse = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
     //course = course.get({ plain: true });
@@ -377,7 +377,7 @@ exports.listCourseById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
 
@@ -422,7 +422,7 @@ exports.updateCourse = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
 
@@ -2040,7 +2040,7 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_DEPARTMENT
     );
   }
 

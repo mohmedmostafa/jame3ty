@@ -71,7 +71,7 @@ exports.updateUniversity = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_UNIVERSITY
       );
     }
 
@@ -124,7 +124,7 @@ exports.deleteUniversity = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_UNIVERSITY
       );
     }
 
@@ -184,7 +184,7 @@ exports.listUniversityById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_UNIVERSITY
       );
     }
 
