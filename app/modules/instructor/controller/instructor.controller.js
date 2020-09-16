@@ -249,7 +249,7 @@ exports.updateInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_INSTRUCTOR
       );
     }
 
@@ -393,7 +393,7 @@ exports.deleteInstructor = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_INSTRUCTOR
       );
     }
 
@@ -608,7 +608,7 @@ exports.listInstructorById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_INSTRUCTOR
       );
     }
 

@@ -24,7 +24,7 @@ exports.addFaculty = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_UNIVERSITY
       );
     }
 
@@ -67,7 +67,7 @@ exports.updateFaculty = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_FACULTY
       );
     }
 
@@ -84,7 +84,7 @@ exports.updateFaculty = async (req, res) => {
           res,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
           ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+          ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_UNIVERSITY
         );
       }
     }
@@ -139,7 +139,7 @@ exports.deleteFaculty = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_FACULTY
       );
     }
 
@@ -202,7 +202,7 @@ exports.listFacultyById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_FACULTY
       );
     }
 

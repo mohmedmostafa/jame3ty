@@ -38,7 +38,8 @@ exports.addGroup = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+      ResponseConstants.ERROR_MESSAGES
+        .RESOURCE_NOT_FOUND_OR_TYPE_NOT_LIVE_STREAMING
     );
   }
 
@@ -65,7 +66,7 @@ exports.addGroup = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_INSTRUCTOR
     );
   }
 
@@ -158,7 +159,8 @@ exports.updateGroup = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES
+          .RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND_OR_TYPE_NOT_LIVE_STREAMING
       );
     }
 
@@ -278,7 +280,7 @@ exports.deleteGroup = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_GROUP
       );
     }
     //course = course.get({ plain: true });
@@ -335,7 +337,7 @@ exports.listGroupByCourseId = async (req, res) => {
       res,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
       ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+      ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
     );
   }
 
@@ -559,7 +561,7 @@ exports.listGroupById = async (req, res) => {
         res,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
         ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_GROUP
       );
     }
 
