@@ -36,7 +36,10 @@ addInstructorValidation = async (req, res, next) => {
     'g-recaptcha-response': Joi.any().messages(Joi_messages),
     img: Joi.any().messages(Joi_messages),
     cv: Joi.any().messages(Joi_messages),
-  }).options({ abortEarly: false });
+    // isVerified: Joi.number().integer().valid(1, 0).default(0).messages(Joi_messages),
+  })
+    .options({ abortEarly: false })
+    .unknown(true);
 
   const { error } = schema.validate(req.body);
   console.log(error);

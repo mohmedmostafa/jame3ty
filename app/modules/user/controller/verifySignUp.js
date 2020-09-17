@@ -96,9 +96,19 @@ checkRolesExisted = async (req, res, next) => {
   if (matchedRoles.length != bodyRoles.length) {
     return Response(
       res,
-      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
-      ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.INVALID_ROLE,
+      ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+      ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type.INVALID_ROLE,
       ResponseConstants.ERROR_MESSAGES.INVALID_ROLE
+    );
+  }
+
+  //If more than one role then refuse
+  if (bodyRoles.length > 1) {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+      ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type.TOO_MANY_ROLES,
+      ResponseConstants.ERROR_MESSAGES.TOO_MANY_ROLES
     );
   }
 

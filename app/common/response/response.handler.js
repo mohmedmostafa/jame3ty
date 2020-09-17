@@ -77,6 +77,8 @@ exports.ResponseConstants = {
         EXPIRED_VERIFICATION_CODE: 'EXPIRED_VERIFICATION_CODE',
         UPAYMENT_PROCESS_FAILED: 'UPAYMENT_PROCESS_FAILED',
         UPAYMENT_PROCESS_CANCELED: 'UPAYMENT_PROCESS_CANCELED',
+        INVALID_ROLE: 'INVALID_ROLE',
+        TOO_MANY_ROLES: 'TOO_MANY_ROLES',
       },
     },
     UNAUTHORIZED: {
@@ -109,7 +111,6 @@ exports.ResponseConstants = {
       type: {
         RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
         NO_ATTACHMENTS_FOUND: 'NO_ATTACHMENTS_FOUND',
-        INVALID_ROLE: 'INVALID_ROLE',
       },
     },
     CONFLICT: {
@@ -214,6 +215,10 @@ exports.ResponseConstants = {
     SIGNIN_REQUIRED: {
       en: 'Sign-in required.',
       ar: 'يلزم تسجيل الدخول',
+    },
+    TOO_MANY_ROLES: {
+      en: 'Multiple roles of account not allowed.',
+      ar: 'لا يمكن اضافه اكتر من دور للحساب.',
     },
     ALREADY_SUBSCRIBED: {
       en:

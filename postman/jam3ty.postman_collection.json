@@ -24,12 +24,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "admin2",
+									"value": "admin23",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "admin2@gmail.com",
+									"value": "admin23@gmail.com",
 									"type": "text"
 								},
 								{
@@ -39,7 +39,7 @@
 								},
 								{
 									"key": "roles",
-									"value": "admin,student,instructor",
+									"value": "admin",
 									"description": "admin,student,instructor",
 									"type": "text"
 								}
@@ -654,7 +654,8 @@
 							{
 								"key": "Authorization",
 								"value": "Bearer {{accessToken}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -662,32 +663,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01100007622",
+									"value": "03398265422",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Osama@gmail.com",
+									"value": "gggggg@gmail.com",
 									"type": "text"
 								},
 								{
@@ -704,6 +705,13 @@
 									"key": "password",
 									"value": "123456",
 									"type": "text"
+								},
+								{
+									"key": "isVerified",
+									"value": "0",
+									"description": "0 or 1",
+									"type": "text",
+									"disabled": true
 								}
 							],
 							"options": {
@@ -1441,7 +1449,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=0&numPerPage=10&page=1&searchKey=&method=both",
+							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=1&numPerPage=10&page=2&searchKey=&method=1",
 							"host": [
 								"{{url}}api"
 							],
@@ -1452,7 +1460,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
@@ -1460,7 +1468,7 @@
 								},
 								{
 									"key": "page",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "searchKey",
@@ -1468,7 +1476,7 @@
 								},
 								{
 									"key": "method",
-									"value": "both",
+									"value": "1",
 									"description": "1 or 0 or both"
 								}
 							]
@@ -1524,7 +1532,7 @@
 								},
 								{
 									"key": "courseId",
-									"value": "15",
+									"value": "4",
 									"type": "text"
 								},
 								{
@@ -1647,13 +1655,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listGroupById/10",
+							"raw": "{{url}}api/listGroupById/27",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listGroupById",
-								"10"
+								"27"
 							]
 						}
 					},
@@ -3977,17 +3985,17 @@
 	],
 	"variable": [
 		{
-			"id": "c316bca5-4b42-4edb-b101-903f92a7dff9",
+			"id": "d66a5f53-7370-4dbb-a160-04e03430e0e6",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "554d6c36-9176-4e8e-93a9-380cc39dd85f",
+			"id": "7be3fd23-88fa-4308-8edf-bc36c6646d1e",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwMjA1ODY0LCJleHAiOjE2MDAyOTIyNjR9.honltb-PU1FJj0G8rx25QPE1EedNxnsb7ph5sE9nXE0"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwMzAyOTU2LCJleHAiOjE2MDAzODkzNTZ9.WK_6zD7fxrdOl4oRm2duSP53DuK977jHZYu0Pxykmac"
 		},
 		{
-			"id": "a7a02271-9308-4f7a-9be9-e853b0ca5dfe",
+			"id": "208c6d84-0f75-4270-a3e9-18596026dc65",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}

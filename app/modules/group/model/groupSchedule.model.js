@@ -12,7 +12,7 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
       },
       time: {
-        type: Sequelize.TIME,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       groupId: {

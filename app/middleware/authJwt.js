@@ -67,7 +67,11 @@ verifyToken = (req, res, next) => {
           ResponseConstants.ERROR_MESSAGES.TOKEN_INVALID
         );
       }
+
+      console.log(decoded);
       req.userId = decoded.id;
+      req.userRoles = decoded.roles;
+
       next();
       return;
     });
