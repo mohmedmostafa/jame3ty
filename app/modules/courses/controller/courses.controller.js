@@ -551,6 +551,18 @@ exports.updateCourse = async (req, res) => {
 
 //---------------------------------------------------------------
 exports.listCourse = async (req, res) => {
+  //Check role from token if instructor return courses for that instructor only not all courses
+  let instructorEmail = '';
+  if (
+    req.userId &&
+    req.userEmail &&
+    req.userRoles &&
+    req.userRoles[0] === 'instructor'
+  ) {
+    instructorEmail = req.userEmail;
+  }
+
+  //
   const doPagination = parseInt(req.query.doPagination);
 
   //Query
@@ -561,36 +573,22 @@ exports.listCourse = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourse_DoPagination_Method_1_or_0(
           req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          instructorEmail
         );
       } else {
         //Do Pagination & Both
-        data = await listCourse_DoPagination_Method_Both(
-          req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
-        );
+        data = await listCourse_DoPagination_Method_Both(req, instructorEmail);
       }
     } else {
       if (req.query.method != 'both') {
         //NO Pagination & Method 1 or 0
         data = await listCourse_NOPagination_Method_1_or_0(
           req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          instructorEmail
         );
       } else {
         //NO Pagination & Method Both
-        data = await listCourse_NOPagination_Method_Both(
-          req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
-        );
+        data = await listCourse_NOPagination_Method_Both(req, instructorEmail);
       }
     }
 
@@ -613,16 +611,43 @@ exports.listCourse = async (req, res) => {
   }
 };
 
-function listCourse_DoPagination_Method_Both(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_DoPagination_Method_Both(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
     const page = parseInt(req.query.page);
+
+    // //Count all rows
+    // const sql =
+    //   'select count(*) as count from courses cr \
+    //   inner join instructors inst on inst.id = cr.instructorId \
+    //   where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
+
+    // let numRows = await connection
+    //   .query(sql, {
+    //     replacements: [
+    //       req.params.instructorId,
+    //       `%${req.query.searchKey}%`,
+    //       `%${req.query.searchKey}%`,
+    //       req.query.method,
+    //     ],
+    //     logging: console.log,
+    //     raw: true,
+    //     plain: true,
+    //     type: QueryTypes.SELECT,
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     return Response(
+    //       res,
+    //       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+    //       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+    //         .ORM_OPERATION_FAILED,
+    //       ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    //     );
+    //   });
+    // console.log(numRows);
+    // numRows = parseInt(numRows.count);
 
     //Count all rows
     let numRows = await db_Course
@@ -658,6 +683,17 @@ function listCourse_DoPagination_Method_Both(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -715,6 +751,12 @@ function listCourse_DoPagination_Method_Both(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -791,12 +833,7 @@ function listCourse_DoPagination_Method_Both(
   });
 }
 
-function listCourse_DoPagination_Method_1_or_0(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -834,6 +871,17 @@ function listCourse_DoPagination_Method_1_or_0(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -889,6 +937,12 @@ function listCourse_DoPagination_Method_1_or_0(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -965,12 +1019,7 @@ function listCourse_DoPagination_Method_1_or_0(
   });
 }
 
-function listCourse_NOPagination_Method_Both(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_NOPagination_Method_Both(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -1010,6 +1059,17 @@ function listCourse_NOPagination_Method_Both(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -1067,6 +1127,12 @@ function listCourse_NOPagination_Method_Both(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -1141,12 +1207,7 @@ function listCourse_NOPagination_Method_Both(
   });
 }
 
-function listCourse_NOPagination_Method_1_or_0(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -1184,6 +1245,17 @@ function listCourse_NOPagination_Method_1_or_0(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -1239,6 +1311,12 @@ function listCourse_NOPagination_Method_1_or_0(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,

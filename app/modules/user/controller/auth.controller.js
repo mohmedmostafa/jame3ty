@@ -194,7 +194,7 @@ exports.signin = async (req, res) => {
 
         //Generate JWT token for that user
         var token = jwt.sign(
-          { id: loginUser.id, roles: authorities },
+          { id: loginUser.id, email: loginUser.email, roles: authorities },
           JWT_SECRET_KEY,
           {
             expiresIn: 86400, // 24 hours
