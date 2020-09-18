@@ -23,6 +23,7 @@ const db_GroupSchedule = db.GroupSchedule;
 const db_AcademicYear = db.AcademicYear;
 const db_Department = db.Department;
 const db_Subject = db.Subject;
+const db_RatingAndReview = db.RatingAndReview;
 const db_connection = db.connection;
 const db_CourseSubscribe = db.CourseSubscribe;
 const db_Student = db.Student;
@@ -304,6 +305,34 @@ exports.deleteCourse = async (req, res) => {
   }
 };
 
+//Get Rating AVG and Rating Count for Course
+function getCourseAVGRateAndRateCount(courseId) {
+  return new Promise(async (resolve, reject) => {
+    await db_RatingAndReview
+      .findOne({
+        attributes: [
+          [Sequelize.fn('avg', Sequelize.col('rate')), 'ratingAVG'],
+          [Sequelize.fn('count', '*'), 'ratingCount'],
+        ],
+        include: [
+          {
+            model: db_CourseSubscribe,
+            attributes: [],
+            where: { courseId: courseId },
+          },
+        ],
+        group: [Sequelize.col('courseId')],
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject(error);
+      })
+      .then((courseAVGRatingAndCount) => {
+        return resolve(courseAVGRatingAndCount);
+      });
+  });
+}
+
 //--------------------------------------------------------------
 exports.listCourseById = async (req, res) => {
   try {
@@ -353,6 +382,9 @@ exports.listCourseById = async (req, res) => {
                 {
                   model: db_Student,
                 },
+                {
+                  model: db_RatingAndReview,
+                },
               ],
             },
           ],
@@ -365,6 +397,9 @@ exports.listCourseById = async (req, res) => {
           include: [
             {
               model: db_Student,
+            },
+            {
+              model: db_RatingAndReview,
             },
           ],
         },
@@ -380,6 +415,24 @@ exports.listCourseById = async (req, res) => {
         ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
+
+    //Calc AVG Rating and Get Rating Count
+    let courseAVGRatingAndCount = await getCourseAVGRateAndRateCount(
+      req.params.id
+    ).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+
+    //add to main object
+    course = course.get({ plain: true });
+    course.AVGRatingAndCount = courseAVGRatingAndCount;
 
     //Success
     return Response(
@@ -617,38 +670,6 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
     const numPerPage = parseInt(req.query.numPerPage);
     const page = parseInt(req.query.page);
 
-    // //Count all rows
-    // const sql =
-    //   'select count(*) as count from courses cr \
-    //   inner join instructors inst on inst.id = cr.instructorId \
-    //   where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
-
-    // let numRows = await connection
-    //   .query(sql, {
-    //     replacements: [
-    //       req.params.instructorId,
-    //       `%${req.query.searchKey}%`,
-    //       `%${req.query.searchKey}%`,
-    //       req.query.method,
-    //     ],
-    //     logging: console.log,
-    //     raw: true,
-    //     plain: true,
-    //     type: QueryTypes.SELECT,
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     return Response(
-    //       res,
-    //       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-    //       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-    //         .ORM_OPERATION_FAILED,
-    //       ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-    //     );
-    //   });
-    // console.log(numRows);
-    // numRows = parseInt(numRows.count);
-
     //Count all rows
     let numRows = await db_Course
       .count({
@@ -796,6 +817,9 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -808,6 +832,9 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -982,6 +1009,9 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -994,6 +1024,9 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1172,6 +1205,9 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1184,6 +1220,9 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1356,6 +1395,9 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1368,6 +1410,9 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1587,6 +1632,9 @@ function listCourseNoDate_DoPagination_Method_Both(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1599,6 +1647,9 @@ function listCourseNoDate_DoPagination_Method_Both(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1746,6 +1797,9 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1758,6 +1812,9 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1909,6 +1966,9 @@ function listCourseNoDate_NOPagination_Method_Both(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1921,6 +1981,9 @@ function listCourseNoDate_NOPagination_Method_Both(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2066,6 +2129,9 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2078,6 +2144,9 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2324,6 +2393,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2336,6 +2408,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2511,6 +2586,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2523,6 +2601,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2695,6 +2776,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2707,6 +2791,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2880,6 +2967,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2892,6 +2982,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3106,6 +3199,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3118,6 +3214,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3261,6 +3360,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3273,6 +3375,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3413,6 +3518,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3425,6 +3533,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3566,6 +3677,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3578,6 +3692,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
