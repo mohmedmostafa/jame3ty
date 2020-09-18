@@ -333,6 +333,56 @@ function getCourseAVGRateAndRateCount(courseId) {
   });
 }
 
+//Add Rating info to each course object
+function addCourseRatingIngoToEachCourseInData(data) {
+  return new Promise(async (resolve, reject) => {
+    //convert data sequelize object to json object
+    data = JSON.parse(JSON.stringify(data));
+
+    //add rating info to each course object in data
+    var courseMapped = await Promise.all(
+      data.data.map(async function (courseObj) {
+        //Calc AVG Rating and Get Rating Count
+        let courseAVGRatingAndCount = await getCourseAVGRateAndRateCount(
+          courseObj['id']
+        ).catch((error) => {
+          console.log(error);
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+              .ORM_OPERATION_FAILED,
+            ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+          );
+        });
+
+        //Get Plain Object from sequelize object
+        if (courseAVGRatingAndCount) {
+          courseAVGRatingAndCount = courseAVGRatingAndCount.get({
+            plain: true,
+          });
+        } else {
+          courseAVGRatingAndCount = {};
+        }
+
+        //add to course object
+        let course = Object.assign({}, courseObj, {
+          AVGRatingAndCount: courseAVGRatingAndCount,
+        });
+
+        return course;
+      })
+    ).catch((error) => {
+      console.log(error);
+      reject(error);
+    });
+
+    //Change courses in data array to the mapped courses
+    data.data = courseMapped;
+
+    resolve(data);
+  });
+}
 //--------------------------------------------------------------
 exports.listCourseById = async (req, res) => {
   try {
@@ -644,6 +694,18 @@ exports.listCourse = async (req, res) => {
         data = await listCourse_NOPagination_Method_Both(req, instructorEmail);
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -1487,6 +1549,18 @@ exports.listCourseNoDate = async (req, res) => {
       }
     }
 
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+
     //Success
     return Response(
       res,
@@ -2226,6 +2300,18 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         );
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -3064,6 +3150,18 @@ exports.listCourseNoDateByInstructor = async (req, res) => {
         );
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
