@@ -482,7 +482,9 @@ exports.listCourseById = async (req, res) => {
 
     //add to main object
     course = course.get({ plain: true });
-    course.AVGRatingAndCount = courseAVGRatingAndCount;
+    course.AVGRatingAndCount = courseAVGRatingAndCount
+      ? courseAVGRatingAndCount
+      : {};
 
     //Success
     return Response(
