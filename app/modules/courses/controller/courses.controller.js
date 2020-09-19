@@ -230,6 +230,7 @@ exports.deleteCourse = async (req, res) => {
       include: [
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
           include: [{ model: db_Student }],
         },
       ],
@@ -319,7 +320,7 @@ function getCourseAVGRateAndRateCount(courseId) {
           {
             model: db_CourseSubscribe,
             attributes: [],
-            where: { courseId: courseId },
+            where: { courseId: courseId, paymentResult: 'CAPTURED' },
           },
         ],
         group: [Sequelize.col('courseId')],
@@ -429,7 +430,7 @@ exports.listCourseById = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
-              
+              where: { paymentResult: 'CAPTURED' },
               include: [{ model: db_Student }, { model: db_RatingAndReview }],
             },
           ],
@@ -439,6 +440,7 @@ exports.listCourseById = async (req, res) => {
         },
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
           include: [
             {
               model: db_Student,
@@ -872,6 +874,7 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -888,6 +891,7 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -1064,6 +1068,7 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -1080,6 +1085,7 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -1260,6 +1266,7 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -1276,6 +1283,7 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -1450,6 +1458,7 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -1466,6 +1475,7 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -1699,6 +1709,7 @@ function listCourseNoDate_DoPagination_Method_Both(
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -1715,6 +1726,7 @@ function listCourseNoDate_DoPagination_Method_Both(
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -1864,6 +1876,7 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -1880,6 +1893,7 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -2033,6 +2047,7 @@ function listCourseNoDate_NOPagination_Method_Both(
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -2049,6 +2064,7 @@ function listCourseNoDate_NOPagination_Method_Both(
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -2196,6 +2212,7 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -2212,6 +2229,7 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -2472,6 +2490,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -2488,6 +2507,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -2665,6 +2685,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -2681,6 +2702,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -2855,6 +2877,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -2871,6 +2894,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -3046,6 +3070,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -3062,6 +3087,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -3290,6 +3316,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -3306,6 +3333,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -3451,6 +3479,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -3467,6 +3496,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -3609,6 +3639,7 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -3625,6 +3656,7 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -3768,6 +3800,7 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
                     model: db_Student,
@@ -3784,6 +3817,7 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,

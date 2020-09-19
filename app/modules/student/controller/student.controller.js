@@ -259,6 +259,14 @@ exports.deleteStudent = async (req, res) => {
 exports.listStudentById = async (req, res) => {
   try {
     let user = await db_User.findOne({
+      attributes: [
+        'id',
+        'username',
+        'email',
+        'isVerified',
+        'createdAt',
+        'updatedAt',
+      ],
       include: [
         {
           model: db_Student,
@@ -286,6 +294,7 @@ exports.listStudentById = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
+              where: { paymentResult: 'CAPTURED' },
             },
           ],
         },
@@ -328,6 +337,14 @@ exports.listStudentByUserId = async (req, res) => {
       where: {
         id: req.params.userId,
       },
+      attributes: [
+        'id',
+        'username',
+        'email',
+        'isVerified',
+        'createdAt',
+        'updatedAt',
+      ],
       include: [
         {
           model: db_Student,
@@ -352,6 +369,7 @@ exports.listStudentByUserId = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
+              where: { paymentResult: 'CAPTURED' },
             },
           ],
         },
@@ -653,6 +671,7 @@ function listStudent_DoPagination(
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
               },
             ],
           },
@@ -718,6 +737,7 @@ function listStudent_NOPagination(
               },
               {
                 model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
               },
             ],
           },

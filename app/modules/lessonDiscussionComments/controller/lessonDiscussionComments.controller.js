@@ -443,7 +443,14 @@ exports.listlessonDiscussionComments = async (req, res) => {
       include: [
         {
           model: db_User,
-          attributes: ['id', 'username', 'email'],
+          attributes: [
+            'id',
+            'username',
+            'email',
+            'isVerified',
+            'createdAt',
+            'updatedAt',
+          ],
           include: [
             {
               model: db_Student,
@@ -458,7 +465,14 @@ exports.listlessonDiscussionComments = async (req, res) => {
           include: [
             {
               model: db_User,
-              attributes: ['id', 'username', 'email'],
+              attributes: [
+                'id',
+                'username',
+                'email',
+                'isVerified',
+                'createdAt',
+                'updatedAt',
+              ],
               include: [
                 {
                   model: db_Student,
@@ -515,7 +529,14 @@ exports.listlessonDiscussionById = async (req, res) => {
       include: [
         {
           model: db_User,
-          attributes: ['id', 'username', 'email'],
+          attributes: [
+            'id',
+            'username',
+            'email',
+            'isVerified',
+            'createdAt',
+            'updatedAt',
+          ],
           include: [
             {
               model: db_Student,
@@ -530,7 +551,14 @@ exports.listlessonDiscussionById = async (req, res) => {
           include: [
             {
               model: db_User,
-              attributes: ['id', 'username', 'email'],
+              attributes: [
+                'id',
+                'username',
+                'email',
+                'isVerified',
+                'createdAt',
+                'updatedAt',
+              ],
               include: [
                 {
                   model: db_Student,
@@ -731,14 +759,28 @@ function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
                 include: [
                   {
                     model: db_User,
-                    attributes: ['id', 'username', 'email'],
+                    attributes: [
+                      'id',
+                      'username',
+                      'email',
+                      'isVerified',
+                      'createdAt',
+                      'updatedAt',
+                    ],
                   },
                   {
                     model: db_lessonDiscussionComments,
                     include: [
                       {
                         model: db_User,
-                        attributes: ['id', 'username', 'email'],
+                        attributes: [
+                          'id',
+                          'username',
+                          'email',
+                          'isVerified',
+                          'createdAt',
+                          'updatedAt',
+                        ],
                       },
                     ],
                   },
@@ -782,14 +824,28 @@ function listlessonDiscussionByCourseId_NOPagination(req) {
                 include: [
                   {
                     model: db_User,
-                    attributes: ['id', 'username', 'email'],
+                    attributes: [
+                      'id',
+                      'username',
+                      'email',
+                      'isVerified',
+                      'createdAt',
+                      'updatedAt',
+                    ],
                   },
                   {
                     model: db_lessonDiscussionComments,
                     include: [
                       {
                         model: db_User,
-                        attributes: ['id', 'username', 'email'],
+                        attributes: [
+                          'id',
+                          'username',
+                          'email',
+                          'isVerified',
+                          'createdAt',
+                          'updatedAt',
+                        ],
                       },
                     ],
                   },

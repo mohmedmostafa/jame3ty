@@ -113,6 +113,7 @@ exports.deleteRatingAndReview = async (req, res) => {
       include: [
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
         },
       ],
     });
@@ -160,6 +161,7 @@ exports.listRatingAndReviewById = async (req, res) => {
       include: [
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
           include: [
             {
               model: db_Student,
@@ -208,6 +210,7 @@ exports.listRatingAndReviewByCourseId = async (req, res) => {
           model: db_CourseSubscribe,
           where: {
             courseId: req.params.courseId,
+            paymentResult: 'CAPTURED',
           },
         },
       ],
@@ -344,6 +347,7 @@ function listRatingAndReview_DoPagination(
         include: [
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -381,6 +385,7 @@ function listRatingAndReview_NOPagination(
         include: [
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,

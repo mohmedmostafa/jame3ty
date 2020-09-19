@@ -153,7 +153,7 @@ exports.signin = async (req, res) => {
           ResponseConstants.ERROR_MESSAGES.USER_NOT_EXISTS
         );
       } else {
-        //Focus on the desired data
+        //Convert Sequelize Object to Json Plain object
         loginUser = loginUser.map(function (user) {
           return user.get({ plain: true });
         });

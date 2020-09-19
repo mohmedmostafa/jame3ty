@@ -142,6 +142,7 @@ exports.updateGroup = async (req, res) => {
           include: [
             {
               model: db_CourseSubscribe,
+              where: { paymentResult: 'CAPTURED' },
             },
             {
               model: db_GroupSchedule,
@@ -266,6 +267,7 @@ exports.deleteGroup = async (req, res) => {
       include: [
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
           include: [{ model: db_Student }],
         },
         {
@@ -458,6 +460,7 @@ function listGroupByCourseId_DoPagination(
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -506,6 +509,7 @@ function listGroupByCourseId_NOPagination(
           },
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -546,6 +550,7 @@ exports.listGroupById = async (req, res) => {
         },
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
           include: [
             {
               model: db_Student,
