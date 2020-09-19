@@ -1,4 +1,6 @@
 const db = require('../..');
+const { Sequelize, connection } = require('../..');
+
 const {
   Response,
   ValidateResponse,
@@ -10,7 +12,7 @@ const {
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
 const moment = require('moment');
-const { Sequelize, connection } = require('../..');
+const RatingReviewsController = require('../../ratingAndReview/controller/ratingAndReview.controller');
 
 const QueryTypes = db.Sequelize.QueryTypes;
 const Op = db.Sequelize.Op;
@@ -227,13 +229,6 @@ exports.deleteCourse = async (req, res) => {
       where: {
         id: req.params.id,
       },
-      include: [
-        {
-          model: db_CourseSubscribe,
-          where: { paymentResult: 'CAPTURED' },
-          include: [{ model: db_Student }],
-        },
-      ],
     });
 
     if (!course) {
@@ -247,17 +242,30 @@ exports.deleteCourse = async (req, res) => {
     }
     //course = course.get({ plain: true });
 
-    console.log(course);
+    course = await db_Course.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
+          include: [{ model: db_Student }],
+        },
+      ],
+    });
 
     //If Students Subscribe the course then can not delete it
-    if (course.courseSubscribes.length > 0) {
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
-        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
-          .RESOURCE_HAS_DEPENDENTS,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
-      );
+    if (course) {
+      if (course.courseSubscribes.length > 0) {
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+          ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+            .RESOURCE_HAS_DEPENDENTS,
+          ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
+        );
+      }
     }
 
     //Delete
@@ -308,32 +316,32 @@ exports.deleteCourse = async (req, res) => {
 };
 
 //Get Rating AVG and Rating Count for Course
-function getCourseAVGRateAndRateCount(courseId) {
-  return new Promise(async (resolve, reject) => {
-    await db_RatingAndReview
-      .findOne({
-        attributes: [
-          [Sequelize.fn('avg', Sequelize.col('rate')), 'ratingAVG'],
-          [Sequelize.fn('count', '*'), 'ratingCount'],
-        ],
-        include: [
-          {
-            model: db_CourseSubscribe,
-            attributes: [],
-            where: { courseId: courseId, paymentResult: 'CAPTURED' },
-          },
-        ],
-        group: [Sequelize.col('courseId')],
-      })
-      .catch((error) => {
-        console.log(error);
-        return reject(error);
-      })
-      .then((courseAVGRatingAndCount) => {
-        return resolve(courseAVGRatingAndCount);
-      });
-  });
-}
+// function getCourseAVGRateAndRateCount(courseId) {
+//   return new Promise(async (resolve, reject) => {
+//     await db_RatingAndReview
+//       .findOne({
+//         attributes: [
+//           [Sequelize.fn('avg', Sequelize.col('rate')), 'ratingAVG'],
+//           [Sequelize.fn('count', '*'), 'ratingCount'],
+//         ],
+//         include: [
+//           {
+//             model: db_CourseSubscribe,
+//             attributes: [],
+//             where: { courseId: courseId, paymentResult: 'CAPTURED' },
+//           },
+//         ],
+//         group: [Sequelize.col('courseId')],
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//         return reject(error);
+//       })
+//       .then((courseAVGRatingAndCount) => {
+//         return resolve(courseAVGRatingAndCount);
+//       });
+//   });
+// }
 
 //Add Rating info to each course object
 function addCourseRatingIngoToEachCourseInData(data) {
@@ -345,7 +353,7 @@ function addCourseRatingIngoToEachCourseInData(data) {
     var courseMapped = await Promise.all(
       data.data.map(async function (courseObj) {
         //Calc AVG Rating and Get Rating Count
-        let courseAVGRatingAndCount = await getCourseAVGRateAndRateCount(
+        let courseAVGRatingAndCount = await RatingReviewsController.getCourseAVGRateAndRateCount(
           courseObj['id']
         ).catch((error) => {
           console.log(error);
@@ -430,6 +438,7 @@ exports.listCourseById = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
+              required: false,
               where: { paymentResult: 'CAPTURED' },
               include: [{ model: db_Student }, { model: db_RatingAndReview }],
             },
@@ -440,6 +449,7 @@ exports.listCourseById = async (req, res) => {
         },
         {
           model: db_CourseSubscribe,
+          required: false,
           where: { paymentResult: 'CAPTURED' },
           include: [
             {
@@ -464,7 +474,7 @@ exports.listCourseById = async (req, res) => {
     }
 
     //Calc AVG Rating and Get Rating Count
-    let courseAVGRatingAndCount = await getCourseAVGRateAndRateCount(
+    let courseAVGRatingAndCount = await RatingReviewsController.getCourseAVGRateAndRateCount(
       req.params.id
     ).catch((error) => {
       console.log(error);
@@ -874,6 +884,7 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -891,6 +902,7 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -1068,6 +1080,7 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -1085,6 +1098,7 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -1266,6 +1280,7 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -1283,6 +1298,7 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -1458,6 +1474,7 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -1475,6 +1492,7 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -1709,6 +1727,7 @@ function listCourseNoDate_DoPagination_Method_Both(
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -1726,6 +1745,7 @@ function listCourseNoDate_DoPagination_Method_Both(
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -1876,6 +1896,7 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -1893,6 +1914,7 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -2047,6 +2069,7 @@ function listCourseNoDate_NOPagination_Method_Both(
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -2064,6 +2087,7 @@ function listCourseNoDate_NOPagination_Method_Both(
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -2212,6 +2236,7 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -2229,6 +2254,7 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -2490,6 +2516,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -2507,6 +2534,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -2685,6 +2713,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -2702,6 +2731,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -2877,6 +2907,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -2894,6 +2925,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -3070,6 +3102,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -3087,6 +3120,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -3316,6 +3350,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {
@@ -3333,6 +3368,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
           },
           {
             model: db_CourseSubscribe,
+            required: false,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
@@ -3479,6 +3515,7 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
                 include: [
                   {

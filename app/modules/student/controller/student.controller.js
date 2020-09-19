@@ -294,6 +294,7 @@ exports.listStudentById = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
+              required: false,
               where: { paymentResult: 'CAPTURED' },
             },
           ],
@@ -369,6 +370,7 @@ exports.listStudentByUserId = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
+              required: false,
               where: { paymentResult: 'CAPTURED' },
             },
           ],
@@ -671,6 +673,7 @@ function listStudent_DoPagination(
               },
               {
                 model: db_CourseSubscribe,
+                required: false,
                 where: { paymentResult: 'CAPTURED' },
               },
             ],
