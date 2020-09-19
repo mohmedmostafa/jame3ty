@@ -14,6 +14,8 @@ const { JWT_SECRET_KEY } = require('../../../../app/config/env.config');
 const db_connection = db.connection;
 const db_User = db.User;
 const db_Role = db.Role;
+const db_Instructor = db.Instructor;
+const db_Student = db.Student;
 const Op = db.Sequelize.Op;
 
 //---------------------------------------------------------------
@@ -133,6 +135,12 @@ exports.signin = async (req, res) => {
         {
           model: db_Role,
         },
+        {
+          model: db_Instructor,
+        },
+        {
+          model: db_Student,
+        },
       ],
     })
     .then((loginUser) => {
@@ -201,18 +209,23 @@ exports.signin = async (req, res) => {
           }
         );
 
+        //Response User Info
+        let userInfoRes = {
+          id: loginUser.id,
+          username: loginUser.username,
+          email: loginUser.email,
+          roles: authorities,
+          accessToken: token,
+          instructorId: loginUser.instructor ? loginUser.instructor.id : null,
+          studentId: loginUser.student ? loginUser.student.id : null,
+        };
+
         //Success
         return Response(
           res,
           ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
           ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-          {
-            id: loginUser.id,
-            username: loginUser.username,
-            email: loginUser.email,
-            roles: authorities,
-            accessToken: token,
-          }
+          userInfoRes
         );
       }
     })
