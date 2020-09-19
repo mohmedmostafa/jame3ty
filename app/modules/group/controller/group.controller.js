@@ -454,18 +454,20 @@ function listGroupByCourseId_DoPagination(
           },
           {
             model: db_Course,
+            include: [
+              {
+                model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_GroupSchedule,
-          },
-          {
-            model: db_CourseSubscribe,
-            where: { paymentResult: 'CAPTURED' },
-            include: [
-              {
-                model: db_Student,
-              },
-            ],
           },
         ],
         offset: skip,
@@ -503,18 +505,20 @@ function listGroupByCourseId_NOPagination(
           },
           {
             model: db_Course,
+            include: [
+              {
+                model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_GroupSchedule,
-          },
-          {
-            model: db_CourseSubscribe,
-            where: { paymentResult: 'CAPTURED' },
-            include: [
-              {
-                model: db_Student,
-              },
-            ],
           },
         ],
       })
@@ -541,21 +545,23 @@ exports.listGroupById = async (req, res) => {
         },
         {
           model: db_Course,
+          include: [
+            {
+              model: db_CourseSubscribe,
+              where: { paymentResult: 'CAPTURED' },
+              include: [
+                {
+                  model: db_Student,
+                },
+              ],
+            },
+          ],
         },
         {
           model: db_Lesson,
         },
         {
           model: db_GroupSchedule,
-        },
-        {
-          model: db_CourseSubscribe,
-          where: { paymentResult: 'CAPTURED' },
-          include: [
-            {
-              model: db_Student,
-            },
-          ],
         },
       ],
     });
