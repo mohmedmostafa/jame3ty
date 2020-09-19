@@ -29,6 +29,7 @@ const db_CourseSubscribe = db.CourseSubscribe;
 const db_Student = db.Student;
 const db_Lesson = db.Lesson;
 const db_Instructor = db.Instructor;
+const db_Payment = db.Payment;
 
 //---------------------------------------------------------------
 exports.addCourse = async (req, res) => {
@@ -428,14 +429,8 @@ exports.listCourseById = async (req, res) => {
             },
             {
               model: db_CourseSubscribe,
-              include: [
-                {
-                  model: db_Student,
-                },
-                {
-                  model: db_RatingAndReview,
-                },
-              ],
+              
+              include: [{ model: db_Student }, { model: db_RatingAndReview }],
             },
           ],
         },

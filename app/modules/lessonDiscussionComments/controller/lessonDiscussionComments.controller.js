@@ -15,10 +15,15 @@ const db_lessonDiscussion = db.LessonDiscussion;
 const db_lesson = db.Lesson;
 const db_Course = db.Course;
 const db_User = db.User;
+const db_Role = db.Role;
+const db_UserRole = db.UserRole;
+const db_Student = db.Student;
+const db_Instructor = db.Instructor;
 
 //---------------------------------------------------------------
 exports.addlessonDiscussionComments = async (req, res) => {
   const user = await db_User.findByPk(req.body.userId);
+
   console.log('test', user);
   if (!user) {
     console.log('!user');
@@ -54,15 +59,16 @@ exports.addlessonDiscussionComments = async (req, res) => {
         ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
       );
     });
+
+    //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
       { post }
     );
-
-    //add comment
   } else {
+    //add comment
     const lessonDiscussion = await db_lessonDiscussion.findByPk(
       req.body.lessonDiscussionId
     );
@@ -89,6 +95,8 @@ exports.addlessonDiscussionComments = async (req, res) => {
         );
       }
     );
+
+    //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
@@ -432,9 +440,37 @@ exports.listlessonDiscussionComments = async (req, res) => {
       where: {
         lessonId: { [Op.eq]: lessonId },
       },
-      include: {
-        model: db_lessonDiscussionComments,
-      },
+      include: [
+        {
+          model: db_User,
+          attributes: ['id', 'username', 'email'],
+          include: [
+            {
+              model: db_Student,
+            },
+            {
+              model: db_Instructor,
+            },
+          ],
+        },
+        {
+          model: db_lessonDiscussionComments,
+          include: [
+            {
+              model: db_User,
+              attributes: ['id', 'username', 'email'],
+              include: [
+                {
+                  model: db_Student,
+                },
+                {
+                  model: db_Instructor,
+                },
+              ],
+            },
+          ],
+        },
+      ],
       order: db.Sequelize.literal('updatedAt DESC'),
     });
 
@@ -476,9 +512,37 @@ exports.listlessonDiscussionById = async (req, res) => {
   try {
     let lessonDiscussion = await db_lessonDiscussion.findOne({
       where: { id: req.params.id },
-      include: {
-        model: db_lessonDiscussionComments,
-      },
+      include: [
+        {
+          model: db_User,
+          attributes: ['id', 'username', 'email'],
+          include: [
+            {
+              model: db_Student,
+            },
+            {
+              model: db_Instructor,
+            },
+          ],
+        },
+        {
+          model: db_lessonDiscussionComments,
+          include: [
+            {
+              model: db_User,
+              attributes: ['id', 'username', 'email'],
+              include: [
+                {
+                  model: db_Student,
+                },
+                {
+                  model: db_Instructor,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     });
 
     if (!lessonDiscussion) {
@@ -667,12 +731,14 @@ function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
                 include: [
                   {
                     model: db_User,
+                    attributes: ['id', 'username', 'email'],
                   },
                   {
                     model: db_lessonDiscussionComments,
                     include: [
                       {
                         model: db_User,
+                        attributes: ['id', 'username', 'email'],
                       },
                     ],
                   },
@@ -716,12 +782,14 @@ function listlessonDiscussionByCourseId_NOPagination(req) {
                 include: [
                   {
                     model: db_User,
+                    attributes: ['id', 'username', 'email'],
                   },
                   {
                     model: db_lessonDiscussionComments,
                     include: [
                       {
                         model: db_User,
+                        attributes: ['id', 'username', 'email'],
                       },
                     ],
                   },
