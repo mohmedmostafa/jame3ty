@@ -13,6 +13,7 @@ const {
 } = require('../../../common/attachmentsUpload/multerConfig');
 const moment = require('moment');
 const RatingReviewsController = require('../../ratingAndReview/controller/ratingAndReview.controller');
+const Helper = require('../../../common/helper');
 
 const QueryTypes = db.Sequelize.QueryTypes;
 const Op = db.Sequelize.Op;
@@ -3800,6 +3801,450 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
       numRows,
       numPerPage,
       numPages,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+////////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
+
+//---------------------------------------------------------------
+exports.listCourseOriginal = async (req, res) => {
+  //Filters
+  let searchKey = req.query.searchKey ? req.query.searchKey : '%%';
+  let type = req.query.type ? req.query.type : '%%';
+  let method = req.query.method ? req.query.method : '%%';
+  let studentId = req.query.studentId ? req.query.studentId : '%%';
+  let universityId = req.query.universityId ? req.query.universityId : '%%';
+  let facultyId = req.query.facultyId ? req.query.facultyId : '%%';
+  let departmentId = req.query.departmentId ? req.query.departmentId : '%%';
+  let academicYearId = req.query.academicYearId
+    ? req.query.academicYearId
+    : '%%';
+  let subjectId = req.query.subjectId ? req.query.subjectId : '%%';
+  let lessonId = req.query.lessonId ? req.query.lessonId : '%%';
+  let groupId = req.query.groupId ? req.query.groupId : '%%';
+
+  //Filter with date range or without date range
+  let startFrom;
+  let startTo;
+  let getMinMaxCreatedAt;
+  if (req.query.startFrom && req.query.startTo) {
+    startFrom = req.query.startFrom;
+    startTo = req.query.startTo;
+  } else {
+    //Set startFrom and startTo to min and max date of the table
+    getMinMaxCreatedAt = await Helper.getMinMaxCreatedAt(Sequelize, db_Course);
+    getMinMaxCreatedAt = getMinMaxCreatedAt.get({ plain: true });
+    startFrom = getMinMaxCreatedAt.min;
+    startTo = getMinMaxCreatedAt.max;
+  }
+
+  //Check role from token if instructor return courses for that instructor only not all courses
+  let instructorId;
+  if (req.userRoles && req.userRoles[0] === 'instructor') {
+    instructorId = req.instructorId;
+  } else {
+    instructorId = req.query.instructorId ? req.query.instructorId : '%%';
+  }
+
+  //
+  const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
+
+  //Query
+  try {
+    let data;
+    if (doPagination) {
+      //Do Pagination
+      data = await listCourseOriginal_DoPagination(
+        req,
+        doPagination,
+        numPerPage,
+        page,
+        searchKey,
+        type,
+        method,
+        instructorId,
+        studentId,
+        universityId,
+        facultyId,
+        departmentId,
+        academicYearId,
+        subjectId,
+        lessonId,
+        groupId,
+        startFrom,
+        startTo,
+        skip,
+        _limit
+      );
+    } else {
+      //NO Pagination
+      data = await listCourseOriginal_NOPagination(
+        req,
+        doPagination,
+        numPerPage,
+        page,
+        searchKey,
+        type,
+        method,
+        instructorId,
+        studentId,
+        universityId,
+        facultyId,
+        departmentId,
+        academicYearId,
+        subjectId,
+        lessonId,
+        groupId,
+        startFrom,
+        startTo
+      );
+    }
+
+    //Add Rating info to each course in the data array
+    // data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+    //   console.log(error);
+    //   return Response(
+    //     res,
+    //     ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+    //     ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+    //       .ORM_OPERATION_FAILED,
+    //     ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    //   );
+    // });
+
+    //Success
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { data }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
+  }
+};
+
+function listCourseOriginal_NOPagination(
+  req,
+  doPagination,
+  numPerPage,
+  page,
+  searchKey,
+  type,
+  method,
+  instructorId,
+  studentId,
+  universityId,
+  facultyId,
+  departmentId,
+  academicYearId,
+  subjectId,
+  lessonId,
+  groupId,
+  startFrom,
+  startTo
+) {
+  return new Promise(async (resolve, reject) => {
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.like]: searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.like]: searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              type: {
+                [Op.like]: type,
+              },
+            },
+            {
+              method: {
+                [Op.like]: method,
+              },
+            },
+            {
+              createdAt: {
+                [Op.between]: [startFrom, startTo],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Instructor,
+            where: {
+              id: { [Op.like]: instructorId },
+            },
+          },
+          {
+            model: db_Subject,
+            where: { id: { [Op.like]: subjectId } },
+            include: [
+              {
+                model: db_AcademicYear,
+                where: { id: { [Op.like]: academicYearId } },
+                include: [
+                  {
+                    model: db_Department,
+                    where: { id: { [Op.like]: departmentId } },
+                    include: [
+                      {
+                        model: db_Faculty,
+                        where: { id: { [Op.like]: facultyId } },
+                        include: [
+                          {
+                            model: db_University,
+                            where: { id: { [Op.like]: universityId } },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            where: { id: { [Op.like]: groupId } },
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                required: false,
+                where: { paymentResult: 'CAPTURED' },
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                  {
+                    model: db_RatingAndReview,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+            where: { id: { [Op.like]: lessonId } },
+          },
+          {
+            model: db_CourseSubscribe,
+            required: false,
+            where: {
+              [Op.and]: {
+                studentId: { [Op.like]: studentId },
+                paymentResult: 'CAPTURED',
+              },
+            },
+            include: [
+              {
+                model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
+              },
+            ],
+          },
+        ],
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numPerPage,
+      page,
+      data,
+    };
+
+    return resolve(result);
+  });
+}
+
+function listCourseOriginal_DoPagination(
+  req,
+  doPagination,
+  numPerPage,
+  page,
+  searchKey,
+  type,
+  method,
+  instructorId,
+  studentId,
+  universityId,
+  facultyId,
+  departmentId,
+  academicYearId,
+  subjectId,
+  lessonId,
+  groupId,
+  startFrom,
+  startTo,
+  skip,
+  _limit
+) {
+  return new Promise(async (resolve, reject) => {
+    let data = await db_Course
+      .findAll({
+        where: {
+          [Op.and]: [
+            {
+              [Op.or]: [
+                {
+                  name_ar: {
+                    [Op.like]: searchKey,
+                  },
+                },
+                {
+                  name_en: {
+                    [Op.like]: searchKey,
+                  },
+                },
+              ],
+            },
+            {
+              type: {
+                [Op.like]: type,
+              },
+            },
+            {
+              method: {
+                [Op.like]: method,
+              },
+            },
+            {
+              startDate: {
+                [Op.between]: [startFrom, startTo],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Instructor,
+            where: { id: { [Op.like]: instructorId } },
+          },
+          {
+            model: db_Subject,
+            where: { id: { [Op.like]: subjectId } },
+            include: [
+              {
+                model: db_AcademicYear,
+                where: { id: { [Op.like]: academicYearId } },
+                include: [
+                  {
+                    model: db_Department,
+                    where: { id: { [Op.like]: departmentId } },
+                    include: [
+                      {
+                        model: db_Faculty,
+                        where: { id: { [Op.like]: facultyId } },
+                        include: [
+                          {
+                            model: db_University,
+                            where: { id: { [Op.like]: universityId } },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Group,
+            where: { id: { [Op.like]: groupId } },
+            include: [
+              {
+                model: db_GroupSchedule,
+              },
+              {
+                model: db_Lesson,
+              },
+              {
+                model: db_CourseSubscribe,
+                where: { paymentResult: 'CAPTURED' },
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                  {
+                    model: db_RatingAndReview,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db_Lesson,
+            where: { id: { [Op.like]: lessonId } },
+          },
+          {
+            model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
+            include: [
+              {
+                model: db_Student,
+                where: { id: { [Op.like]: studentId } },
+              },
+              {
+                model: db_RatingAndReview,
+              },
+            ],
+          },
+        ],
+        skip,
+        _limit,
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      });
+
+    let result = {
+      doPagination,
+      numPerPage,
       page,
       data,
     };

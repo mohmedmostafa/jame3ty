@@ -72,6 +72,8 @@ verifyToken = (req, res, next) => {
       req.userId = decoded.id;
       req.userEmail = decoded.email;
       req.userRoles = decoded.roles;
+      req.instructorId = decoded.instructorId;
+      req.studentId = decoded.studentId;
 
       next();
       return;

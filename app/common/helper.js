@@ -38,4 +38,24 @@ function getUserdata(req, res) {
   return result;
 }
 
+function getMinMaxCreatedAt(Sequelize, modelName) {
+  return new Promise(async (resolve, reject) => {
+    let minMaxCreatedAt = await modelName
+      .findOne({
+        attributes: [
+          [Sequelize.fn('max', Sequelize.col('createdAt')), 'max'],
+          [Sequelize.fn('min', Sequelize.col('createdAt')), 'min'],
+        ],
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+
+    //
+    resolve(minMaxCreatedAt);
+  });
+}
+
 module.exports.getUserdata = getUserdata;
+module.exports.getMinMaxCreatedAt = getMinMaxCreatedAt;
