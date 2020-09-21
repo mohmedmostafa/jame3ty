@@ -3990,8 +3990,8 @@ function listCourseOriginal_NOPagination(
   orderBy
 ) {
   return new Promise(async (resolve, reject) => {
-    let data = await db_Course
-      .findAll({
+    let { count, rows } = await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -4075,6 +4075,7 @@ function listCourseOriginal_NOPagination(
             model: db_Lesson,
           },
         ],
+        distinct: true,
         order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
@@ -4082,11 +4083,15 @@ function listCourseOriginal_NOPagination(
         return reject(err);
       });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(count / numPerPage);
     let result = {
       doPagination,
+      numRows: count,
       numPerPage,
+      numPages,
       page,
-      data,
+      data: rows,
     };
 
     return resolve(result);
@@ -4114,8 +4119,8 @@ function listCourseOriginal_DoPagination(
   orderBy
 ) {
   return new Promise(async (resolve, reject) => {
-    let data = await db_Course
-      .findAll({
+    let { count, rows } = await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -4199,6 +4204,7 @@ function listCourseOriginal_DoPagination(
             model: db_Lesson,
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
         order: Sequelize.literal(orderBy),
@@ -4208,11 +4214,15 @@ function listCourseOriginal_DoPagination(
         return reject(err);
       });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(count / numPerPage);
     let result = {
       doPagination,
+      numRows: count,
       numPerPage,
+      numPages,
       page,
-      data,
+      data: rows,
     };
 
     return resolve(result);
