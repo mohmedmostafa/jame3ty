@@ -38,13 +38,13 @@ function getUserdata(req, res) {
   return result;
 }
 
-function getMinMaxCreatedAt(Sequelize, modelName) {
+function getColumnMinMax(Sequelize, modelName, colName) {
   return new Promise(async (resolve, reject) => {
-    let minMaxCreatedAt = await modelName
+    let columnMinMax = await modelName
       .findOne({
         attributes: [
-          [Sequelize.fn('max', Sequelize.col('createdAt')), 'max'],
-          [Sequelize.fn('min', Sequelize.col('createdAt')), 'min'],
+          [Sequelize.fn('max', Sequelize.col(colName)), 'max'],
+          [Sequelize.fn('min', Sequelize.col(colName)), 'min'],
         ],
       })
       .catch((error) => {
@@ -53,9 +53,9 @@ function getMinMaxCreatedAt(Sequelize, modelName) {
       });
 
     //
-    resolve(minMaxCreatedAt);
+    resolve(columnMinMax);
   });
 }
 
 module.exports.getUserdata = getUserdata;
-module.exports.getMinMaxCreatedAt = getMinMaxCreatedAt;
+module.exports.getColumnMinMax = getColumnMinMax;

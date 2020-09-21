@@ -3820,7 +3820,6 @@ exports.listCourseOriginal = async (req, res) => {
   let searchKey = req.query.searchKey ? req.query.searchKey : '%%';
   let type = req.query.type ? req.query.type : '%%';
   let method = req.query.method ? req.query.method : '%%';
-  let studentId = req.query.studentId ? req.query.studentId : '%%';
   let universityId = req.query.universityId ? req.query.universityId : '%%';
   let facultyId = req.query.facultyId ? req.query.facultyId : '%%';
   let departmentId = req.query.departmentId ? req.query.departmentId : '%%';
@@ -3831,19 +3830,24 @@ exports.listCourseOriginal = async (req, res) => {
   let lessonId = req.query.lessonId ? req.query.lessonId : '%%';
   let groupId = req.query.groupId ? req.query.groupId : '%%';
 
-  //Filter with date range or without date range
+  //Filter with date range or without date range for courses start Date
   let startFrom;
   let startTo;
-  let getMinMaxCreatedAt;
+  let startDateMinMaxDate;
   if (req.query.startFrom && req.query.startTo) {
     startFrom = req.query.startFrom;
     startTo = req.query.startTo;
   } else {
     //Set startFrom and startTo to min and max date of the table
-    getMinMaxCreatedAt = await Helper.getMinMaxCreatedAt(Sequelize, db_Course);
-    getMinMaxCreatedAt = getMinMaxCreatedAt.get({ plain: true });
-    startFrom = getMinMaxCreatedAt.min;
-    startTo = getMinMaxCreatedAt.max;
+    startDateMinMaxDate = await Helper.getColumnMinMax(
+      Sequelize,
+      db_Course,
+      'startDate'
+    );
+    startDateMinMaxDate = startDateMinMaxDate.get({ plain: true });
+    startFrom = startDateMinMaxDate.min;
+    startTo = startDateMinMaxDate.max;
+    console.log(startDateMinMaxDate);
   }
 
   //Check role from token if instructor return courses for that instructor only not all courses
@@ -3852,6 +3856,17 @@ exports.listCourseOriginal = async (req, res) => {
     instructorId = req.instructorId;
   } else {
     instructorId = req.query.instructorId ? req.query.instructorId : '%%';
+  }
+
+  //Order Data Based on created At of course
+  let orderBy = '';
+  if (req.query.orderBy) {
+    orderBy =
+      req.query.orderBy.trim() === 'DESC'
+        ? 'courses.createdAt DESC'
+        : 'courses.createdAt ASC';
+  } else {
+    orderBy = 'courses.createdAt ASC';
   }
 
   //
@@ -3877,18 +3892,16 @@ exports.listCourseOriginal = async (req, res) => {
         type,
         method,
         instructorId,
-        studentId,
         universityId,
         facultyId,
         departmentId,
         academicYearId,
         subjectId,
-        lessonId,
-        groupId,
         startFrom,
         startTo,
         skip,
-        _limit
+        _limit,
+        orderBy
       );
     } else {
       //NO Pagination
@@ -3901,30 +3914,28 @@ exports.listCourseOriginal = async (req, res) => {
         type,
         method,
         instructorId,
-        studentId,
         universityId,
         facultyId,
         departmentId,
         academicYearId,
         subjectId,
-        lessonId,
-        groupId,
         startFrom,
-        startTo
+        startTo,
+        orderBy
       );
     }
 
     //Add Rating info to each course in the data array
-    // data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
-    //   console.log(error);
-    //   return Response(
-    //     res,
-    //     ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-    //     ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-    //       .ORM_OPERATION_FAILED,
-    //     ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-    //   );
-    // });
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -3954,16 +3965,14 @@ function listCourseOriginal_NOPagination(
   type,
   method,
   instructorId,
-  studentId,
   universityId,
   facultyId,
   departmentId,
   academicYearId,
   subjectId,
-  lessonId,
-  groupId,
   startFrom,
-  startTo
+  startTo,
+  orderBy
 ) {
   return new Promise(async (resolve, reject) => {
     let data = await db_Course
@@ -3995,7 +4004,7 @@ function listCourseOriginal_NOPagination(
               },
             },
             {
-              createdAt: {
+              startDate: {
                 [Op.between]: [startFrom, startTo],
               },
             },
@@ -4038,7 +4047,6 @@ function listCourseOriginal_NOPagination(
           },
           {
             model: db_Group,
-            where: { id: { [Op.like]: groupId } },
             include: [
               {
                 model: db_GroupSchedule,
@@ -4046,44 +4054,13 @@ function listCourseOriginal_NOPagination(
               {
                 model: db_Lesson,
               },
-              {
-                model: db_CourseSubscribe,
-                required: false,
-                where: { paymentResult: 'CAPTURED' },
-                include: [
-                  {
-                    model: db_Student,
-                  },
-                  {
-                    model: db_RatingAndReview,
-                  },
-                ],
-              },
             ],
           },
           {
             model: db_Lesson,
-            where: { id: { [Op.like]: lessonId } },
-          },
-          {
-            model: db_CourseSubscribe,
-            required: false,
-            where: {
-              [Op.and]: {
-                studentId: { [Op.like]: studentId },
-                paymentResult: 'CAPTURED',
-              },
-            },
-            include: [
-              {
-                model: db_Student,
-              },
-              {
-                model: db_RatingAndReview,
-              },
-            ],
           },
         ],
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
@@ -4110,18 +4087,16 @@ function listCourseOriginal_DoPagination(
   type,
   method,
   instructorId,
-  studentId,
   universityId,
   facultyId,
   departmentId,
   academicYearId,
   subjectId,
-  lessonId,
-  groupId,
   startFrom,
   startTo,
   skip,
-  _limit
+  _limit,
+  orderBy
 ) {
   return new Promise(async (resolve, reject) => {
     let data = await db_Course
@@ -4162,7 +4137,9 @@ function listCourseOriginal_DoPagination(
         include: [
           {
             model: db_Instructor,
-            where: { id: { [Op.like]: instructorId } },
+            where: {
+              id: { [Op.like]: instructorId },
+            },
           },
           {
             model: db_Subject,
@@ -4194,7 +4171,6 @@ function listCourseOriginal_DoPagination(
           },
           {
             model: db_Group,
-            where: { id: { [Op.like]: groupId } },
             include: [
               {
                 model: db_GroupSchedule,
@@ -4202,40 +4178,15 @@ function listCourseOriginal_DoPagination(
               {
                 model: db_Lesson,
               },
-              {
-                model: db_CourseSubscribe,
-                where: { paymentResult: 'CAPTURED' },
-                include: [
-                  {
-                    model: db_Student,
-                  },
-                  {
-                    model: db_RatingAndReview,
-                  },
-                ],
-              },
             ],
           },
           {
             model: db_Lesson,
-            where: { id: { [Op.like]: lessonId } },
-          },
-          {
-            model: db_CourseSubscribe,
-            where: { paymentResult: 'CAPTURED' },
-            include: [
-              {
-                model: db_Student,
-                where: { id: { [Op.like]: studentId } },
-              },
-              {
-                model: db_RatingAndReview,
-              },
-            ],
           },
         ],
         skip,
         _limit,
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);

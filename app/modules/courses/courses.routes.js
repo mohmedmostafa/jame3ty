@@ -82,7 +82,7 @@ module.exports = function (app) {
     '/api/listCourseOriginal',
     FileUploader.upload.none(),
     [
-      // CourseValidation.listCourseValidation,
+      // CourseValidation.listCourseOriginalValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrStudentorOrAdmin,
     ],

@@ -352,7 +352,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listUniversity?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"raw": "{{url}}api/listUniversity?doPagination=1&numPerPage=2&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -362,11 +362,11 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
-									"value": "10"
+									"value": "2"
 								},
 								{
 									"key": "page",
@@ -1147,12 +1147,13 @@
 								},
 								{
 									"key": "searchKey",
-									"value": ""
+									"value": "",
+									"description": "search name_ar and name_en of the course"
 								},
 								{
 									"key": "method",
 									"value": "both",
-									"description": "1 or 0 or both"
+									"description": "0 for Recorded Lessons  or 1 for Live Streaming or both"
 								},
 								{
 									"key": "startFrom",
@@ -1336,7 +1337,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDate?doPagination=1&numPerPage=2&page=1&searchKey=&method=both",
+							"raw": "{{url}}api/listCourseNoDate?doPagination=0&numPerPage=10&page=1&searchKey=&method=both",
 							"host": [
 								"{{url}}api"
 							],
@@ -1346,11 +1347,11 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
-									"value": "2"
+									"value": "10"
 								},
 								{
 									"key": "page",
@@ -1392,7 +1393,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=0&numPerPage=1&page=1&searchKey=&method=both",
+							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=1&numPerPage=10&page=1&searchKey=&method=1&orderBy=DESC",
 							"host": [
 								"{{url}}api"
 							],
@@ -1403,11 +1404,11 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
-									"value": "1"
+									"value": "10"
 								},
 								{
 									"key": "page",
@@ -1419,8 +1420,13 @@
 								},
 								{
 									"key": "method",
-									"value": "both",
+									"value": "1",
 									"description": "1 or 0 or both"
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"description": "DESC or ASC"
 								}
 							]
 						}
@@ -1478,6 +1484,116 @@
 									"key": "method",
 									"value": "1",
 									"description": "1 or 0 or both"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listCourseOriginal",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listCourseOriginal?doPagination=0&numPerPage=10&page=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listCourseOriginal"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": "",
+									"description": "search name_ar and name_en of the course",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "",
+									"description": "0 for Subject | 1 for Assignment",
+									"disabled": true
+								},
+								{
+									"key": "method",
+									"value": "both",
+									"description": "0 for Recorded Lessons  or 1 for Live Streaming",
+									"disabled": true
+								},
+								{
+									"key": "startFrom",
+									"value": "1992-11-05 00:00:00.000",
+									"disabled": true
+								},
+								{
+									"key": "startTo",
+									"value": "2022-11-05 23:59:59.000",
+									"disabled": true
+								},
+								{
+									"key": "universityId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "facultyId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "departmentId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "academicYearId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "subjectId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "instructorId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"disabled": true
 								}
 							]
 						}
@@ -1603,7 +1719,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listGroupByCourseId/1?doPagination=1&numPerPage=1&page=2&searchKey=",
+							"raw": "{{url}}api/listGroupByCourseId/1?doPagination=0&numPerPage=1&page=2&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -1614,7 +1730,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -1655,13 +1771,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listGroupById/27",
+							"raw": "{{url}}api/listGroupById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listGroupById",
-								"27"
+								"1"
 							]
 						}
 					},
@@ -2420,13 +2536,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listDepartmentById/17",
+							"raw": "{{url}}api/listDepartmentById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listDepartmentById",
-								"17"
+								"1"
 							]
 						}
 					},
@@ -2444,7 +2560,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listDepartment?doPagination=1&numPerPage=10&page=1&searchKey=",
+							"raw": "{{url}}api/listDepartment?doPagination=0&numPerPage=10&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -2454,7 +2570,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -2619,13 +2735,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listAcademicYearById/6",
+							"raw": "{{url}}api/listAcademicYearById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listAcademicYearById",
-								"6"
+								"1"
 							]
 						}
 					},
@@ -3466,13 +3582,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listStudentByUserId/8",
+							"raw": "{{url}}api/listStudentByUserId/3",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listStudentByUserId",
-								"8"
+								"3"
 							]
 						}
 					},
@@ -3932,12 +4048,12 @@
 							"formdata": [
 								{
 									"key": "studentId",
-									"value": "1",
+									"value": "3",
 									"type": "text"
 								},
 								{
 									"key": "courseId",
-									"value": "3",
+									"value": "1",
 									"type": "text"
 								}
 							],
@@ -3985,17 +4101,17 @@
 	],
 	"variable": [
 		{
-			"id": "a9d43ef3-be9a-42df-8767-0b65b170f626",
+			"id": "fb937e8e-0a39-428f-a930-2f565948749b",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "d8f8d468-55f2-4608-8851-d2fe7cc51434",
+			"id": "b8ec1175-6d69-4d8e-97e7-2dfe255d25d7",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwNTE3MTU2LCJleHAiOjE2MDA2MDM1NTZ9.9Tgq19pjy714DgOIwqQ3ObW3twcpd0dsnQmV4lTfvsc"
 		},
 		{
-			"id": "a5086907-ffc2-4b2e-b6bc-4e9a67c432a8",
+			"id": "9709fd94-1461-406c-bca2-0485d5ec23d8",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}
