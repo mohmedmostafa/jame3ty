@@ -3827,8 +3827,6 @@ exports.listCourseOriginal = async (req, res) => {
     ? req.query.academicYearId
     : '%%';
   let subjectId = req.query.subjectId ? req.query.subjectId : '%%';
-  let lessonId = req.query.lessonId ? req.query.lessonId : '%%';
-  let groupId = req.query.groupId ? req.query.groupId : '%%';
 
   //Filter with date range or without date range for courses start Date
   let startFrom;
@@ -3847,7 +3845,6 @@ exports.listCourseOriginal = async (req, res) => {
     startDateMinMaxDate = startDateMinMaxDate.get({ plain: true });
     startFrom = startDateMinMaxDate.min;
     startTo = startDateMinMaxDate.max;
-    console.log(startDateMinMaxDate);
   }
 
   //Check role from token if instructor return courses for that instructor only not all courses
@@ -3902,7 +3899,16 @@ exports.listCourseOriginal = async (req, res) => {
         skip,
         _limit,
         orderBy
-      );
+      ).catch((error) => {
+        console.log(error);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
+      });
     } else {
       //NO Pagination
       data = await listCourseOriginal_NOPagination(
@@ -3922,7 +3928,16 @@ exports.listCourseOriginal = async (req, res) => {
         startFrom,
         startTo,
         orderBy
-      );
+      ).catch((error) => {
+        console.log(error);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+            .ORM_OPERATION_FAILED,
+          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+        );
+      });
     }
 
     //Add Rating info to each course in the data array
@@ -4184,8 +4199,8 @@ function listCourseOriginal_DoPagination(
             model: db_Lesson,
           },
         ],
-        skip,
-        _limit,
+        offset: skip,
+        limit: _limit,
         order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
