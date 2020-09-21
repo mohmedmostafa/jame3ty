@@ -97,8 +97,8 @@ async function initial() {
   //--------------------------------------------------
   /////////////////Role//////////////////////////////
   //--------------------------------------------------
-  const ROLES_EN = ['student', 'admin', 'instructor'];
-  const ROLES_AR = ['طالب', 'مدير', 'محاضر'];
+  const ROLES_EN = ['admin', 'student', 'instructor'];
+  const ROLES_AR = ['مدير', 'طالب', 'محاضر'];
 
   await db_Role.create({
     id: 1,

@@ -23,6 +23,7 @@ const db_GroupSchedule = db.GroupSchedule;
 const db_AcademicYear = db.AcademicYear;
 const db_Department = db.Department;
 const db_Subject = db.Subject;
+const db_RatingAndReview = db.RatingAndReview;
 const db_connection = db.connection;
 const db_CourseSubscribe = db.CourseSubscribe;
 const db_Student = db.Student;
@@ -304,6 +305,84 @@ exports.deleteCourse = async (req, res) => {
   }
 };
 
+//Get Rating AVG and Rating Count for Course
+function getCourseAVGRateAndRateCount(courseId) {
+  return new Promise(async (resolve, reject) => {
+    await db_RatingAndReview
+      .findOne({
+        attributes: [
+          [Sequelize.fn('avg', Sequelize.col('rate')), 'ratingAVG'],
+          [Sequelize.fn('count', '*'), 'ratingCount'],
+        ],
+        include: [
+          {
+            model: db_CourseSubscribe,
+            attributes: [],
+            where: { courseId: courseId },
+          },
+        ],
+        group: [Sequelize.col('courseId')],
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject(error);
+      })
+      .then((courseAVGRatingAndCount) => {
+        return resolve(courseAVGRatingAndCount);
+      });
+  });
+}
+
+//Add Rating info to each course object
+function addCourseRatingIngoToEachCourseInData(data) {
+  return new Promise(async (resolve, reject) => {
+    //convert data sequelize object to json object
+    data = JSON.parse(JSON.stringify(data));
+
+    //add rating info to each course object in data
+    var courseMapped = await Promise.all(
+      data.data.map(async function (courseObj) {
+        //Calc AVG Rating and Get Rating Count
+        let courseAVGRatingAndCount = await getCourseAVGRateAndRateCount(
+          courseObj['id']
+        ).catch((error) => {
+          console.log(error);
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+              .ORM_OPERATION_FAILED,
+            ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+          );
+        });
+
+        //Get Plain Object from sequelize object
+        if (courseAVGRatingAndCount) {
+          courseAVGRatingAndCount = courseAVGRatingAndCount.get({
+            plain: true,
+          });
+        } else {
+          courseAVGRatingAndCount = {};
+        }
+
+        //add to course object
+        let course = Object.assign({}, courseObj, {
+          AVGRatingAndCount: courseAVGRatingAndCount,
+        });
+
+        return course;
+      })
+    ).catch((error) => {
+      console.log(error);
+      reject(error);
+    });
+
+    //Change courses in data array to the mapped courses
+    data.data = courseMapped;
+
+    resolve(data);
+  });
+}
 //--------------------------------------------------------------
 exports.listCourseById = async (req, res) => {
   try {
@@ -353,6 +432,9 @@ exports.listCourseById = async (req, res) => {
                 {
                   model: db_Student,
                 },
+                {
+                  model: db_RatingAndReview,
+                },
               ],
             },
           ],
@@ -365,6 +447,9 @@ exports.listCourseById = async (req, res) => {
           include: [
             {
               model: db_Student,
+            },
+            {
+              model: db_RatingAndReview,
             },
           ],
         },
@@ -380,6 +465,26 @@ exports.listCourseById = async (req, res) => {
         ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
       );
     }
+
+    //Calc AVG Rating and Get Rating Count
+    let courseAVGRatingAndCount = await getCourseAVGRateAndRateCount(
+      req.params.id
+    ).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+
+    //add to main object
+    course = course.get({ plain: true });
+    course.AVGRatingAndCount = courseAVGRatingAndCount
+      ? courseAVGRatingAndCount
+      : {};
 
     //Success
     return Response(
@@ -551,6 +656,18 @@ exports.updateCourse = async (req, res) => {
 
 //---------------------------------------------------------------
 exports.listCourse = async (req, res) => {
+  //Check role from token if instructor return courses for that instructor only not all courses
+  let instructorEmail = '';
+  if (
+    req.userId &&
+    req.userEmail &&
+    req.userRoles &&
+    req.userRoles[0] === 'instructor'
+  ) {
+    instructorEmail = req.userEmail;
+  }
+
+  //
   const doPagination = parseInt(req.query.doPagination);
 
   //Query
@@ -561,38 +678,36 @@ exports.listCourse = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourse_DoPagination_Method_1_or_0(
           req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          instructorEmail
         );
       } else {
         //Do Pagination & Both
-        data = await listCourse_DoPagination_Method_Both(
-          req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
-        );
+        data = await listCourse_DoPagination_Method_Both(req, instructorEmail);
       }
     } else {
       if (req.query.method != 'both') {
         //NO Pagination & Method 1 or 0
         data = await listCourse_NOPagination_Method_1_or_0(
           req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          instructorEmail
         );
       } else {
         //NO Pagination & Method Both
-        data = await listCourse_NOPagination_Method_Both(
-          req,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
-        );
+        data = await listCourse_NOPagination_Method_Both(req, instructorEmail);
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -613,12 +728,7 @@ exports.listCourse = async (req, res) => {
   }
 };
 
-function listCourse_DoPagination_Method_Both(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_DoPagination_Method_Both(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -658,6 +768,17 @@ function listCourse_DoPagination_Method_Both(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -715,6 +836,12 @@ function listCourse_DoPagination_Method_Both(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -754,6 +881,9 @@ function listCourse_DoPagination_Method_Both(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -766,6 +896,9 @@ function listCourse_DoPagination_Method_Both(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -791,12 +924,7 @@ function listCourse_DoPagination_Method_Both(
   });
 }
 
-function listCourse_DoPagination_Method_1_or_0(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -834,6 +962,17 @@ function listCourse_DoPagination_Method_1_or_0(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -889,6 +1028,12 @@ function listCourse_DoPagination_Method_1_or_0(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -928,6 +1073,9 @@ function listCourse_DoPagination_Method_1_or_0(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -940,6 +1088,9 @@ function listCourse_DoPagination_Method_1_or_0(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -965,12 +1116,7 @@ function listCourse_DoPagination_Method_1_or_0(
   });
 }
 
-function listCourse_NOPagination_Method_Both(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_NOPagination_Method_Both(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -1010,6 +1156,17 @@ function listCourse_NOPagination_Method_Both(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -1067,6 +1224,12 @@ function listCourse_NOPagination_Method_Both(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -1106,6 +1269,9 @@ function listCourse_NOPagination_Method_Both(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1118,6 +1284,9 @@ function listCourse_NOPagination_Method_Both(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1141,12 +1310,7 @@ function listCourse_NOPagination_Method_Both(
   });
 }
 
-function listCourse_NOPagination_Method_1_or_0(
-  req,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -1184,6 +1348,17 @@ function listCourse_NOPagination_Method_1_or_0(
             },
           ],
         },
+        include: [
+          {
+            model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
+          },
+        ],
       })
       .catch((error) => {
         console.log(error);
@@ -1239,6 +1414,12 @@ function listCourse_NOPagination_Method_1_or_0(
         include: [
           {
             model: db_Instructor,
+            required: true,
+            where: {
+              email: {
+                [Op.substring]: instructorEmail,
+              },
+            },
           },
           {
             model: db_Subject,
@@ -1278,6 +1459,9 @@ function listCourse_NOPagination_Method_1_or_0(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1290,6 +1474,9 @@ function listCourse_NOPagination_Method_1_or_0(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1363,6 +1550,18 @@ exports.listCourseNoDate = async (req, res) => {
         );
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -1509,6 +1708,9 @@ function listCourseNoDate_DoPagination_Method_Both(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1521,6 +1723,9 @@ function listCourseNoDate_DoPagination_Method_Both(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1668,6 +1873,9 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1680,6 +1888,9 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1831,6 +2042,9 @@ function listCourseNoDate_NOPagination_Method_Both(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -1843,6 +2057,9 @@ function listCourseNoDate_NOPagination_Method_Both(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -1988,6 +2205,9 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2000,6 +2220,9 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2079,6 +2302,18 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         );
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -2246,6 +2481,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2258,6 +2496,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2433,6 +2674,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2445,6 +2689,9 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2617,6 +2864,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2629,6 +2879,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2802,6 +3055,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -2814,6 +3070,9 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -2893,6 +3152,18 @@ exports.listCourseNoDateByInstructor = async (req, res) => {
         );
       }
     }
+
+    //Add Rating info to each course in the data array
+    data = await addCourseRatingIngoToEachCourseInData(data).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
 
     //Success
     return Response(
@@ -3028,6 +3299,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3040,6 +3314,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3183,6 +3460,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3195,6 +3475,9 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3335,6 +3618,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3347,6 +3633,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },
@@ -3488,6 +3777,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
                   {
                     model: db_Student,
                   },
+                  {
+                    model: db_RatingAndReview,
+                  },
                 ],
               },
             ],
@@ -3500,6 +3792,9 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
             include: [
               {
                 model: db_Student,
+              },
+              {
+                model: db_RatingAndReview,
               },
             ],
           },

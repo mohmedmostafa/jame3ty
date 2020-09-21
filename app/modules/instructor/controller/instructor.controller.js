@@ -145,6 +145,15 @@ exports.addInstructor = async (req, res) => {
       req.body.file = field_1.join();
     }
 
+    //Check who addinstructor ? admin or new instructor signup by himself
+    //if userId added to req that means some one signed in try to add instructor
+    let isVerifiedByAdmin = 0;
+    if (req.body.isVerified) {
+      if (parseInt(req.body.isVerified) === 1) {
+        isVerifiedByAdmin = 1;
+      }
+    }
+
     //Save TO DB
     const instructor = await db_connection.transaction(async (t) => {
       //const randomToken = await email.generateRandomToken({ byteLength: 10 });
@@ -169,7 +178,7 @@ exports.addInstructor = async (req, res) => {
           email: req.body.email,
           username: req.body.username,
           password: bcrypt.hashSync(req.body.password, 8),
-          isVerified: 0,
+          isVerified: isVerifiedByAdmin,
           lastVerificationCodeSend: randomToken,
           lasVerificationCodeCreatedAt: moment(),
           lasVerificationCodeExpireAt: moment().add(1, 'd'),
@@ -191,20 +200,22 @@ exports.addInstructor = async (req, res) => {
       return { inst, randomToken };
     });
 
-    //Send Verification Email with Code
-    await email
-      .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
-      .catch((err) => {
-        console.log(err);
-        console.error(err.message);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.code,
-          ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.type
-            .VERIFICATION_EMAIL_SEND_FAILED,
-          ResponseConstants.ERROR_MESSAGES.VERIFICATION_EMAIL_SEND_FAILED
-        );
-      });
+    if (!isVerifiedByAdmin) {
+      //Send Verification Email with Code
+      await email
+        .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
+        .catch((err) => {
+          console.log(err);
+          console.error(err.message);
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.code,
+            ResponseConstants.HTTP_STATUS_CODES.BAD_GATEWAY.type
+              .VERIFICATION_EMAIL_SEND_FAILED,
+            ResponseConstants.ERROR_MESSAGES.VERIFICATION_EMAIL_SEND_FAILED
+          );
+        });
+    }
 
     //Success
     return Response(

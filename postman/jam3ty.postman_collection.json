@@ -24,12 +24,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "admin2",
+									"value": "admin23",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "admin2@gmail.com",
+									"value": "admin23@gmail.com",
 									"type": "text"
 								},
 								{
@@ -39,7 +39,7 @@
 								},
 								{
 									"key": "roles",
-									"value": "admin,student,instructor",
+									"value": "admin",
 									"description": "admin,student,instructor",
 									"type": "text"
 								}
@@ -88,7 +88,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "adminAll",
+									"value": "adminAll@gmail.com",
 									"type": "text"
 								},
 								{
@@ -654,7 +654,8 @@
 							{
 								"key": "Authorization",
 								"value": "Bearer {{accessToken}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -662,32 +663,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01100007622",
+									"value": "03367555422",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "Osama",
+									"value": "gggggg",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Osama@gmail.com",
+									"value": "gggggg@gmail.com",
 									"type": "text"
 								},
 								{
@@ -704,6 +705,13 @@
 									"key": "password",
 									"value": "123456",
 									"type": "text"
+								},
+								{
+									"key": "isVerified",
+									"value": "1",
+									"description": "1 only",
+									"type": "text",
+									"disabled": true
 								}
 							],
 							"options": {
@@ -1117,7 +1125,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourse?doPagination=1&numPerPage=1&page=4&searchKey=&method=both&startFrom=1992-11-05 00:00:00.000&startTo=2022-11-05 23:59:59.000",
+							"raw": "{{url}}api/listCourse?doPagination=0&numPerPage=10&page=1&searchKey=&method=both&startFrom=1992-11-05 00:00:00.000&startTo=2022-11-05 23:59:59.000",
 							"host": [
 								"{{url}}api"
 							],
@@ -1127,15 +1135,15 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
-									"value": "1"
+									"value": "10"
 								},
 								{
 									"key": "page",
-									"value": "4"
+									"value": "1"
 								},
 								{
 									"key": "searchKey",
@@ -1181,13 +1189,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseById/3",
+							"raw": "{{url}}api/listCourseById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseById",
-								"3"
+								"1"
 							]
 						}
 					},
@@ -1441,7 +1449,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=0&numPerPage=10&page=1&searchKey=&method=both",
+							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=1&numPerPage=10&page=1&searchKey=&method=1",
 							"host": [
 								"{{url}}api"
 							],
@@ -1452,7 +1460,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
@@ -1468,7 +1476,7 @@
 								},
 								{
 									"key": "method",
-									"value": "both",
+									"value": "1",
 									"description": "1 or 0 or both"
 								}
 							]
@@ -1524,7 +1532,7 @@
 								},
 								{
 									"key": "courseId",
-									"value": "15",
+									"value": "4",
 									"type": "text"
 								},
 								{
@@ -1647,13 +1655,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listGroupById/10",
+							"raw": "{{url}}api/listGroupById/27",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listGroupById",
-								"10"
+								"27"
 							]
 						}
 					},
@@ -3217,22 +3225,22 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Mohaned",
+									"value": "HEEMA",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01020000317",
+									"value": "01050000317",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "Mohaned",
+									"value": "HEEMA",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Mohaned@gmail.com",
+									"value": "HEEMA@gmail.com",
 									"type": "text"
 								},
 								{
@@ -3977,17 +3985,17 @@
 	],
 	"variable": [
 		{
-			"id": "c316bca5-4b42-4edb-b101-903f92a7dff9",
+			"id": "b681cb7e-a04f-4247-a7aa-e201980712d5",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "554d6c36-9176-4e8e-93a9-380cc39dd85f",
+			"id": "0f2a01eb-49e2-4ee3-a40a-93644576b8ec",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwMjA1ODY0LCJleHAiOjE2MDAyOTIyNjR9.honltb-PU1FJj0G8rx25QPE1EedNxnsb7ph5sE9nXE0"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwMzk5ODY5LCJleHAiOjE2MDA0ODYyNjl9.iwtROw8Hhd00yZrdaehiISdrKniauEiHWH5_BdMDCHY"
 		},
 		{
-			"id": "a7a02271-9308-4f7a-9be9-e853b0ca5dfe",
+			"id": "6f8ccca7-117d-4216-8e8a-323fd2d498f6",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}
