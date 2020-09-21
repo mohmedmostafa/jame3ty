@@ -607,6 +607,14 @@ exports.listInstructorById = async (req, res) => {
       include: [
         {
           model: db_User,
+          attributes: [
+            'id',
+            'username',
+            'email',
+            'isVerified',
+            'createdAt',
+            'updatedAt',
+          ],
         },
         { model: db_Course },
         { model: db_Group },

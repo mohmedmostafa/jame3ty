@@ -107,7 +107,7 @@ exports.generatePaymentRequest = async (req, res) => {
     });
     console.log(studentCourseSubscribe);
   } else {
-    //Update course details if all payment from student to course is
+    //Update course details if all payment from student to course is CAPTURED
     let studentCourseSubscribePayment = await db_CourseSubscribe.findOne({
       where: {
         studentId: req.body.studentId,
@@ -360,6 +360,18 @@ exports.success_urlPaymentRequest = async (req, res) => {
       OrderID: req.query.OrderID,
     });
 
+    //Update payment result in Course Subscribe table
+    await db_CourseSubscribe.update(
+      {
+        paymentResult: req.query.Result,
+      },
+      {
+        where: {
+          id: req.query.courseSubscribeId,
+        },
+      }
+    );
+
     //When req.query.Result === 'CAPTURED'
     return Response(
       res,
@@ -379,6 +391,7 @@ exports.success_urlPaymentRequest = async (req, res) => {
     );
   }
 };
+
 exports.error_urlPaymentRequest = async (req, res) => {
   console.log(req.query);
   //
@@ -394,6 +407,18 @@ exports.error_urlPaymentRequest = async (req, res) => {
       Auth: req.query.Auth,
       OrderID: req.query.OrderID,
     });
+
+    //Update payment result in Course Subscribe table
+    await db_CourseSubscribe.update(
+      {
+        paymentResult: req.query.Result,
+      },
+      {
+        where: {
+          id: req.query.courseSubscribeId,
+        },
+      }
+    );
 
     //When req.query.Result === 'NOT CAPTURED'
     return Response(

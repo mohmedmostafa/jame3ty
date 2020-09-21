@@ -142,6 +142,8 @@ exports.updateGroup = async (req, res) => {
           include: [
             {
               model: db_CourseSubscribe,
+              required: false,
+              where: { paymentResult: 'CAPTURED' },
             },
             {
               model: db_GroupSchedule,
@@ -263,15 +265,6 @@ exports.deleteGroup = async (req, res) => {
       where: {
         id: req.params.id,
       },
-      include: [
-        {
-          model: db_CourseSubscribe,
-          include: [{ model: db_Student }],
-        },
-        {
-          model: db_GroupSchedule,
-        },
-      ],
     });
 
     if (!group) {
@@ -285,17 +278,33 @@ exports.deleteGroup = async (req, res) => {
     }
     //course = course.get({ plain: true });
 
-    console.log(group);
+    group = await db_Group.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
+          include: [{ model: db_Student }],
+        },
+        {
+          model: db_GroupSchedule,
+        },
+      ],
+    });
 
     //If Students Subscribe the course then can not delete it
-    if (group.courseSubscribes.length > 0) {
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
-        ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
-          .RESOURCE_HAS_DEPENDENTS,
-        ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
-      );
+    if (group) {
+      if (group.courseSubscribes.length > 0) {
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.CONFLICT.code,
+          ResponseConstants.HTTP_STATUS_CODES.CONFLICT.type
+            .RESOURCE_HAS_DEPENDENTS,
+          ResponseConstants.ERROR_MESSAGES.RESOURCE_HAS_DEPENDENTS
+        );
+      }
     }
 
     // //Delete
@@ -452,17 +461,21 @@ function listGroupByCourseId_DoPagination(
           },
           {
             model: db_Course,
+            include: [
+              {
+                model: db_CourseSubscribe,
+                required: false,
+                where: { paymentResult: 'CAPTURED' },
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_GroupSchedule,
-          },
-          {
-            model: db_CourseSubscribe,
-            include: [
-              {
-                model: db_Student,
-              },
-            ],
           },
         ],
         offset: skip,
@@ -500,17 +513,21 @@ function listGroupByCourseId_NOPagination(
           },
           {
             model: db_Course,
+            include: [
+              {
+                model: db_CourseSubscribe,
+                required: false,
+                where: { paymentResult: 'CAPTURED' },
+                include: [
+                  {
+                    model: db_Student,
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_GroupSchedule,
-          },
-          {
-            model: db_CourseSubscribe,
-            include: [
-              {
-                model: db_Student,
-              },
-            ],
           },
         ],
       })
@@ -537,20 +554,24 @@ exports.listGroupById = async (req, res) => {
         },
         {
           model: db_Course,
+          include: [
+            {
+              model: db_CourseSubscribe,
+              required: false,
+              where: { paymentResult: 'CAPTURED' },
+              include: [
+                {
+                  model: db_Student,
+                },
+              ],
+            },
+          ],
         },
         {
           model: db_Lesson,
         },
         {
           model: db_GroupSchedule,
-        },
-        {
-          model: db_CourseSubscribe,
-          include: [
-            {
-              model: db_Student,
-            },
-          ],
         },
       ],
     });

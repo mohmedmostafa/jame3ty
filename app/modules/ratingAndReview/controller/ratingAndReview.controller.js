@@ -1,9 +1,11 @@
 const db = require('../..');
+const { Sequelize, connection } = require('../..');
 const {
   Response,
   ResponseConstants,
 } = require('../../../common/response/response.handler');
 
+const QueryTypes = db.Sequelize.QueryTypes;
 const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
@@ -113,6 +115,7 @@ exports.deleteRatingAndReview = async (req, res) => {
       include: [
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
         },
       ],
     });
@@ -160,6 +163,7 @@ exports.listRatingAndReviewById = async (req, res) => {
       include: [
         {
           model: db_CourseSubscribe,
+          where: { paymentResult: 'CAPTURED' },
           include: [
             {
               model: db_Student,
@@ -208,6 +212,7 @@ exports.listRatingAndReviewByCourseId = async (req, res) => {
           model: db_CourseSubscribe,
           where: {
             courseId: req.params.courseId,
+            paymentResult: 'CAPTURED',
           },
         },
       ],
@@ -344,6 +349,7 @@ function listRatingAndReview_DoPagination(
         include: [
           {
             model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -381,6 +387,8 @@ function listRatingAndReview_NOPagination(
         include: [
           {
             model: db_CourseSubscribe,
+            required: false,
+            where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Student,
@@ -398,3 +406,31 @@ function listRatingAndReview_NOPagination(
       });
   });
 }
+
+//Get Rating AVG and Rating Count for Course
+exports.getCourseAVGRateAndRateCount = function (courseId) {
+  return new Promise(async (resolve, reject) => {
+    await db_RatingAndReview
+      .findOne({
+        attributes: [
+          [Sequelize.fn('avg', Sequelize.col('rate')), 'ratingAVG'],
+          [Sequelize.fn('count', '*'), 'ratingCount'],
+        ],
+        include: [
+          {
+            model: db_CourseSubscribe,
+            attributes: [],
+            where: { courseId: courseId, paymentResult: 'CAPTURED' },
+          },
+        ],
+        group: [Sequelize.col('courseId')],
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject(error);
+      })
+      .then((courseAVGRatingAndCount) => {
+        return resolve(courseAVGRatingAndCount);
+      });
+  });
+};

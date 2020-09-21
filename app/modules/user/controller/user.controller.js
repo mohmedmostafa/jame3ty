@@ -164,6 +164,14 @@ exports.listUser = async (req, res) => {
     let data;
 
     data = await db_User.findAll({
+      attributes: [
+        'id',
+        'username',
+        'email',
+        'isVerified',
+        'createdAt',
+        'updatedAt',
+      ],
       include: {
         model: db_Role,
         where: {
@@ -198,6 +206,14 @@ exports.listUserById = async (req, res) => {
   try {
     let User = await db_User.findOne({
       where: { id: req.params.id },
+      attributes: [
+        'id',
+        'username',
+        'email',
+        'isVerified',
+        'createdAt',
+        'updatedAt',
+      ],
       include: {
         model: db_Role,
       },

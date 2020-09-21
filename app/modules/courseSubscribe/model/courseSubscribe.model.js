@@ -43,6 +43,11 @@ module.exports = (connection, Sequelize) => {
           return this.getDataValue('details').toString('utf8');
         },
       },
+      paymentResult: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        defaultValue: '0',
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
