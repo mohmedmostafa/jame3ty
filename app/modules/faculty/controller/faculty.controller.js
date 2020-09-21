@@ -8,6 +8,9 @@ const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
 const db_Department = db.Department;
+const db_AcademicYear = db.AcademicYear;
+const db_Subject = db.Subject;
+const db_Course = db.Course;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
@@ -188,10 +191,25 @@ exports.listFacultyById = async (req, res) => {
       where: { id: parseInt(req.params.id) },
       include: [
         {
-          model: db_Department,
+          model: db_University,
         },
         {
-          model: db_University,
+          model: db_Department,
+          include: [
+            {
+              model: db_AcademicYear,
+              include: [
+                {
+                  model: db_Subject,
+                  include: [
+                    {
+                      model: db_Course,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -340,6 +358,21 @@ function listFaculty_DoPagination(
         include: [
           {
             model: db_Department,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Subject,
+                    include: [
+                      {
+                        model: db_Course,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_University,
@@ -383,6 +416,21 @@ function listFaculty_NOPagination(req, db_Faculty, db_Department) {
         include: [
           {
             model: db_Department,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Subject,
+                    include: [
+                      {
+                        model: db_Course,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_University,

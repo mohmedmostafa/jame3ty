@@ -369,6 +369,11 @@ listCourseNoDateByDepartmentValidation = (req, res, next) => {
       .valid('1', '0', 'both')
       .required()
       .messages(Joi_messages),
+    orderBy: Joi.string()
+      .trim()
+      .valid('DESC', 'ASC')
+      .required()
+      .messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);

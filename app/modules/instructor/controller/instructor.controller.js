@@ -4,6 +4,8 @@ const {
   ValidateResponse,
   ResponseConstants,
 } = require('../../../common/response/response.handler');
+const RatingReviewsController = require('../../ratingAndReview/controller/ratingAndReview.controller');
+const CourseSubscribeController = require('../../courseSubscribe/controller/courseSubscribe.controller');
 
 const bcrypt = require('bcryptjs');
 const { number } = require('joi');
@@ -653,6 +655,46 @@ exports.listInstructorById = async (req, res) => {
         ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
       );
     }
+
+    //Calc AVG Rating and Get Rating Count for all courses for the instructor
+    let instructorAVGRatingAndCount = await RatingReviewsController.getInstructorAVGRateAndRateCount(
+      req.params.id
+    ).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+
+    //add to main object
+    Instructor = Instructor.get({ plain: true });
+    Instructor.instructorAVGRatingAndCount = instructorAVGRatingAndCount
+      ? instructorAVGRatingAndCount
+      : {};
+
+    //Calc Total sbscribed students for instructor courses
+    let instructorTotalStudentsSubscribed = await CourseSubscribeController.getInstructorSubscribedStudents(
+      req.params.id
+    ).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+
+    //add to main object
+    //Instructor = Instructor.get({ plain: true });
+    Instructor.totalStudentSubscribed = instructorTotalStudentsSubscribed
+      ? instructorTotalStudentsSubscribed
+      : {};
 
     //Success
     return Response(

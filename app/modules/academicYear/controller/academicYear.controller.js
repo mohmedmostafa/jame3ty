@@ -203,10 +203,15 @@ exports.listAcademicYearById = async (req, res) => {
       where: { id: parseInt(req.params.id) },
       include: [
         {
-          model: db_Subject,
+          model: db_Department,
         },
         {
-          model: db_Department,
+          model: db_Subject,
+          include: [
+            {
+              model: db_Course,
+            },
+          ],
         },
       ],
     });
@@ -349,11 +354,16 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
         },
         include: [
           {
-            model: db_Subject,
-          },
-          {
             model: db_Department,
             where: { id: { [Op.like]: departmentId } },
+          },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_Course,
+              },
+            ],
           },
         ],
       })
@@ -387,10 +397,15 @@ function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
         },
         include: [
           {
-            model: db_Subject,
+            model: db_Department,
           },
           {
-            model: db_Department,
+            model: db_Subject,
+            include: [
+              {
+                model: db_Course,
+              },
+            ],
           },
         ],
         offset: skip,

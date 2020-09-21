@@ -2307,6 +2307,15 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
   }
 
   //
+  let orderBy = '';
+  if (req.query.orderBy) {
+    orderBy =
+      req.query.orderBy.trim() === 'DESC' ? 'createdAt DESC' : 'createdAt ASC';
+  } else {
+    orderBy = 'createdAt ASC';
+  }
+
+  //
   const doPagination = parseInt(req.query.doPagination);
 
   //Query
@@ -2317,13 +2326,15 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
           req,
-          res
+          res,
+          orderBy
         );
       } else {
         //Do Pagination & Both
         data = await listCourseNoDateByDepartment_DoPagination_Method_Both(
           req,
-          res
+          res,
+          orderBy
         );
       }
     } else {
@@ -2331,13 +2342,15 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         //NO Pagination & Method 1 or 0
         data = await listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
           req,
-          res
+          res,
+          orderBy
         );
       } else {
         //NO Pagination & Method Both
         data = await listCourseNoDateByDepartment_NOPagination_Method_Both(
           req,
-          res
+          res,
+          orderBy
         );
       }
     }
@@ -2373,7 +2386,11 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
   }
 };
 
-function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
+function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
+  req,
+  res,
+  orderBy
+) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -2444,34 +2461,6 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
             },
           ],
         },
-        /*include: [
-          {
-            model: db_Group,
-            include: [{ model: db_GroupSchedule }],
-          },
-          {
-            model: db_Subject,
-            required: true,
-            attributes: [],
-            include: [
-              {
-                model: db_AcademicYear,
-                required: true,
-                attributes: [],
-                include: [
-                  {
-                    model: db_Department,
-                    required: true,
-                    attributes: [],
-                    where: {
-                      id: req.params.departmentId,
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],*/
         include: [
           {
             model: db_Instructor,
@@ -2548,6 +2537,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
         ],
         offset: skip,
         limit: _limit,
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
@@ -2567,7 +2557,11 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(req, res) {
   });
 }
 
-function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
+function listCourseNoDateByDepartment_DoPagination_Method_Both(
+  req,
+  res,
+  orderBy
+) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -2641,34 +2635,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
             },
           ],
         },
-        /*include: [
-          {
-            model: db_Group,
-            include: [{ model: db_GroupSchedule }],
-          },
-          {
-            model: db_Subject,
-            required: true,
-            attributes: [],
-            include: [
-              {
-                model: db_AcademicYear,
-                required: true,
-                attributes: [],
-                include: [
-                  {
-                    model: db_Department,
-                    required: true,
-                    attributes: [],
-                    where: {
-                      id: req.params.departmentId,
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],*/
+
         include: [
           {
             model: db_Instructor,
@@ -2745,6 +2712,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
         ],
         offset: skip,
         limit: _limit,
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
@@ -2764,7 +2732,11 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(req, res) {
   });
 }
 
-function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
+function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
+  req,
+  res,
+  orderBy
+) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -2835,34 +2807,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
             },
           ],
         },
-        /*include: [
-          {
-            model: db_Group,
-            include: [{ model: db_GroupSchedule }],
-          },
-          {
-            model: db_Subject,
-            required: true,
-            attributes: [],
-            include: [
-              {
-                model: db_AcademicYear,
-                required: true,
-                attributes: [],
-                include: [
-                  {
-                    model: db_Department,
-                    required: true,
-                    attributes: [],
-                    where: {
-                      id: req.params.departmentId,
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],*/
+
         include: [
           {
             model: db_Instructor,
@@ -2937,6 +2882,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
             ],
           },
         ],
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
@@ -2956,7 +2902,11 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, res) {
   });
 }
 
-function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
+function listCourseNoDateByDepartment_NOPagination_Method_Both(
+  req,
+  res,
+  orderBy
+) {
   return new Promise(async (resolve, reject) => {
     const doPagination = parseInt(req.query.doPagination);
     const numPerPage = parseInt(req.query.numPerPage);
@@ -3030,34 +2980,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
             },
           ],
         },
-        /*include: [
-          {
-            model: db_Group,
-            include: [{ model: db_GroupSchedule }],
-          },
-          {
-            model: db_Subject,
-            required: true,
-            attributes: [],
-            include: [
-              {
-                model: db_AcademicYear,
-                required: true,
-                attributes: [],
-                include: [
-                  {
-                    model: db_Department,
-                    required: true,
-                    attributes: [],
-                    where: {
-                      id: req.params.departmentId,
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],*/
+
         include: [
           {
             model: db_Instructor,
@@ -3132,6 +3055,7 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(req, res) {
             ],
           },
         ],
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);

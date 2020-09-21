@@ -11,6 +11,8 @@ const db_University = db.University;
 const db_Faculty = db.Faculty;
 const db_Department = db.Department;
 const db_CourseSubscribe = db.CourseSubscribe;
+const db_Course = db.Course;
+const db_Instructor = db.Instructor;
 const db_RatingAndReview = db.RatingAndReview;
 const db_Student = db.Student;
 const db_connection = db.connection;
@@ -431,6 +433,39 @@ exports.getCourseAVGRateAndRateCount = function (courseId) {
       })
       .then((courseAVGRatingAndCount) => {
         return resolve(courseAVGRatingAndCount);
+      });
+  });
+};
+
+//Get Instructor AVG Rating and Count Rating for all courses for this instructor
+exports.getInstructorAVGRateAndRateCount = function (instructorId) {
+  return new Promise(async (resolve, reject) => {
+    await db_RatingAndReview
+      .findOne({
+        attributes: [
+          [Sequelize.fn('avg', Sequelize.col('rate')), 'ratingAVG'],
+          [Sequelize.fn('count', '*'), 'ratingCount'],
+        ],
+        include: [
+          {
+            model: db_CourseSubscribe,
+            where: { paymentResult: 'CAPTURED' },
+            include: [
+              {
+                model: db_Course,
+                where: { instructorId: instructorId },
+              },
+            ],
+          },
+        ],
+        // group: [Sequelize.col('instructorId')],
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject(error);
+      })
+      .then((instructorAVGRatingAndCount) => {
+        return resolve(instructorAVGRatingAndCount);
       });
   });
 };

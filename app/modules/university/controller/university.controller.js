@@ -10,6 +10,7 @@ const db_Faculty = db.Faculty;
 const db_Department = db.Department;
 const db_AcademicYear = db.AcademicYear;
 const db_Subject = db.Subject;
+const db_Course = db.Course;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
@@ -174,6 +175,26 @@ exports.listUniversityById = async (req, res) => {
       include: [
         {
           model: db_Faculty,
+          include: [
+            {
+              model: db_Department,
+              include: [
+                {
+                  model: db_AcademicYear,
+                  include: [
+                    {
+                      model: db_Subject,
+                      include: [
+                        {
+                          model: db_Course,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -322,6 +343,11 @@ function listUniversity_DoPagination(req, db_University, skip, _limit) {
                     include: [
                       {
                         model: db_Subject,
+                        include: [
+                          {
+                            model: db_Course,
+                          },
+                        ],
                       },
                     ],
                   },
@@ -373,6 +399,11 @@ function listUniversity_NOPagination(req, db_University) {
                     include: [
                       {
                         model: db_Subject,
+                        include: [
+                          {
+                            model: db_Course,
+                          },
+                        ],
                       },
                     ],
                   },
