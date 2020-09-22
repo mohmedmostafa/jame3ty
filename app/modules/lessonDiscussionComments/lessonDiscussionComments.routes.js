@@ -18,7 +18,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.addlessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrStudent,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.addlessonDiscussionComments
   );
@@ -29,7 +29,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.updatelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrStudent,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.updatelessonDiscussionComments
   );
@@ -40,7 +40,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.updatelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrStudent,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.updatelessonDiscussion
   );
@@ -83,7 +83,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.deletelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrStudent,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.deletelessonDiscussionComments
   );
@@ -94,7 +94,7 @@ module.exports = function (app) {
     [
       lessonDiscussionCommentsValidation.deletelessonDiscussionCommentsValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructorOrStudent,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.deletelessonDiscussion
   );
@@ -108,5 +108,6 @@ module.exports = function (app) {
       AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
     lessonDiscussionCommentsController.listlessonDiscussionByCourseId
+    
   );
 };
