@@ -1,4 +1,9 @@
-const { PORT, HOST, ENV } = require('../../../config/env.config');
+const {
+  PORT,
+  HOST,
+  ENV,
+  VIMEO_HOST_URL,
+} = require('../../../config/env.config');
 
 module.exports = (connection, Sequelize) => {
   const Course = connection.define(
@@ -84,11 +89,7 @@ module.exports = (connection, Sequelize) => {
           if (fieldFilesPaths.length > 0) {
             fieldFilesPaths = fieldFilesPaths.split(',');
             fieldFilesPaths.forEach((location, index) => {
-              if (ENV === 'dev') {
-                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
-              } else {
-                fieldFilesPaths[index] = `${HOST}` + '/' + location;
-              }
+              fieldFilesPaths[index] = `${VIMEO_HOST_URL}` + location;
             });
             fieldFilesPaths = fieldFilesPaths.join();
           }

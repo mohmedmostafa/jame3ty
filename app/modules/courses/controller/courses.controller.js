@@ -1,6 +1,6 @@
 const db = require('../..');
 const { Sequelize, connection } = require('../..');
-
+const VimeoHelper = require('../../../common/vimeo/vimeoHelper');
 const {
   Response,
   ValidateResponse,
@@ -78,25 +78,22 @@ exports.addCourse = async (req, res) => {
     req.body.img = field_1.join();
   }
 
-  //Create Attachment String
-  if (req.files.vedio) {
-    let field_2 = [];
-    req.files['vedio'].forEach((file) => {
-      let fileUrl = file.path.replace(/\\/g, '/');
-      field_2.push(fileUrl);
+  //Upload Video to Vimeo
+  await VimeoHelper.uploadVideoTOVimeo(req, res)
+    .catch((error) => {
+      onErrorDeleteFiles(req);
+      VimeoHelper.vimeoErrorResHandler(req, res, error);
+    })
+    .then((uri) => {
+      //Add Course
+      //If the Course Methiod is 'Recorded Lessons'
+      if (req.params.method === '0') {
+        addRecordedLessonsCourse(req, res, instructor);
+      } else {
+        //If the Course Methiod is 'Live Streaming'
+        addLiveStreamingCourse(req, res, instructor);
+      }
     });
-    req.body.vedio = field_2.join();
-  }
-
-  console.log(req.body);
-
-  //If the Course Methiod is 'Recorded Lessons'
-  if (req.params.method === '0') {
-    addRecordedLessonsCourse(req, res, instructor);
-  } else {
-    //If the Course Methiod is 'Live Streaming'
-    addLiveStreamingCourse(req, res, instructor);
-  }
 };
 
 //Add Course with 'Recorded Lessons' as a Method
@@ -118,7 +115,7 @@ async function addRecordedLessonsCourse(req, res, instructor) {
       type: req.body.type,
       method: req.params.method,
       img: req.body.img ? req.body.img : '',
-      vedio: req.body.vedio ? req.body.vedio : '',
+      vedio: req.body.uri ? req.body.uri : '',
       subjectId: parseInt(req.body.subjectId),
       instructorId: instructor.id,
     });
@@ -165,7 +162,7 @@ async function addLiveStreamingCourse(req, res, instructor) {
           type: req.body.type,
           method: req.params.method,
           img: req.body.img ? req.body.img : '',
-          vedio: req.body.vedio ? req.body.vedio : '',
+          vedio: req.body.uri ? req.body.uri : '',
           subjectId: parseInt(req.body.subjectId),
           instructorId: instructor.id,
         },
