@@ -3093,12 +3093,12 @@ function listCourseOriginal_NOPagination(
               [Op.or]: [
                 {
                   name_ar: {
-                    [Op.like]: searchKey,
+                    [Op.substring]: searchKey,
                   },
                 },
                 {
                   name_en: {
-                    [Op.like]: searchKey,
+                    [Op.substring]: searchKey,
                   },
                 },
               ],
@@ -3209,12 +3209,12 @@ function listCourseOriginal_DoPagination(
               [Op.or]: [
                 {
                   name_ar: {
-                    [Op.like]: searchKey,
+                    [Op.substring]: searchKey,
                   },
                 },
                 {
                   name_en: {
-                    [Op.like]: searchKey,
+                    [Op.substring]: searchKey,
                   },
                 },
               ],
