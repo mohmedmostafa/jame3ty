@@ -75,17 +75,16 @@ module.exports = function (app) {
     AssignmentSubmissionController.listAssignmentSubmissionById
   );
 
-  /*
   app.get(
-    '/api/listAssignmentSubmissionBylessonIdStudentBased/:lessonId',
+    '/api/listAssignmentsSubmission',
     FileUploader.upload.none(),
     [
-      AssignmentSubmissionValidation.listAssignmentSubmissionBylessonIdStudentBased,
+      AssignmentSubmissionValidation.listAssignmentsSubmissionValidation,
       AuthJwt.VerifyToken,
       AuthJwt.isInstructorOrStudentorOrAdmin,
     ],
-    AssignmentSubmissionController.listAssignmentSubmission
-  );*/
+    AssignmentSubmissionController.listAssignmentsSubmission
+  );
 
   const upload_updateAssignmentSubmission = FileUploader.upload.fields([
     {

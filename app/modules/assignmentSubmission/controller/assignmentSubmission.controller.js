@@ -7,6 +7,7 @@ const {
   onErrorDeleteFiles,
   deleteFile,
 } = require('../../../common/attachmentsUpload/multerConfig');
+const Helper = require('../../../common/helper');
 const moment = require('moment');
 const { Sequelize } = require('../..');
 
@@ -350,31 +351,47 @@ exports.updateAssignmentSubmission = async (req, res) => {
 };
 
 //---------------------------------------------------------------
-/*
-exports.listAssignmentSubmission = async (req, res) => {
+exports.listAssignmentsSubmission = async (req, res) => {
+  //Filters
+  let instructorId = req.query.instructorId ? req.query.instructorId : '%%';
+  let studentId = req.query.studentId ? req.query.studentId : '%%';
+  let lessonId = req.query.lessonId ? req.query.lessonId : '%%';
+  let courseId = req.query.courseId ? req.query.courseId : '%%';
+
+  //Filter with date range or without date range for Assignment submission Date
+  let submissionStartFrom;
+  let submissionStartTo;
+  let submissionDateMinMaxDate;
+  if (req.query.submissionStartFrom && req.query.submissionStartTo) {
+    submissionStartFrom = req.query.submissionStartFrom;
+    submissionStartTo = req.query.submissionStartTo;
+  } else {
+    //Set submissionStartFrom and submissionStartTo to min and max date of the table
+    submissionDateMinMaxDate = await Helper.getColumnMinMax(
+      Sequelize,
+      db_AssignmentSubmission,
+      'submissionDate'
+    );
+    submissionDateMinMaxDate = submissionDateMinMaxDate.get({ plain: true });
+    submissionStartFrom = submissionDateMinMaxDate.min;
+    submissionStartTo = submissionDateMinMaxDate.max;
+  }
+
+  //Order Data Based on created At of course
+  let orderBy = '';
+  if (req.query.orderBy) {
+    orderBy =
+      req.query.orderBy.trim() === 'DESC'
+        ? 'assignmentsSubmission.submissionDate DESC'
+        : 'assignmentsSubmission.submissionDate ASC';
+  } else {
+    orderBy = 'assignmentsSubmission.submissionDate ASC';
+  }
+
+  //
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
-
-  //Count all rows
-  let numRows = await db_AssignmentSubmission
-    .count({
-      where: {
-        rate: {
-          [Op.eq]: req.query.searchKey,
-        },
-      },
-    })
-    .catch((error) => {console.log(error);
-      return Response(res, ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-        .ORM_OPERATION_FAILED,
-      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED);
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
 
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
@@ -384,74 +401,178 @@ exports.listAssignmentSubmission = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await listRatingAndReview_DoPagination(
+      //Do Pagination
+      data = await listAssignmentsSubmission_DoPagination(
         req,
-        db_RatingAndReview,
-        db_CourseSubscribe,
-        db_Student,
+        instructorId,
+        studentId,
+        lessonId,
+        courseId,
+        submissionStartFrom,
+        submissionStartTo,
+        orderBy,
         skip,
         _limit
       );
     } else {
-      data = await listRatingAndReview_NOPagination(
+      //NO Pagination
+      data = await listAssignmentsSubmission_NOPagination(
         req,
-        db_RatingAndReview,
-        db_CourseSubscribe,
-        db_Student
+        instructorId,
+        studentId,
+        lessonId,
+        courseId,
+        submissionStartFrom,
+        submissionStartTo,
+        orderBy
       );
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
-    return Response(res, ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS, { result });
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
   } catch (error) {
     console.log(error);
-    return Response(res, ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
         .ORM_OPERATION_FAILED,
-      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED);
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
   }
 };
 
-function listRatingAndReview_DoPagination(
+function listAssignmentsSubmission_NOPagination(
   req,
-  db_RatingAndReview,
-  db_CourseSubscribe,
-  db_Student,
+  instructorId,
+  studentId,
+  lessonId,
+  courseId,
+  submissionStartFrom,
+  submissionStartTo,
+  orderBy
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_AssignmentSubmission
+      .findAndCountAll({
+        where: {
+          [Op.and]: [
+            { studentId: { [Op.like]: studentId } },
+            { lessonId: { [Op.like]: lessonId } },
+            {
+              submissionDate: {
+                [Op.between]: [submissionStartFrom, submissionStartTo],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_Lesson,
+            required: true,
+            include: [
+              {
+                model: db_Course,
+                required: true,
+                where: {
+                  id: { [Op.like]: courseId },
+                },
+                include: [
+                  {
+                    model: db_Instructor,
+                    required: true,
+                    where: {
+                      id: { [Op.like]: instructorId },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        distinct: true,
+        order: Sequelize.literal(orderBy),
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listAssignmentsSubmission_DoPagination(
+  req,
+  instructorId,
+  studentId,
+  lessonId,
+  courseId,
+  submissionStartFrom,
+  submissionStartTo,
+  orderBy,
   skip,
   _limit
 ) {
   return new Promise(async (resolve, reject) => {
-    await db_RatingAndReview
-      .findAll({
+    await db_AssignmentSubmission
+      .findAndCountAll({
         where: {
-          rate: {
-            [Op.eq]: req.query.searchKey,
-          },
+          [Op.and]: [
+            { studentId: { [Op.like]: studentId } },
+            { lessonId: { [Op.like]: lessonId } },
+            {
+              submissionDate: {
+                [Op.between]: [submissionStartFrom, submissionStartTo],
+              },
+            },
+          ],
         },
         include: [
           {
-            model: db_CourseSubscribe,
+            model: db_Lesson,
             include: [
               {
-                model: db_Student,
+                model: db_Course,
+                where: {
+                  id: { [Op.like]: courseId },
+                },
+                include: [
+                  {
+                    model: db_Instructor,
+                    where: {
+                      id: { [Op.like]: instructorId },
+                    },
+                  },
+                ],
               },
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
+        order: Sequelize.literal(orderBy),
       })
-      .catch((err) => {console.log(err);
+      .catch((err) => {
+        console.log(err);
         return reject(err);
       })
       .then((data) => {
@@ -459,38 +580,3 @@ function listRatingAndReview_DoPagination(
       });
   });
 }
-
-function listRatingAndReview_NOPagination(
-  req,
-  db_RatingAndReview,
-  db_CourseSubscribe,
-  db_Student
-) {
-  return new Promise(async (resolve, reject) => {
-    await db_RatingAndReview
-      .findAll({
-        where: {
-          rate: {
-            [Op.eq]: req.query.searchKey,
-          },
-        },
-        include: [
-          {
-            model: db_CourseSubscribe,
-            include: [
-              {
-                model: db_Student,
-              },
-            ],
-          },
-        ],
-      })
-      .catch((err) => {console.log(err);
-        return reject(err);
-      })
-      .then((data) => {
-        return resolve(data);
-      });
-  });
-}
-*/

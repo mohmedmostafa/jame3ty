@@ -2975,9 +2975,6 @@ exports.listCourseOriginal = async (req, res) => {
       //Do Pagination
       data = await listCourseOriginal_DoPagination(
         req,
-        doPagination,
-        numPerPage,
-        page,
         searchKey,
         type,
         method,
@@ -3006,9 +3003,6 @@ exports.listCourseOriginal = async (req, res) => {
       //NO Pagination
       data = await listCourseOriginal_NOPagination(
         req,
-        doPagination,
-        numPerPage,
-        page,
         searchKey,
         type,
         method,
@@ -3077,9 +3071,6 @@ exports.listCourseOriginal = async (req, res) => {
 
 function listCourseOriginal_NOPagination(
   req,
-  doPagination,
-  numPerPage,
-  page,
   searchKey,
   type,
   method,
@@ -3194,9 +3185,6 @@ function listCourseOriginal_NOPagination(
 
 function listCourseOriginal_DoPagination(
   req,
-  doPagination,
-  numPerPage,
-  page,
   searchKey,
   type,
   method,
