@@ -537,39 +537,6 @@ exports.listStudent = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_Student
-    .count({
-      where: {
-        [Op.or]: [
-          {
-            name: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-          {
-            email: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-        ],
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -578,30 +545,20 @@ exports.listStudent = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await listStudent_DoPagination(
-        req,
-        db_Student,
-        db_User,
-        db_CourseSubscribe,
-        skip,
-        _limit
-      );
+      data = await listStudent_DoPagination(req, skip, _limit);
     } else {
-      data = await listStudent_NOPagination(
-        req,
-        db_Student,
-        db_User,
-        db_CourseSubscribe
-      );
+      data = await listStudent_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -623,17 +580,10 @@ exports.listStudent = async (req, res) => {
   }
 };
 
-function listStudent_DoPagination(
-  req,
-  db_Student,
-  db_User,
-  db_CourseSubscribe,
-  skip,
-  _limit
-) {
+function listStudent_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_User
-      .findAll({
+      .findAndCountAll({
         include: [
           {
             model: db_Student,
@@ -679,6 +629,7 @@ function listStudent_DoPagination(
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
@@ -692,15 +643,10 @@ function listStudent_DoPagination(
   });
 }
 
-function listStudent_NOPagination(
-  req,
-  db_Student,
-  db_User,
-  db_CourseSubscribe
-) {
+function listStudent_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     await db_User
-      .findAll({
+      .findAndCountAll({
         include: [
           {
             model: db_Student,
@@ -745,6 +691,7 @@ function listStudent_NOPagination(
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);

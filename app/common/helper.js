@@ -38,4 +38,24 @@ function getUserdata(req, res) {
   return result;
 }
 
+function getColumnMinMax(Sequelize, modelName, colName) {
+  return new Promise(async (resolve, reject) => {
+    let columnMinMax = await modelName
+      .findOne({
+        attributes: [
+          [Sequelize.fn('max', Sequelize.col(colName)), 'max'],
+          [Sequelize.fn('min', Sequelize.col(colName)), 'min'],
+        ],
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+
+    //
+    resolve(columnMinMax);
+  });
+}
+
 module.exports.getUserdata = getUserdata;
+module.exports.getColumnMinMax = getColumnMinMax;

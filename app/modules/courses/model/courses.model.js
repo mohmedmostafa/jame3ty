@@ -1,4 +1,4 @@
-const { PORT, HOST } = require('../../../config/env.config');
+const { PORT, HOST, ENV } = require('../../../config/env.config');
 
 module.exports = (connection, Sequelize) => {
   const Course = connection.define(
@@ -65,7 +65,11 @@ module.exports = (connection, Sequelize) => {
           if (fieldFilesPaths.length > 0) {
             fieldFilesPaths = fieldFilesPaths.split(',');
             fieldFilesPaths.forEach((location, index) => {
-              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              if (ENV === 'dev') {
+                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              } else {
+                fieldFilesPaths[index] = `${HOST}` + '/' + location;
+              }
             });
             fieldFilesPaths = fieldFilesPaths.join();
           }
@@ -80,7 +84,11 @@ module.exports = (connection, Sequelize) => {
           if (fieldFilesPaths.length > 0) {
             fieldFilesPaths = fieldFilesPaths.split(',');
             fieldFilesPaths.forEach((location, index) => {
-              fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              if (ENV === 'dev') {
+                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              } else {
+                fieldFilesPaths[index] = `${HOST}` + '/' + location;
+              }
             });
             fieldFilesPaths = fieldFilesPaths.join();
           }

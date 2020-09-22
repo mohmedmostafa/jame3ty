@@ -8,6 +8,9 @@ const Op = db.Sequelize.Op;
 const db_University = db.University;
 const db_Faculty = db.Faculty;
 const db_Department = db.Department;
+const db_AcademicYear = db.AcademicYear;
+const db_Subject = db.Subject;
+const db_Course = db.Course;
 const db_connection = db.connection;
 
 //---------------------------------------------------------------
@@ -188,10 +191,25 @@ exports.listFacultyById = async (req, res) => {
       where: { id: parseInt(req.params.id) },
       include: [
         {
-          model: db_Department,
+          model: db_University,
         },
         {
-          model: db_University,
+          model: db_Department,
+          include: [
+            {
+              model: db_AcademicYear,
+              include: [
+                {
+                  model: db_Subject,
+                  include: [
+                    {
+                      model: db_Course,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -231,39 +249,6 @@ exports.listFaculty = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_Faculty
-    .count({
-      where: {
-        [Op.or]: [
-          {
-            name_ar: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-          {
-            name_en: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-        ],
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -272,24 +257,20 @@ exports.listFaculty = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await listFaculty_DoPagination(
-        req,
-        db_Faculty,
-        db_Department,
-        skip,
-        _limit
-      );
+      data = await listFaculty_DoPagination(req, skip, _limit);
     } else {
-      data = await listFaculty_NOPagination(req, db_Faculty, db_Department);
+      data = await listFaculty_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -311,18 +292,12 @@ exports.listFaculty = async (req, res) => {
   }
 };
 
-function listFaculty_DoPagination(
-  req,
-  db_Faculty,
-  db_Department,
-  skip,
-  _limit
-) {
+function listFaculty_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     //query paramter to filter faculties based on university id
     let universityId = req.query.universityId ? req.query.universityId : '%%';
     await db_Faculty
-      .findAll({
+      .findAndCountAll({
         where: {
           [Op.or]: [
             {
@@ -340,12 +315,28 @@ function listFaculty_DoPagination(
         include: [
           {
             model: db_Department,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Subject,
+                    include: [
+                      {
+                        model: db_Course,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_University,
             where: { id: { [Op.like]: universityId } },
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
@@ -359,13 +350,13 @@ function listFaculty_DoPagination(
   });
 }
 
-function listFaculty_NOPagination(req, db_Faculty, db_Department) {
+function listFaculty_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     //query paramter to filter faculties based on university id
     let universityId = req.query.universityId ? req.query.universityId : '%%';
 
     await db_Faculty
-      .findAll({
+      .findAndCountAll({
         where: {
           [Op.or]: [
             {
@@ -383,12 +374,28 @@ function listFaculty_NOPagination(req, db_Faculty, db_Department) {
         include: [
           {
             model: db_Department,
+            include: [
+              {
+                model: db_AcademicYear,
+                include: [
+                  {
+                    model: db_Subject,
+                    include: [
+                      {
+                        model: db_Course,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
             model: db_University,
             where: { id: { [Op.like]: universityId } },
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);

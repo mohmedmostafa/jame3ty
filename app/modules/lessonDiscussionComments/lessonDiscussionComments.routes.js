@@ -110,4 +110,15 @@ module.exports = function (app) {
     lessonDiscussionCommentsController.listlessonDiscussionByCourseId
     
   );
+
+  app.get(
+    '/api/listLessonDiscussion',
+    FileUploader.upload.none(),
+    [
+      lessonDiscussionCommentsValidation.listLessonDiscussionValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    lessonDiscussionCommentsController.listLessonDiscussion
+  );
 };

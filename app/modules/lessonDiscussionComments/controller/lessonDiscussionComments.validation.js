@@ -213,6 +213,41 @@ listlessonDiscussionByCourseIdValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+listLessonDiscussionValidation = (req, res, next) => {
+  //Body Validation
+  const schema = Joi.object({
+    doPagination: Joi.number()
+      .integer()
+      .valid(1, 0)
+      .default(1)
+      .messages(Joi_messages),
+    numPerPage: Joi.number()
+      .integer()
+      .greater(0)
+      .required()
+      .messages(Joi_messages),
+    page: Joi.number().integer().greater(0).required().messages(Joi_messages),
+    searchKey: Joi.string().allow('', null).required().messages(Joi_messages),
+  })
+    .options({ abortEarly: false })
+    .unknown(true);
+
+  const { error } = schema.validate(req.query);
+  console.log(error);
+  if (error) {
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_QUERY_PARAM,
+      error.details
+    );
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 const lessonDiscussionCommentsValidation = {
   addlessonDiscussionCommentsValidation: addlessonDiscussionCommentsValidation,
   updatelessonDiscussionCommentsValidation: updatelessonDiscussionCommentsValidation,
@@ -220,6 +255,7 @@ const lessonDiscussionCommentsValidation = {
   listlessonDiscussionCommentsValidationById: listlessonDiscussionCommentsValidationById,
   deletelessonDiscussionCommentsValidation: deletelessonDiscussionCommentsValidation,
   listlessonDiscussionByCourseIdValidation: listlessonDiscussionByCourseIdValidation,
+  listLessonDiscussionValidation: listLessonDiscussionValidation,
 };
 
 module.exports = lessonDiscussionCommentsValidation;

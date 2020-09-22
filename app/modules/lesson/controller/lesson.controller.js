@@ -474,6 +474,12 @@ exports.updateLesson = async (req, res) => {
 //---------------------------------------------------------------
 exports.listLesson = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
 
   //Query
   try {
@@ -481,47 +487,38 @@ exports.listLesson = async (req, res) => {
     if (doPagination) {
       if (req.query.type != 'both') {
         //Do Pagination & Type 1 or 0
-        data = await listLesson_DoPagination_Type_1_or_0(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group
-        );
+        data = await listLesson_DoPagination_Type_1_or_0(req, skip, _limit);
       } else {
         //Do Pagination & Type Both
-        data = await listLesson_DoPagination_Type_Both(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group
-        );
+        data = await listLesson_DoPagination_Type_Both(req, skip, _limit);
       }
     } else {
       if (req.query.type != 'both') {
         //NO Pagination & Type 1 or 0
-        data = await listLesson_NOPagination_Type_1_or_0(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group
-        );
+        data = await listLesson_NOPagination_Type_1_or_0(req);
       } else {
         //NO Pagination & Type Both
-        data = await listLesson_NOPagination_Type_Both(
-          req,
-          db_Lesson,
-          db_Course,
-          db_Group
-        );
+        data = await listLesson_NOPagination_Type_Both(req);
       }
     }
+
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
 
     //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { data }
+      { result }
     );
   } catch (error) {
     console.log(error);
@@ -535,66 +532,10 @@ exports.listLesson = async (req, res) => {
   }
 };
 
-function listLesson_DoPagination_Type_Both(
-  req,
-  db_Lesson,
-  db_Course,
-  db_Group
-) {
+function listLesson_DoPagination_Type_Both(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Lesson
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              type: {
-                [Op.in]: ['0', '1'],
-              },
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Lesson
-      .findAll({
+    await db_Lesson
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -626,85 +567,24 @@ function listLesson_DoPagination_Type_Both(
             model: db_Group,
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listLesson_DoPagination_Type_1_or_0(
-  req,
-  db_Lesson,
-  db_Course,
-  db_Group
-) {
+function listLesson_DoPagination_Type_1_or_0(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Lesson
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              type: req.query.type,
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Lesson
-      .findAll({
+    await db_Lesson
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -734,82 +614,24 @@ function listLesson_DoPagination_Type_1_or_0(
             model: db_Group,
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listLesson_NOPagination_Type_Both(
-  req,
-  db_Lesson,
-  db_Course,
-  db_Group
-) {
+function listLesson_NOPagination_Type_Both(req) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Lesson
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Lesson
-      .findAll({
+    await db_Lesson
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -836,83 +658,22 @@ function listLesson_NOPagination_Type_Both(
             model: db_Group,
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listLesson_NOPagination_Type_1_or_0(
-  req,
-  db_Lesson,
-  db_Course,
-  db_Group
-) {
+function listLesson_NOPagination_Type_1_or_0(req) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Lesson
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              type: req.query.type,
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Lesson
-      .findAll({
+    await db_Lesson
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -942,21 +703,14 @@ function listLesson_NOPagination_Type_1_or_0(
             model: db_Group,
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }

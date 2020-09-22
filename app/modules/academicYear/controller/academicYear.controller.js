@@ -203,10 +203,15 @@ exports.listAcademicYearById = async (req, res) => {
       where: { id: parseInt(req.params.id) },
       include: [
         {
-          model: db_Subject,
+          model: db_Department,
         },
         {
-          model: db_Department,
+          model: db_Subject,
+          include: [
+            {
+              model: db_Course,
+            },
+          ],
         },
       ],
     });
@@ -246,39 +251,6 @@ exports.listAcademicYear = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_AcademicYear
-    .count({
-      where: {
-        [Op.or]: [
-          {
-            name_ar: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-          {
-            name_en: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-        ],
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -288,24 +260,21 @@ exports.listAcademicYear = async (req, res) => {
     let data;
     if (doPagination) {
       //Do Pagination
-      data = await listAcademicYear_DoPagination(
-        req,
-        db_AcademicYear,
-        skip,
-        _limit
-      );
+      data = await listAcademicYear_DoPagination(req, skip, _limit);
     } else {
       //Do Pagination
-      data = await listAcademicYear_NOPagination(req, db_AcademicYear);
+      data = await listAcademicYear_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -327,12 +296,12 @@ exports.listAcademicYear = async (req, res) => {
   }
 };
 
-function listAcademicYear_NOPagination(req, db_AcademicYear) {
+function listAcademicYear_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     let departmentId = req.query.DepartmentId ? req.query.DepartmentId : '%%';
 
     await db_AcademicYear
-      .findAll({
+      .findAndCountAll({
         where: {
           [Op.or]: [
             {
@@ -349,13 +318,19 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
         },
         include: [
           {
-            model: db_Subject,
-          },
-          {
             model: db_Department,
             where: { id: { [Op.like]: departmentId } },
           },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_Course,
+              },
+            ],
+          },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
@@ -367,10 +342,10 @@ function listAcademicYear_NOPagination(req, db_AcademicYear) {
   });
 }
 
-function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
+function listAcademicYear_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_AcademicYear
-      .findAll({
+      .findAndCountAll({
         where: {
           [Op.or]: [
             {
@@ -387,12 +362,18 @@ function listAcademicYear_DoPagination(req, db_AcademicYear, skip, _limit) {
         },
         include: [
           {
-            model: db_Subject,
-          },
-          {
             model: db_Department,
           },
+          {
+            model: db_Subject,
+            include: [
+              {
+                model: db_Course,
+              },
+            ],
+          },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })

@@ -79,6 +79,17 @@ module.exports = function (app) {
   );
 
   app.get(
+    '/api/listCourseOriginal',
+    FileUploader.upload.none(),
+    [
+      // CourseValidation.listCourseOriginalValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrStudentorOrAdmin,
+    ],
+    CourseController.listCourseOriginal
+  );
+
+  app.get(
     '/api/listCourse',
     FileUploader.upload.none(),
     [

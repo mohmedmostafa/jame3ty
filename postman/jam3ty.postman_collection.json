@@ -88,7 +88,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "adminAll@gmail.com",
+									"value": "sera@gmail.com",
 									"type": "text"
 								},
 								{
@@ -352,7 +352,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listUniversity?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"raw": "{{url}}api/listUniversity?doPagination=0&numPerPage=2&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -366,7 +366,7 @@
 								},
 								{
 									"key": "numPerPage",
-									"value": "10"
+									"value": "2"
 								},
 								{
 									"key": "page",
@@ -663,32 +663,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "gggggg",
+									"value": "rrrrrrrr",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "gggggg",
+									"value": "rrrrrrrr",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "gggggg",
+									"value": "rrrrrrrr",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "03367555422",
+									"value": "03117555422",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "gggggg",
+									"value": "rrrrrrrr",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "gggggg@gmail.com",
+									"value": "rrrrrrrr@gmail.com",
 									"type": "text"
 								},
 								{
@@ -699,7 +699,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Pictures/1.PNG"
 								},
 								{
 									"key": "password",
@@ -864,7 +864,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listInstructor?doPagination=0&numPerPage=10&page=1",
+							"raw": "{{url}}api/listInstructor?doPagination=0&numPerPage=10&page=1&searchKey=rrrrrrrr",
 							"host": [
 								"{{url}}api"
 							],
@@ -886,8 +886,7 @@
 								},
 								{
 									"key": "searchKey",
-									"value": "",
-									"disabled": true
+									"value": "rrrrrrrr"
 								}
 							]
 						}
@@ -922,13 +921,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listInstructorById/1",
+							"raw": "{{url}}api/listInstructorById/2",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listInstructorById",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -1125,7 +1124,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourse?doPagination=0&numPerPage=10&page=1&searchKey=&method=both&startFrom=1992-11-05 00:00:00.000&startTo=2022-11-05 23:59:59.000",
+							"raw": "{{url}}api/listCourse?doPagination=0&numPerPage=1&page=1&searchKey=&method=both&startFrom=1992-11-05 00:00:00.000&startTo=2022-11-05 23:59:59.000",
 							"host": [
 								"{{url}}api"
 							],
@@ -1139,7 +1138,7 @@
 								},
 								{
 									"key": "numPerPage",
-									"value": "10"
+									"value": "1"
 								},
 								{
 									"key": "page",
@@ -1147,12 +1146,13 @@
 								},
 								{
 									"key": "searchKey",
-									"value": ""
+									"value": "",
+									"description": "search name_ar and name_en of the course"
 								},
 								{
 									"key": "method",
 									"value": "both",
-									"description": "1 or 0 or both"
+									"description": "0 for Recorded Lessons  or 1 for Live Streaming or both"
 								},
 								{
 									"key": "startFrom",
@@ -1336,7 +1336,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDate?doPagination=1&numPerPage=2&page=1&searchKey=&method=both",
+							"raw": "{{url}}api/listCourseNoDate?doPagination=1&numPerPage=1&page=1&searchKey=&method=both",
 							"host": [
 								"{{url}}api"
 							],
@@ -1350,7 +1350,7 @@
 								},
 								{
 									"key": "numPerPage",
-									"value": "2"
+									"value": "1"
 								},
 								{
 									"key": "page",
@@ -1392,7 +1392,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=0&numPerPage=1&page=1&searchKey=&method=both",
+							"raw": "{{url}}api/listCourseNoDateByDepartment/1?doPagination=0&numPerPage=10&page=1&searchKey=&method=1&orderBy=DESC",
 							"host": [
 								"{{url}}api"
 							],
@@ -1407,7 +1407,7 @@
 								},
 								{
 									"key": "numPerPage",
-									"value": "1"
+									"value": "10"
 								},
 								{
 									"key": "page",
@@ -1419,8 +1419,13 @@
 								},
 								{
 									"key": "method",
-									"value": "both",
+									"value": "1",
 									"description": "1 or 0 or both"
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"description": "DESC or ASC"
 								}
 							]
 						}
@@ -1449,7 +1454,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=1&numPerPage=10&page=1&searchKey=&method=1",
+							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=0&numPerPage=10&page=1&searchKey=&method=0",
 							"host": [
 								"{{url}}api"
 							],
@@ -1460,7 +1465,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -1476,8 +1481,118 @@
 								},
 								{
 									"key": "method",
-									"value": "1",
+									"value": "0",
 									"description": "1 or 0 or both"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listCourseOriginal",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listCourseOriginal?doPagination=0&numPerPage=2&page=2",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listCourseOriginal"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "searchKey",
+									"value": "",
+									"description": "search name_ar and name_en of the course",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "",
+									"description": "0 for Subject | 1 for Assignment",
+									"disabled": true
+								},
+								{
+									"key": "method",
+									"value": "both",
+									"description": "0 for Recorded Lessons  or 1 for Live Streaming",
+									"disabled": true
+								},
+								{
+									"key": "startFrom",
+									"value": "1992-11-05 00:00:00.000",
+									"disabled": true
+								},
+								{
+									"key": "startTo",
+									"value": "2022-11-05 23:59:59.000",
+									"disabled": true
+								},
+								{
+									"key": "universityId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "facultyId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "departmentId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "academicYearId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "subjectId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "instructorId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"disabled": true
 								}
 							]
 						}
@@ -1603,7 +1718,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listGroupByCourseId/1?doPagination=1&numPerPage=1&page=2&searchKey=",
+							"raw": "{{url}}api/listGroupByCourseId/1?doPagination=1&numPerPage=1&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -1622,7 +1737,7 @@
 								},
 								{
 									"key": "page",
-									"value": "2"
+									"value": "1"
 								},
 								{
 									"key": "searchKey",
@@ -1655,13 +1770,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listGroupById/27",
+							"raw": "{{url}}api/listGroupById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listGroupById",
-								"27"
+								"1"
 							]
 						}
 					},
@@ -1936,7 +2051,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=1&doPagination=0&numPerPage=3&page=1",
+							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=1&doPagination=1&numPerPage=1&page=3",
 							"host": [
 								"{{url}}api"
 							],
@@ -1950,15 +2065,15 @@
 								},
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
-									"value": "3"
+									"value": "1"
 								},
 								{
 									"key": "page",
-									"value": "1"
+									"value": "3"
 								}
 							]
 						}
@@ -2274,6 +2389,87 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "{{url}}api/listLessonDiscussion",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listLessonDiscussion?doPagination=1&numPerPage=3&page=1&searchKey=&userId=1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listLessonDiscussion"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "1"
+								},
+								{
+									"key": "numPerPage",
+									"value": "3"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": ""
+								},
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "lessonId",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "courseId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"description": "ASC or DESC",
+									"disabled": true
+								},
+								{
+									"key": "createdAtFrom",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "createdAtTo",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -2420,13 +2616,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listDepartmentById/17",
+							"raw": "{{url}}api/listDepartmentById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listDepartmentById",
-								"17"
+								"1"
 							]
 						}
 					},
@@ -2619,13 +2815,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listAcademicYearById/6",
+							"raw": "{{url}}api/listAcademicYearById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listAcademicYearById",
-								"6"
+								"1"
 							]
 						}
 					},
@@ -2643,7 +2839,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listAcademicYear?doPagination=0&numPerPage=2&page=1&searchKey=",
+							"raw": "{{url}}api/listAcademicYear?doPagination=1&numPerPage=2&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -2653,7 +2849,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
@@ -2836,7 +3032,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listSubject?doPagination=1&numPerPage=5&page=2&searchKey=s",
+							"raw": "{{url}}api/listSubject?doPagination=1&numPerPage=5&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -2854,11 +3050,11 @@
 								},
 								{
 									"key": "page",
-									"value": "2"
+									"value": "1"
 								},
 								{
 									"key": "searchKey",
-									"value": "s"
+									"value": ""
 								}
 							]
 						}
@@ -2908,7 +3104,7 @@
 								},
 								{
 									"key": "isLiveStreaming",
-									"value": "1",
+									"value": "0",
 									"description": "0 or 1",
 									"type": "text"
 								},
@@ -2919,7 +3115,7 @@
 								},
 								{
 									"key": "isAssostatedWithGroup",
-									"value": "1",
+									"value": "0",
 									"description": "0 or 1",
 									"type": "text"
 								},
@@ -2941,7 +3137,11 @@
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": []
+									"src": [
+										"/C:/Users/Farag/Pictures/download.jpeg",
+										"/C:/Users/Farag/Pictures/q.mp4",
+										"/C:/Users/Farag/Pictures/ssssssss.png"
+									]
 								}
 							],
 							"options": {
@@ -3040,7 +3240,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listLesson?doPagination=1&numPerPage=1&page=1&searchKey=&type=1",
+							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both",
 							"host": [
 								"{{url}}api"
 							],
@@ -3050,7 +3250,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -3066,7 +3266,7 @@
 								},
 								{
 									"key": "type",
-									"value": "1",
+									"value": "both",
 									"description": "1 or 0 or both"
 								}
 							]
@@ -3225,28 +3425,28 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "HEEMA",
+									"value": "HHHHHHHH",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01050000317",
+									"value": "01053300317",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "HEEMA",
+									"value": "HHHHHHHH",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "HEEMA@gmail.com",
+									"value": "HHHHHHHH@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Pictures/2.jpeg"
 								},
 								{
 									"key": "academicYearId",
@@ -3381,13 +3581,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listStudentById/1",
+							"raw": "{{url}}api/listStudentById/15",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listStudentById",
-								"1"
+								"15"
 							]
 						}
 					},
@@ -3415,7 +3615,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listStudent?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"raw": "{{url}}api/listStudent?doPagination=0&numPerPage=1&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -3429,7 +3629,7 @@
 								},
 								{
 									"key": "numPerPage",
-									"value": "10"
+									"value": "1"
 								},
 								{
 									"key": "page",
@@ -3466,13 +3666,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listStudentByUserId/8",
+							"raw": "{{url}}api/listStudentByUserId/3",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listStudentByUserId",
-								"8"
+								"3"
 							]
 						}
 					},
@@ -3589,32 +3789,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listRatingAndReviewByCourseId/1?doPagination=0&numPerPage=10&page=1&searchKey=3",
+							"raw": "{{url}}api/listRatingAndReviewByCourseId/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listRatingAndReviewByCourseId",
 								"1"
-							],
-							"query": [
-								{
-									"key": "doPagination",
-									"value": "0"
-								},
-								{
-									"key": "numPerPage",
-									"value": "10"
-								},
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "searchKey",
-									"value": "3",
-									"description": "search by rate equal"
-								}
 							]
 						}
 					},
@@ -3690,7 +3871,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listRatingAndReview?doPagination=1&numPerPage=10&page=1&searchKey=5",
+							"raw": "{{url}}api/listRatingAndReview?doPagination=0&numPerPage=10&page=1&searchKey=5",
 							"host": [
 								"{{url}}api"
 							],
@@ -3700,7 +3881,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -3749,15 +3930,18 @@
 									"key": "attachments",
 									"type": "file",
 									"src": [
-										"/C:/Users/Farag/Pictures/1.PNG",
+										"/C:/Users/Farag/Pictures/2.jpeg",
 										"/C:/Users/Farag/Pictures/2.PNG",
-										"/C:/Users/Farag/Pictures/3.PNG",
-										"/C:/Users/Farag/Pictures/4.png",
-										"/C:/Users/Farag/Pictures/5.PNG"
+										"/C:/Users/Farag/Pictures/3.PNG"
 									]
 								},
 								{
 									"key": "lessonId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "studentId",
 									"value": "1",
 									"type": "text"
 								}
@@ -3909,6 +4093,90 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "{{url}}api/listAssignmentsSubmission",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listAssignmentsSubmission?doPagination=0&numPerPage=1&page=1&orderBy=DESC",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listAssignmentsSubmission"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "instructorId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "studentId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "lessonId",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "courseId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "submissionStartFrom",
+									"value": null,
+									"description": "submissionDate From",
+									"disabled": true
+								},
+								{
+									"key": "submissionStartTo",
+									"value": null,
+									"description": "submissionDate To",
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"description": "ASC or DESC"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -3932,12 +4200,12 @@
 							"formdata": [
 								{
 									"key": "studentId",
-									"value": "1",
+									"value": "3",
 									"type": "text"
 								},
 								{
 									"key": "courseId",
-									"value": "3",
+									"value": "1",
 									"type": "text"
 								}
 							],
@@ -3985,17 +4253,17 @@
 	],
 	"variable": [
 		{
-			"id": "a9d43ef3-be9a-42df-8767-0b65b170f626",
+			"id": "549ba2a4-070b-40e8-a5c4-007114612ef3",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "d8f8d468-55f2-4608-8851-d2fe7cc51434",
+			"id": "9197585e-4556-42f8-8866-d84ff2b55d8d",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwNTE3MTU2LCJleHAiOjE2MDA2MDM1NTZ9.9Tgq19pjy714DgOIwqQ3ObW3twcpd0dsnQmV4lTfvsc"
 		},
 		{
-			"id": "a5086907-ffc2-4b2e-b6bc-4e9a67c432a8",
+			"id": "b9929cef-18d2-4c49-a73c-40a200d4d61f",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}

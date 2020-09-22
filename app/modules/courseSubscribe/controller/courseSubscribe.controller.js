@@ -439,3 +439,31 @@ exports.error_urlPaymentRequest = async (req, res) => {
     );
   }
 };
+
+//-------------------------------------------------
+//-------------------------------------------------
+//-------------------------------------------------
+//Get Instructor total num of students subscribed in all courses
+exports.getInstructorSubscribedStudents = function (instructorId) {
+  return new Promise(async (resolve, reject) => {
+    await db_CourseSubscribe
+      .findOne({
+        attributes: [[Sequelize.fn('count', '*'), 'totalStudents']],
+        where: { paymentResult: 'CAPTURED' },
+        include: [
+          {
+            model: db_Course,
+            attributes: [],
+            where: { instructorId: instructorId },
+          },
+        ],
+      })
+      .catch((error) => {
+        console.log(error);
+        return reject(error);
+      })
+      .then((instructorTotalStudentsSubscribed) => {
+        return resolve(instructorTotalStudentsSubscribed);
+      });
+  });
+};
