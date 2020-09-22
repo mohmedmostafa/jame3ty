@@ -570,6 +570,20 @@ exports.listInstructor = async (req, res) => {
 
     data = doPagination ? data : data_all;
 
+    //Add Rating info to each instructor in the data array
+    data = await addInstructorAVGRateAndRateCountToEachInstructorInData(
+      data
+    ).catch((error) => {
+      console.log(error);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+          .ORM_OPERATION_FAILED,
+        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+      );
+    });
+
     //Total num of valid pages
     let numPages = Math.ceil(data.count / numPerPage);
     let result = {
@@ -712,3 +726,82 @@ exports.listInstructorById = async (req, res) => {
     );
   }
 };
+
+//Add Rating info to each course object
+function addInstructorAVGRateAndRateCountToEachInstructorInData(data) {
+  return new Promise(async (resolve, reject) => {
+    //convert data sequelize object to json object
+    data = JSON.parse(JSON.stringify(data));
+
+    //add rating info to each course object in data
+    var instructorMapped = await Promise.all(
+      data.rows.map(async function (instructorObj) {
+        //Calc AVG Rating and Get Rating Count
+        let instructorAVGRatingAndCount = await RatingReviewsController.getInstructorAVGRateAndRateCount(
+          instructorObj['id']
+        ).catch((error) => {
+          console.log(error);
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+              .ORM_OPERATION_FAILED,
+            ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+          );
+        });
+
+        //Get Plain Object from sequelize object
+        if (instructorAVGRatingAndCount) {
+          instructorAVGRatingAndCount = instructorAVGRatingAndCount.get({
+            plain: true,
+          });
+        } else {
+          instructorAVGRatingAndCount = {};
+        }
+
+        //-----
+        //Calc Total sbscribed students for instructor courses
+        let instructorTotalStudentsSubscribed = await CourseSubscribeController.getInstructorSubscribedStudents(
+          instructorObj['id']
+        ).catch((error) => {
+          console.log(error);
+          return Response(
+            res,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+            ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+              .ORM_OPERATION_FAILED,
+            ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+          );
+        });
+
+        //Get Plain Object from sequelize object
+        if (instructorTotalStudentsSubscribed) {
+          instructorTotalStudentsSubscribed = instructorTotalStudentsSubscribed.get(
+            {
+              plain: true,
+            }
+          );
+        } else {
+          instructorTotalStudentsSubscribed = {};
+        }
+
+        //---------------------
+        //add to instructor object
+        let instructor = Object.assign({}, instructorObj, {
+          instructorAVGRatingAndCount: instructorAVGRatingAndCount,
+          totalStudentSubscribed: instructorTotalStudentsSubscribed,
+        });
+
+        return instructor;
+      })
+    ).catch((error) => {
+      console.log(error);
+      reject(error);
+    });
+
+    //Change instructor in data array to the mapped instructor
+    data.rows = instructorMapped;
+
+    resolve(data);
+  });
+}
