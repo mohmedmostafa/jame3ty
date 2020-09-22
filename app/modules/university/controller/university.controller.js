@@ -234,39 +234,6 @@ exports.listUniversity = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_University
-    .count({
-      where: {
-        [Op.or]: [
-          {
-            name_ar: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-          {
-            name_en: {
-              [Op.substring]: req.query.searchKey,
-            },
-          },
-        ],
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -275,23 +242,20 @@ exports.listUniversity = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await listUniversity_DoPagination(
-        req,
-        db_University,
-        skip,
-        _limit
-      );
+      data = await listUniversity_DoPagination(req, skip, _limit);
     } else {
-      data = await listUniversity_NOPagination(req, db_University);
+      data = await listUniversity_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -313,10 +277,10 @@ exports.listUniversity = async (req, res) => {
   }
 };
 
-function listUniversity_DoPagination(req, db_University, skip, _limit) {
+function listUniversity_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_University
-      .findAll({
+      .findAndCountAll({
         where: {
           [Op.or]: [
             {
@@ -356,6 +320,7 @@ function listUniversity_DoPagination(req, db_University, skip, _limit) {
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
@@ -369,10 +334,10 @@ function listUniversity_DoPagination(req, db_University, skip, _limit) {
   });
 }
 
-function listUniversity_NOPagination(req, db_University) {
+function listUniversity_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     await db_University
-      .findAll({
+      .findAndCountAll({
         where: {
           [Op.or]: [
             {
@@ -412,6 +377,7 @@ function listUniversity_NOPagination(req, db_University) {
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);

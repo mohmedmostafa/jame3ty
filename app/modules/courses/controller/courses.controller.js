@@ -352,7 +352,7 @@ function addCourseRatingIngoToEachCourseInData(data) {
 
     //add rating info to each course object in data
     var courseMapped = await Promise.all(
-      data.data.map(async function (courseObj) {
+      data.rows.map(async function (courseObj) {
         //Calc AVG Rating and Get Rating Count
         let courseAVGRatingAndCount = await RatingReviewsController.getCourseAVGRateAndRateCount(
           courseObj['id']
@@ -389,7 +389,7 @@ function addCourseRatingIngoToEachCourseInData(data) {
     });
 
     //Change courses in data array to the mapped courses
-    data.data = courseMapped;
+    data.rows = courseMapped;
 
     resolve(data);
   });
@@ -677,6 +677,12 @@ exports.listCourse = async (req, res) => {
 
   //
   const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
 
   //Query
   try {
@@ -686,11 +692,18 @@ exports.listCourse = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourse_DoPagination_Method_1_or_0(
           req,
-          instructorEmail
+          instructorEmail,
+          skip,
+          _limit
         );
       } else {
         //Do Pagination & Both
-        data = await listCourse_DoPagination_Method_Both(req, instructorEmail);
+        data = await listCourse_DoPagination_Method_Both(
+          req,
+          instructorEmail,
+          skip,
+          _limit
+        );
       }
     } else {
       if (req.query.method != 'both') {
@@ -717,12 +730,23 @@ exports.listCourse = async (req, res) => {
       );
     });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
+
     //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { data }
+      { result }
     );
   } catch (error) {
     console.log(error);
@@ -736,80 +760,15 @@ exports.listCourse = async (req, res) => {
   }
 };
 
-function listCourse_DoPagination_Method_Both(req, instructorEmail) {
+function listCourse_DoPagination_Method_Both(
+  req,
+  instructorEmail,
+  skip,
+  _limit
+) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: {
-                [Op.in]: ['0', '1'],
-              },
-            },
-            {
-              startDate: {
-                [Op.between]: [
-                  moment.utc(req.query.startFrom),
-                  moment.utc(req.query.startTo),
-                ],
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Instructor,
-            required: true,
-            where: {
-              email: {
-                [Op.substring]: instructorEmail,
-              },
-            },
-          },
-        ],
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -915,99 +874,29 @@ function listCourse_DoPagination_Method_Both(req, instructorEmail) {
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
+function listCourse_DoPagination_Method_1_or_0(
+  req,
+  instructorEmail,
+  skip,
+  _limit
+) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: req.query.method,
-            },
-            {
-              startDate: {
-                [Op.between]: [
-                  moment.utc(req.query.startFrom),
-                  moment.utc(req.query.startTo),
-                ],
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Instructor,
-            required: true,
-            where: {
-              email: {
-                [Op.substring]: instructorEmail,
-              },
-            },
-          },
-        ],
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -1111,101 +1000,24 @@ function listCourse_DoPagination_Method_1_or_0(req, instructorEmail) {
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
 function listCourse_NOPagination_Method_Both(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: {
-                [Op.in]: ['0', '1'],
-              },
-            },
-            {
-              startDate: {
-                [Op.between]: [
-                  moment.utc(req.query.startFrom),
-                  moment.utc(req.query.startTo),
-                ],
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Instructor,
-            required: true,
-            where: {
-              email: {
-                [Op.substring]: instructorEmail,
-              },
-            },
-          },
-        ],
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -1311,97 +1123,22 @@ function listCourse_NOPagination_Method_Both(req, instructorEmail) {
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
 function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: req.query.method,
-            },
-            {
-              startDate: {
-                [Op.between]: [
-                  moment.utc(req.query.startFrom),
-                  moment.utc(req.query.startTo),
-                ],
-              },
-            },
-          ],
-        },
-        include: [
-          {
-            model: db_Instructor,
-            required: true,
-            where: {
-              email: {
-                [Op.substring]: instructorEmail,
-              },
-            },
-          },
-        ],
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -1505,22 +1242,15 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
@@ -1529,6 +1259,12 @@ function listCourse_NOPagination_Method_1_or_0(req, instructorEmail) {
 //---------------------------------------------------------------
 exports.listCourseNoDate = async (req, res) => {
   const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
 
   //Query
   try {
@@ -1538,40 +1274,24 @@ exports.listCourseNoDate = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourseNoDate_DoPagination_Method_1_or_0(
           req,
-          res,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          skip,
+          _limit
         );
       } else {
         //Do Pagination & Both
         data = await listCourseNoDate_DoPagination_Method_Both(
           req,
-          res,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
+          skip,
+          _limit
         );
       }
     } else {
       if (req.query.method != 'both') {
         //NO Pagination & Method 1 or 0
-        data = await listCourseNoDate_NOPagination_Method_1_or_0(
-          req,
-          res,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
-        );
+        data = await listCourseNoDate_NOPagination_Method_1_or_0(req);
       } else {
         //NO Pagination & Method Both
-        data = await listCourseNoDate_NOPagination_Method_Both(
-          req,
-          res,
-          db_Course,
-          db_Group,
-          db_GroupSchedule
-        );
+        data = await listCourseNoDate_NOPagination_Method_Both(req);
       }
     }
 
@@ -1587,12 +1307,23 @@ exports.listCourseNoDate = async (req, res) => {
       );
     });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
+
     //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { data }
+      { result }
     );
   } catch (error) {
     console.log(error);
@@ -1606,67 +1337,10 @@ exports.listCourseNoDate = async (req, res) => {
   }
 };
 
-function listCourseNoDate_DoPagination_Method_Both(
-  req,
-  res,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourseNoDate_DoPagination_Method_Both(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: {
-                [Op.in]: ['0', '1'],
-              },
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -1758,86 +1432,24 @@ function listCourseNoDate_DoPagination_Method_Both(
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDate_DoPagination_Method_1_or_0(
-  req,
-  res,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourseNoDate_DoPagination_Method_1_or_0(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: req.query.method,
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -1927,88 +1539,24 @@ function listCourseNoDate_DoPagination_Method_1_or_0(
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDate_NOPagination_Method_Both(
-  req,
-  res,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourseNoDate_NOPagination_Method_Both(req) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: {
-                [Op.in]: ['0', '1'],
-              },
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -2100,84 +1648,22 @@ function listCourseNoDate_NOPagination_Method_Both(
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDate_NOPagination_Method_1_or_0(
-  req,
-  res,
-  db_Course,
-  db_Group,
-  db_GroupSchedule
-) {
+function listCourseNoDate_NOPagination_Method_1_or_0(req) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    let numRows = await db_Course
-      .count({
-        where: {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  name_ar: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-                {
-                  name_en: {
-                    [Op.substring]: req.query.searchKey,
-                  },
-                },
-              ],
-            },
-            {
-              method: req.query.method,
-            },
-          ],
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    numRows = parseInt(numRows);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -2267,22 +1753,15 @@ function listCourseNoDate_NOPagination_Method_1_or_0(
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
@@ -2318,6 +1797,12 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
 
   //
   const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
 
   //Query
   try {
@@ -2327,14 +1812,16 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
           req,
-          res,
+          skip,
+          _limit,
           orderBy
         );
       } else {
         //Do Pagination & Both
         data = await listCourseNoDateByDepartment_DoPagination_Method_Both(
           req,
-          res,
+          skip,
+          _limit,
           orderBy
         );
       }
@@ -2343,14 +1830,12 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
         //NO Pagination & Method 1 or 0
         data = await listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
           req,
-          res,
           orderBy
         );
       } else {
         //NO Pagination & Method Both
         data = await listCourseNoDateByDepartment_NOPagination_Method_Both(
           req,
-          res,
           orderBy
         );
       }
@@ -2368,12 +1853,23 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
       );
     });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
+
     //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { data }
+      { result }
     );
   } catch (error) {
     console.log(error);
@@ -2389,58 +1885,13 @@ exports.listCourseNoDateByDepartment = async (req, res) => {
 
 function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
   req,
-  res,
+  skip,
+  _limit,
   orderBy
 ) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicYears acy on acy.id = sub.academicYearId \
-      inner join departments dept on dept.id = acy.departmentId \
-      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.departmentId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          req.query.method,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -2536,6 +1987,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
         order: Sequelize.literal(orderBy),
@@ -2543,76 +1995,22 @@ function listCourseNoDateByDepartment_DoPagination_Method_1_or_0(
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
 function listCourseNoDateByDepartment_DoPagination_Method_Both(
   req,
-  res,
+  skip,
+  _limit,
   orderBy
 ) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicYears acy on acy.id = sub.academicYearId \
-      inner join departments dept on dept.id = acy.departmentId \
-      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.departmentId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          1,
-          0,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -2711,6 +2109,7 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
         order: Sequelize.literal(orderBy),
@@ -2718,75 +2117,17 @@ function listCourseNoDateByDepartment_DoPagination_Method_Both(
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
-  req,
-  res,
-  orderBy
-) {
+function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(req, orderBy) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicYears acy on acy.id = sub.academicYearId \
-      inner join departments dept on dept.id = acy.departmentId \
-      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.departmentId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          req.query.method,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -2883,81 +2224,23 @@ function listCourseNoDateByDepartment_NOPagination_Method_1_or_0(
             ],
           },
         ],
+        distinct: true,
         order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDateByDepartment_NOPagination_Method_Both(
-  req,
-  res,
-  orderBy
-) {
+function listCourseNoDateByDepartment_NOPagination_Method_Both(req, orderBy) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join subjects sub on sub.id = cr.subjectId \
-      inner join academicYears acy on acy.id = sub.academicYearId \
-      inner join departments dept on dept.id = acy.departmentId \
-      where dept.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.departmentId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          1,
-          0,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -3056,23 +2339,16 @@ function listCourseNoDateByDepartment_NOPagination_Method_Both(
             ],
           },
         ],
+        distinct: true,
         order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
@@ -3099,6 +2375,12 @@ exports.listCourseNoDateByInstructor = async (req, res) => {
 
   //
   const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
 
   //Query
   try {
@@ -3108,28 +2390,26 @@ exports.listCourseNoDateByInstructor = async (req, res) => {
         //Do Pagination & Method 1 or 0
         data = await listCourseNoDateByInstructor_DoPagination_Method_1_or_0(
           req,
-          res
+          skip,
+          _limit
         );
       } else {
         //Do Pagination & Both
         data = await listCourseNoDateByInstructor_DoPagination_Method_Both(
           req,
-          res
+          skip,
+          _limit
         );
       }
     } else {
       if (req.query.method != 'both') {
         //NO Pagination & Method 1 or 0
         data = await listCourseNoDateByInstructor_NOPagination_Method_1_or_0(
-          req,
-          res
+          req
         );
       } else {
         //NO Pagination & Method Both
-        data = await listCourseNoDateByInstructor_NOPagination_Method_Both(
-          req,
-          res
-        );
+        data = await listCourseNoDateByInstructor_NOPagination_Method_Both(req);
       }
     }
 
@@ -3145,12 +2425,23 @@ exports.listCourseNoDateByInstructor = async (req, res) => {
       );
     });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
+
     //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { data }
+      { result }
     );
   } catch (error) {
     console.log(error);
@@ -3164,54 +2455,14 @@ exports.listCourseNoDateByInstructor = async (req, res) => {
   }
 };
 
-function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
+function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(
+  req,
+  skip,
+  _limit
+) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join instructors inst on inst.id = cr.instructorId \
-      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.instructorId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          req.query.method,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -3305,76 +2556,28 @@ function listCourseNoDateByInstructor_DoPagination_Method_1_or_0(req, res) {
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
+function listCourseNoDateByInstructor_DoPagination_Method_Both(
+  req,
+  skip,
+  _limit
+) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join instructors inst on inst.id = cr.instructorId \
-      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.instructorId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          1,
-          0,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -3469,75 +2672,24 @@ function listCourseNoDateByInstructor_DoPagination_Method_Both(req, res) {
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
+function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join instructors inst on inst.id = cr.instructorId \
-      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method = ?';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.instructorId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          req.query.method,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -3629,74 +2781,22 @@ function listCourseNoDateByInstructor_NOPagination_Method_1_or_0(req, res) {
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
-function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
+function listCourseNoDateByInstructor_NOPagination_Method_Both(req) {
   return new Promise(async (resolve, reject) => {
-    const doPagination = parseInt(req.query.doPagination);
-    const numPerPage = parseInt(req.query.numPerPage);
-    const page = parseInt(req.query.page);
-
-    //Count all rows
-    const sql =
-      'select count(*) as count from courses cr \
-      inner join instructors inst on inst.id = cr.instructorId \
-      where inst.id = ? and (cr.name_ar like ? or cr.name_en like ?) and cr.method in (?,?)';
-
-    let numRows = await connection
-      .query(sql, {
-        replacements: [
-          req.params.instructorId,
-          `%${req.query.searchKey}%`,
-          `%${req.query.searchKey}%`,
-          1,
-          0,
-        ],
-        logging: console.log,
-        raw: true,
-        plain: true,
-        type: QueryTypes.SELECT,
-      })
-      .catch((error) => {
-        console.log(error);
-        return Response(
-          res,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-          ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-            .ORM_OPERATION_FAILED,
-          ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-        );
-      });
-    console.log(numRows);
-    numRows = parseInt(numRows.count);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
-
-    //Calc skip or offset to be used in limit
-    let skip = (page - 1) * numPerPage;
-    let _limit = numPerPage;
-
-    //
-    let data = await db_Course
-      .findAll({
+    await db_Course
+      .findAndCountAll({
         where: {
           [Op.and]: [
             {
@@ -3790,22 +2890,15 @@ function listCourseNoDateByInstructor_NOPagination_Method_Both(req, res) {
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    let result = {
-      doPagination,
-      numRows,
-      numPerPage,
-      numPages,
-      page,
-      data,
-    };
-
-    return resolve(result);
   });
 }
 
@@ -3952,12 +3045,23 @@ exports.listCourseOriginal = async (req, res) => {
       );
     });
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
+
     //Success
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
       ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      { data }
+      { result }
     );
   } catch (error) {
     console.log(error);
@@ -3990,7 +3094,7 @@ function listCourseOriginal_NOPagination(
   orderBy
 ) {
   return new Promise(async (resolve, reject) => {
-    let { count, rows } = await db_Course
+    await db_Course
       .findAndCountAll({
         where: {
           [Op.and]: [
@@ -4081,20 +3185,10 @@ function listCourseOriginal_NOPagination(
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    //Total num of valid pages
-    let numPages = Math.ceil(count / numPerPage);
-    let result = {
-      doPagination,
-      numRows: count,
-      numPerPage,
-      numPages,
-      page,
-      data: rows,
-    };
-
-    return resolve(result);
   });
 }
 
@@ -4119,7 +3213,7 @@ function listCourseOriginal_DoPagination(
   orderBy
 ) {
   return new Promise(async (resolve, reject) => {
-    let { count, rows } = await db_Course
+    await db_Course
       .findAndCountAll({
         where: {
           [Op.and]: [
@@ -4212,19 +3306,9 @@ function listCourseOriginal_DoPagination(
       .catch((err) => {
         console.log(err);
         return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
       });
-
-    //Total num of valid pages
-    let numPages = Math.ceil(count / numPerPage);
-    let result = {
-      doPagination,
-      numRows: count,
-      numPerPage,
-      numPages,
-      page,
-      data: rows,
-    };
-
-    return resolve(result);
   });
 }

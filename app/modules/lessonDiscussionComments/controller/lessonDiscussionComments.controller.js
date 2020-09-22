@@ -424,19 +424,20 @@ exports.listlessonDiscussionComments = async (req, res) => {
   let lessonId = req.query.lessonId ? parseInt(req.query.lessonId) : '';
 
   try {
-    let data = await db_lessonDiscussion.findAll({
+    let data = await db_lessonDiscussion.findAndCountAll({
       where: {
         lessonId: { [Op.eq]: lessonId },
       },
       include: {
         model: db_lessonDiscussionComments,
       },
+      distinct: true,
       offset: skip,
       order: db.Sequelize.literal('updatedAt DESC'),
       limit: _limit,
     });
 
-    let data_all = await db_lessonDiscussion.findAll({
+    let data_all = await db_lessonDiscussion.findAndCountAll({
       where: {
         lessonId: { [Op.eq]: lessonId },
       },
@@ -485,21 +486,21 @@ exports.listlessonDiscussionComments = async (req, res) => {
           ],
         },
       ],
+      distinct: true,
       order: db.Sequelize.literal('updatedAt DESC'),
     });
 
-    let numRows = parseInt(data_all.length);
-
-    // //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
     data = doPagination ? data : data_all;
+
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -662,37 +663,6 @@ exports.listlessonDiscussionByCourseId = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  const sql =
-    'select count(*) as count from lessonDiscussions ld \
-  inner join lessons les on les.id = ld.lessonId \
-  inner join courses cr on cr.id = les.courseId \
-  where cr.id = ? and ld.text like ? ';
-
-  let numRows = await db_connection
-    .query(sql, {
-      replacements: [req.params.courseId, `%${req.query.searchKey}%`],
-      logging: console.log,
-      raw: true,
-      plain: true,
-      type: QueryTypes.SELECT,
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  console.log(numRows);
-  numRows = parseInt(numRows.count);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -710,13 +680,15 @@ exports.listlessonDiscussionByCourseId = async (req, res) => {
       data = await listlessonDiscussionByCourseId_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -741,7 +713,7 @@ exports.listlessonDiscussionByCourseId = async (req, res) => {
 function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_Course
-      .findAll({
+      .findAndCountAll({
         where: {
           id: req.params.courseId,
         },
@@ -789,6 +761,7 @@ function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
             ],
           },
         ],
+        distinct: true,
         order: [['createdAt', 'DESC']],
         offset: skip,
         limit: _limit,
@@ -806,7 +779,7 @@ function listlessonDiscussionByCourseId_DoPagination(req, skip, _limit) {
 function listlessonDiscussionByCourseId_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     await db_Course
-      .findAll({
+      .findAndCountAll({
         where: {
           id: req.params.courseId,
         },
@@ -854,6 +827,7 @@ function listlessonDiscussionByCourseId_NOPagination(req) {
             ],
           },
         ],
+        distinct: true,
         order: [['createdAt', 'DESC']],
       })
       .catch((err) => {

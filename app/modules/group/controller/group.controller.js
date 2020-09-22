@@ -355,28 +355,6 @@ exports.listGroupByCourseId = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_Group
-    .count({
-      where: {
-        courseId: req.params.courseId,
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -386,37 +364,21 @@ exports.listGroupByCourseId = async (req, res) => {
     let data;
     if (doPagination) {
       //Do Pagination
-      data = await listGroupByCourseId_DoPagination(
-        req,
-        db_Group,
-        db_Instructor,
-        db_Course,
-        db_GroupSchedule,
-        db_CourseSubscribe,
-        db_Student,
-        skip,
-        _limit
-      );
+      data = await listGroupByCourseId_DoPagination(req, skip, _limit);
     } else {
       //NO Pagination
-      data = await listGroupByCourseId_NOPagination(
-        req,
-        db_Group,
-        db_Instructor,
-        db_Course,
-        db_GroupSchedule,
-        db_CourseSubscribe,
-        db_Student
-      );
+      data = await listGroupByCourseId_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -438,20 +400,10 @@ exports.listGroupByCourseId = async (req, res) => {
   }
 };
 
-function listGroupByCourseId_DoPagination(
-  req,
-  db_Group,
-  db_Instructor,
-  db_Course,
-  db_GroupSchedule,
-  db_CourseSubscribe,
-  db_Student,
-  skip,
-  _limit
-) {
+function listGroupByCourseId_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findAll({
+      .findAndCountAll({
         where: {
           courseId: req.params.courseId,
         },
@@ -478,6 +430,7 @@ function listGroupByCourseId_DoPagination(
             model: db_GroupSchedule,
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
@@ -490,20 +443,10 @@ function listGroupByCourseId_DoPagination(
       });
   });
 }
-function listGroupByCourseId_NOPagination(
-  req,
-  db_Group,
-  db_Instructor,
-  db_Course,
-  db_GroupSchedule,
-  db_CourseSubscribe,
-  db_Student,
-  skip,
-  _limit
-) {
+function listGroupByCourseId_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     await db_Group
-      .findAll({
+      .findAndCountAll({
         where: {
           courseId: req.params.courseId,
         },
@@ -530,6 +473,7 @@ function listGroupByCourseId_NOPagination(
             model: db_GroupSchedule,
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);

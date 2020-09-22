@@ -519,7 +519,7 @@ exports.listInstructor = async (req, res) => {
   }
 
   try {
-    let data = await db_Instructor.findAll({
+    let data = await db_Instructor.findAndCountAll({
       where: {
         [Op.or]: [
           {
@@ -539,11 +539,12 @@ exports.listInstructor = async (req, res) => {
           },
         ],
       },
+      distinct: true,
       offset: skip,
       limit: _limit,
     });
 
-    let data_all = await db_Instructor.findAll({
+    let data_all = await db_Instructor.findAndCountAll({
       where: {
         [Op.or]: [
           {
@@ -564,23 +565,20 @@ exports.listInstructor = async (req, res) => {
           },
         ],
       },
+      distinct: true,
     });
-
-    //Total num of all rows
-    let numRows = parseInt(data_all.length);
-
-    //Total num of valid pages
-    let numPages = Math.ceil(numRows / numPerPage);
 
     data = doPagination ? data : data_all;
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success

@@ -255,30 +255,6 @@ exports.listRatingAndReview = async (req, res) => {
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
 
-  //Count all rows
-  let numRows = await db_RatingAndReview
-    .count({
-      where: {
-        rate: {
-          [Op.eq]: req.query.searchKey,
-        },
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      return Response(
-        res,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-        ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-          .ORM_OPERATION_FAILED,
-        ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-      );
-    });
-  numRows = parseInt(numRows);
-
-  //Total num of valid pages
-  let numPages = Math.ceil(numRows / numPerPage);
-
   //Calc skip or offset to be used in limit
   let skip = (page - 1) * numPerPage;
   let _limit = numPerPage;
@@ -287,30 +263,20 @@ exports.listRatingAndReview = async (req, res) => {
   try {
     let data;
     if (doPagination) {
-      data = await listRatingAndReview_DoPagination(
-        req,
-        db_RatingAndReview,
-        db_CourseSubscribe,
-        db_Student,
-        skip,
-        _limit
-      );
+      data = await listRatingAndReview_DoPagination(req, skip, _limit);
     } else {
-      data = await listRatingAndReview_NOPagination(
-        req,
-        db_RatingAndReview,
-        db_CourseSubscribe,
-        db_Student
-      );
+      data = await listRatingAndReview_NOPagination(req);
     }
 
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
     let result = {
       doPagination,
-      numRows,
+      numRows: data.count,
       numPerPage,
       numPages,
       page,
-      data,
+      data: data.rows,
     };
 
     //Success
@@ -332,17 +298,10 @@ exports.listRatingAndReview = async (req, res) => {
   }
 };
 
-function listRatingAndReview_DoPagination(
-  req,
-  db_RatingAndReview,
-  db_CourseSubscribe,
-  db_Student,
-  skip,
-  _limit
-) {
+function listRatingAndReview_DoPagination(req, skip, _limit) {
   return new Promise(async (resolve, reject) => {
     await db_RatingAndReview
-      .findAll({
+      .findAndCountAll({
         where: {
           rate: {
             [Op.eq]: req.query.searchKey,
@@ -359,6 +318,7 @@ function listRatingAndReview_DoPagination(
             ],
           },
         ],
+        distinct: true,
         offset: skip,
         limit: _limit,
       })
@@ -372,15 +332,10 @@ function listRatingAndReview_DoPagination(
   });
 }
 
-function listRatingAndReview_NOPagination(
-  req,
-  db_RatingAndReview,
-  db_CourseSubscribe,
-  db_Student
-) {
+function listRatingAndReview_NOPagination(req) {
   return new Promise(async (resolve, reject) => {
     await db_RatingAndReview
-      .findAll({
+      .findAndCountAll({
         where: {
           rate: {
             [Op.eq]: req.query.searchKey,
@@ -398,6 +353,7 @@ function listRatingAndReview_NOPagination(
             ],
           },
         ],
+        distinct: true,
       })
       .catch((err) => {
         console.log(err);
