@@ -2052,7 +2052,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=11&doPagination=1&numPerPage=1&page=3",
+							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=1&doPagination=1&numPerPage=1&page=3",
 							"host": [
 								"{{url}}api"
 							],
@@ -2062,7 +2062,7 @@
 							"query": [
 								{
 									"key": "lessonId",
-									"value": "11"
+									"value": "1"
 								},
 								{
 									"key": "doPagination",
@@ -2361,7 +2361,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionByCourseId/1?doPagination=1&numPerPage=10&page=1&searchKey=",
+							"raw": "{{url}}api/listlessonDiscussionByCourseId/1?doPagination=0&numPerPage=10&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
@@ -2372,7 +2372,7 @@
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -2385,6 +2385,84 @@
 								{
 									"key": "searchKey",
 									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/listLessonDiscussion",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listLessonDiscussion?doPagination=0&numPerPage=1&page=1&searchKey=1&userId=3&lessonId=2&courseId=1&orderBy=DESC",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listLessonDiscussion"
+							],
+							"query": [
+								{
+									"key": "doPagination",
+									"value": "0"
+								},
+								{
+									"key": "numPerPage",
+									"value": "1"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "searchKey",
+									"value": "1"
+								},
+								{
+									"key": "userId",
+									"value": "3"
+								},
+								{
+									"key": "lessonId",
+									"value": "2"
+								},
+								{
+									"key": "courseId",
+									"value": "1"
+								},
+								{
+									"key": "orderBy",
+									"value": "DESC",
+									"description": "ASC or DESC"
+								},
+								{
+									"key": "createdAtFrom",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "createdAtTo",
+									"value": null,
+									"disabled": true
 								}
 							]
 						}
@@ -4029,7 +4107,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listAssignmentsSubmission?doPagination=0&numPerPage=1&page=1&studentId=1&courseId=1&orderBy=DESC",
+							"raw": "{{url}}api/listAssignmentsSubmission?doPagination=0&numPerPage=1&page=1&orderBy=DESC",
 							"host": [
 								"{{url}}api"
 							],
@@ -4056,7 +4134,8 @@
 								},
 								{
 									"key": "studentId",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "lessonId",
@@ -4065,7 +4144,8 @@
 								},
 								{
 									"key": "courseId",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "submissionStartFrom",
@@ -4164,17 +4244,17 @@
 	],
 	"variable": [
 		{
-			"id": "a3dd68d9-e71a-4422-9f0e-85ae85a61c4f",
+			"id": "620aac15-1776-4df6-a2a1-3c2688c308c0",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "8ddc3829-8ef5-47a2-8334-2e35f8056836",
+			"id": "6f47b21c-8153-4a0b-b5b9-ae77b778319b",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjAwNTE3MTU2LCJleHAiOjE2MDA2MDM1NTZ9.9Tgq19pjy714DgOIwqQ3ObW3twcpd0dsnQmV4lTfvsc"
 		},
 		{
-			"id": "45764f49-d35b-46c4-b059-aaf6c50ed393",
+			"id": "25b4085f-596b-4298-b622-d9aa45b4eaaf",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}

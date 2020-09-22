@@ -1044,7 +1044,7 @@ function listLessonDiscussion_DoPagination(
   _limit
 ) {
   return new Promise(async (resolve, reject) => {
-    await db_AssignmentSubmission
+    await db_lessonDiscussion
       .findAndCountAll({
         where: {
           [Op.and]: [
