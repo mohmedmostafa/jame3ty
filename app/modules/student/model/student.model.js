@@ -1,3 +1,5 @@
+const { PORT, HOST, ENV } = require('../../../config/env.config');
+
 module.exports = (connection, Sequelize) => {
   const Student = connection.define(
     'students',
@@ -23,6 +25,21 @@ module.exports = (connection, Sequelize) => {
       img: {
         type: Sequelize.STRING(255),
         defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('img');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              if (ENV === 'dev') {
+                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              } else {
+                fieldFilesPaths[index] = `${HOST}` + '/' + location;
+              }
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
       },
       userId: {
         type: Sequelize.INTEGER,
