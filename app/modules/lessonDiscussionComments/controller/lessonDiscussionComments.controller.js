@@ -1,8 +1,11 @@
 const db = require('../../../modules');
+const { Sequelize, connection } = require('../..');
+
 const {
   Response,
   ResponseConstants,
 } = require('../../../common/response/response.handler');
+const Helper = require('../../../common/helper');
 
 const { ref, date } = require('joi');
 const { User } = require('../../../modules');
@@ -829,6 +832,278 @@ function listlessonDiscussionByCourseId_NOPagination(req) {
         ],
         distinct: true,
         order: [['createdAt', 'DESC']],
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+//-------------------------------------------------
+//-------------------------------------------------
+//-------------------------------------------------
+//-------------------------------------------------
+
+//---------------------------------------------------------------
+exports.listLessonDiscussion = async (req, res) => {
+  //Filters
+  let userId = req.query.userId ? req.query.userId : '%%';
+  let lessonId = req.query.lessonId ? req.query.lessonId : '%%';
+  let courseId = req.query.courseId ? req.query.courseId : '%%';
+
+  //Filter with date range or without date range for Lesson Discussion Created At
+  let createdAtFrom;
+  let createdAtTo;
+  let createdAtMinMaxDate;
+  if (req.query.createdAtFrom && req.query.createdAtTo) {
+    createdAtFrom = req.query.createdAtFrom;
+    createdAtTo = req.query.createdAtTo;
+  } else {
+    //Set createdAtFrom and createdAtTo to min and max date of the table
+    createdAtMinMaxDate = await Helper.getColumnMinMax(
+      Sequelize,
+      db_lessonDiscussion,
+      'createdAt'
+    );
+    createdAtMinMaxDate = createdAtMinMaxDate.get({ plain: true });
+    createdAtFrom = createdAtMinMaxDate.min;
+    createdAtTo = createdAtMinMaxDate.max;
+  }
+
+  //Order Data Based on created At of course
+  let orderBy = '';
+  if (req.query.orderBy) {
+    orderBy =
+      req.query.orderBy.trim() === 'DESC'
+        ? 'lessonDiscussions.createdAt DESC'
+        : 'lessonDiscussions.createdAt ASC';
+  } else {
+    orderBy = 'lessonDiscussions.createdAt ASC';
+  }
+
+  //
+  const doPagination = parseInt(req.query.doPagination);
+  const numPerPage = parseInt(req.query.numPerPage);
+  const page = parseInt(req.query.page);
+
+  //Calc skip or offset to be used in limit
+  let skip = (page - 1) * numPerPage;
+  let _limit = numPerPage;
+
+  //Query
+  try {
+    let data;
+    if (doPagination) {
+      //Do Pagination
+      data = await listLessonDiscussion_DoPagination(
+        req,
+        userId,
+        lessonId,
+        courseId,
+        createdAtFrom,
+        createdAtTo,
+        orderBy,
+        skip,
+        _limit
+      );
+    } else {
+      //NO Pagination
+      data = await listLessonDiscussion_NOPagination(
+        req,
+        userId,
+        lessonId,
+        courseId,
+        createdAtFrom,
+        createdAtTo,
+        orderBy
+      );
+    }
+
+    //Total num of valid pages
+    let numPages = Math.ceil(data.count / numPerPage);
+    let result = {
+      doPagination,
+      numRows: data.count,
+      numPerPage,
+      numPages,
+      page,
+      data: data.rows,
+    };
+
+    //Success
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      { result }
+    );
+  } catch (error) {
+    console.log(error);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
+  }
+};
+
+function listLessonDiscussion_NOPagination(
+  req,
+  userId,
+  lessonId,
+  courseId,
+  createdAtFrom,
+  createdAtTo,
+  orderBy
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_lessonDiscussion
+      .findAndCountAll({
+        where: {
+          [Op.and]: [
+            { userId: { [Op.like]: userId } },
+            { lessonId: { [Op.like]: lessonId } },
+            {
+              createdAt: {
+                [Op.between]: [createdAtFrom, createdAtTo],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_User,
+            required: true,
+            attributes: [
+              'id',
+              'username',
+              'email',
+              'isVerified',
+              'createdAt',
+              'updatedAt',
+            ],
+          },
+          {
+            model: db_lessonDiscussionComments,
+            include: [
+              {
+                model: db_User,
+                attributes: [
+                  'id',
+                  'username',
+                  'email',
+                  'isVerified',
+                  'createdAt',
+                  'updatedAt',
+                ],
+              },
+            ],
+          },
+          {
+            model: db_lesson,
+            required: true,
+            include: [
+              {
+                model: db_Course,
+                required: true,
+                where: {
+                  id: { [Op.like]: courseId },
+                },
+              },
+            ],
+          },
+        ],
+        distinct: true,
+        order: Sequelize.literal(orderBy),
+      })
+      .catch((err) => {
+        console.log(err);
+        return reject(err);
+      })
+      .then((data) => {
+        return resolve(data);
+      });
+  });
+}
+
+function listLessonDiscussion_DoPagination(
+  req,
+  userId,
+  lessonId,
+  courseId,
+  createdAtFrom,
+  createdAtTo,
+  orderBy,
+  skip,
+  _limit
+) {
+  return new Promise(async (resolve, reject) => {
+    await db_AssignmentSubmission
+      .findAndCountAll({
+        where: {
+          [Op.and]: [
+            { userId: { [Op.like]: userId } },
+            { lessonId: { [Op.like]: lessonId } },
+            {
+              createdAt: {
+                [Op.between]: [createdAtFrom, createdAtTo],
+              },
+            },
+          ],
+        },
+        include: [
+          {
+            model: db_User,
+            required: true,
+            attributes: [
+              'id',
+              'username',
+              'email',
+              'isVerified',
+              'createdAt',
+              'updatedAt',
+            ],
+          },
+          {
+            model: db_lessonDiscussionComments,
+            include: [
+              {
+                model: db_User,
+                attributes: [
+                  'id',
+                  'username',
+                  'email',
+                  'isVerified',
+                  'createdAt',
+                  'updatedAt',
+                ],
+              },
+            ],
+          },
+          {
+            model: db_lesson,
+            required: true,
+            include: [
+              {
+                model: db_Course,
+                required: true,
+                where: {
+                  id: { [Op.like]: courseId },
+                },
+              },
+            ],
+          },
+        ],
+        distinct: true,
+        offset: skip,
+        limit: _limit,
+        order: Sequelize.literal(orderBy),
       })
       .catch((err) => {
         console.log(err);
