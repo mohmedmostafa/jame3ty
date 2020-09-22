@@ -440,6 +440,9 @@ exports.error_urlPaymentRequest = async (req, res) => {
   }
 };
 
+//-------------------------------------------------
+//-------------------------------------------------
+//-------------------------------------------------
 //Get Instructor total num of students subscribed in all courses
 exports.getInstructorSubscribedStudents = function (instructorId) {
   return new Promise(async (resolve, reject) => {
@@ -454,7 +457,6 @@ exports.getInstructorSubscribedStudents = function (instructorId) {
             where: { instructorId: instructorId },
           },
         ],
-        // group: [Sequelize.col('courseId')],
       })
       .catch((error) => {
         console.log(error);

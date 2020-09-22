@@ -365,6 +365,9 @@ function listRatingAndReview_NOPagination(req) {
   });
 }
 
+//-----------------------------------------------
+//-----------------------------------------------
+//-----------------------------------------------
 //Get Rating AVG and Rating Count for Course
 exports.getCourseAVGRateAndRateCount = function (courseId) {
   return new Promise(async (resolve, reject) => {
@@ -405,10 +408,13 @@ exports.getInstructorAVGRateAndRateCount = function (instructorId) {
         include: [
           {
             model: db_CourseSubscribe,
+            attributes: [],
+            required: true,
             where: { paymentResult: 'CAPTURED' },
             include: [
               {
                 model: db_Course,
+                required: true,
                 where: { instructorId: instructorId },
               },
             ],
