@@ -79,6 +79,11 @@ exports.ResponseConstants = {
         UPAYMENT_PROCESS_CANCELED: 'UPAYMENT_PROCESS_CANCELED',
         INVALID_ROLE: 'INVALID_ROLE',
         TOO_MANY_ROLES: 'TOO_MANY_ROLES',
+        VIMEO_ERROR_CODE_2205: 'VIMEO_ERROR_CODE_2205',
+        VIMEO_ERROR_CODE_2204: 'VIMEO_ERROR_CODE_2204',
+        VIMEO_ERROR_CODE_2230: 'VIMEO_ERROR_CODE_2230',
+        VIMEO_ERROR_CODE_2511: 'VIMEO_ERROR_CODE_2511',
+        VIMEO_ERROR_CODE_3116: 'VIMEO_ERROR_CODE_3116',
       },
     },
     UNAUTHORIZED: {
@@ -92,6 +97,7 @@ exports.ResponseConstants = {
         INVALID_PASSWORD: 'INVALID_PASSWORD',
         VERIFICATION_CODE_INCORRECT: 'VERIFICATION_CODE_INCORRECT',
         SIGNIN_REQUIRED: 'SIGNIN REQUIRED',
+        VIMEO_ERROR_CODE_8002: 'VIMEO_ERROR_CODE_8002',
       },
     },
     PAYMENT_REQUIRED: {
@@ -104,6 +110,8 @@ exports.ResponseConstants = {
       code: '403',
       type: {
         ACCESS_DENIED: 'ACCESS_DENIED',
+        VIMEO_ERROR_CODE_4102: 'VIMEO_ERROR_CODE_4102',
+        VIMEO_ERROR_CODE_4101: 'VIMEO_ERROR_CODE_4101',
       },
     },
     NOT_FOUND: {
@@ -144,6 +152,7 @@ exports.ResponseConstants = {
         INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
         ORM_OPERATION_FAILED: 'ORM_OPERATION_FAILED',
         ATTACHMENT_DELETION_FAILED: 'ATTACHMENT_DELETION_FAILED',
+        VIMEO_ERROR_CODE_4003: 'VIMEO_ERROR_CODE_4003',
       },
     },
     BAD_GATEWAY: {
@@ -156,6 +165,44 @@ exports.ResponseConstants = {
   },
   //Error MSGs
   ERROR_MESSAGES: {
+    VIMEO_ERROR_CODE_4003: {
+      en: 'There is a problem initiating the upload.',
+      ar: 'There is a problem initiating the upload.',
+    },
+    VIMEO_ERROR_CODE_4101: {
+      en: "The authenticated user's maximum disk space has been reached.",
+      ar: "The authenticated user's maximum disk space has been reached.",
+    },
+    VIMEO_ERROR_CODE_4102: {
+      en: "The authenticated user's allotted quota has been reached.",
+      ar: "The authenticated user's allotted quota has been reached.",
+    },
+    VIMEO_ERROR_CODE_8002: {
+      en: 'No user is associated with the access token.',
+      ar: 'No user is associated with the access token.',
+    },
+    VIMEO_ERROR_CODE_3116: {
+      en:
+        'The type payload parameter was supplied. instead of upload.approach. Use upload.approach starting from API version 3.4',
+      ar:
+        'The type payload parameter was supplied. instead of upload.approach. Use upload.approach starting from API version 3.4',
+    },
+    VIMEO_ERROR_CODE_2511: {
+      en: 'The scheduled_start_time parameter is invalid.',
+      ar: 'The scheduled_start_time parameter is invalid.',
+    },
+    VIMEO_ERROR_CODE_2230: {
+      en: 'The upload type is invalid.',
+      ar: 'The upload type is invalid.',
+    },
+    VIMEO_ERROR_CODE_2204: {
+      en: 'The request contains invalid body parameters.',
+      ar: 'The request contains invalid body parameters.',
+    },
+    VIMEO_ERROR_CODE_2205: {
+      en: "The body of the request isn't formatted properly.",
+      ar: "The body of the request isn't formatted properly.",
+    },
     UPAYMENTS_GATEWAY_NOT_TEST_CREDENTIALS: {
       en: 'Accessing sandbox using live parameters or wrong parameter value',
       ar: 'Accessing sandbox using live parameters or wrong parameter value',

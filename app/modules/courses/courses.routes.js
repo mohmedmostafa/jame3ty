@@ -143,4 +143,19 @@ module.exports = function (app) {
     ],
     CourseController.listCourseById
   );
+
+  // const testVedioUpload = FileUploader.upload.fields([
+  //   {
+  //     name: 'vedio',
+  //     maxCount: 1,
+  //   },
+  // ]);
+
+  // app.post(
+  //   '/api/uploadVedioVimeo',
+  //   (req, res, next) => {
+  //     FileUploader.validateFileAfterUpdate(req, res, next, testVedioUpload);
+  //   },
+  //   CourseController.uploadVedioVimeo
+  // );
 };
