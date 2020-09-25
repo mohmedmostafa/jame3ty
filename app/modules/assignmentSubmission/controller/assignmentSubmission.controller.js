@@ -239,6 +239,16 @@ exports.listAssignmentSubmissionById = async (req, res) => {
         },
         {
           model: db_Lesson,
+          include: [
+            {
+              model: db_Course,
+              include: [
+                {
+                  model: db_Instructor,
+                },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -484,6 +494,9 @@ function listAssignmentsSubmission_NOPagination(
         },
         include: [
           {
+            model: db_Student,
+          },
+          {
             model: db_Lesson,
             required: true,
             include: [
@@ -546,6 +559,9 @@ function listAssignmentsSubmission_DoPagination(
           ],
         },
         include: [
+          {
+            model: db_Student,
+          },
           {
             model: db_Lesson,
             include: [

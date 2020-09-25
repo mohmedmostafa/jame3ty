@@ -68,7 +68,7 @@ exports.ResponseConstants = {
     },
     NO_CONTENT: {
       code: '204',
-      type: { NO_CONTENT: 'NO_CONTENT' },
+      type: { NO_CONTENT: 'NO_CONTENT', VIMEO_NO_CONTENT: 'VIMEO_NO_CONTENT' },
     },
     BAD_REQUEST: {
       code: '400',
@@ -84,6 +84,7 @@ exports.ResponseConstants = {
         VIMEO_ERROR_CODE_2230: 'VIMEO_ERROR_CODE_2230',
         VIMEO_ERROR_CODE_2511: 'VIMEO_ERROR_CODE_2511',
         VIMEO_ERROR_CODE_3116: 'VIMEO_ERROR_CODE_3116',
+        VIMEO_ERROR_UNKNOWN: 'VIMEO_ERROR_UNKNOWN',
       },
     },
     UNAUTHORIZED: {
@@ -110,6 +111,7 @@ exports.ResponseConstants = {
       code: '403',
       type: {
         ACCESS_DENIED: 'ACCESS_DENIED',
+        VIMEO_FORBIDDEN: 'VIMEO_FORBIDDEN',
         VIMEO_ERROR_CODE_4102: 'VIMEO_ERROR_CODE_4102',
         VIMEO_ERROR_CODE_4101: 'VIMEO_ERROR_CODE_4101',
       },
@@ -165,6 +167,18 @@ exports.ResponseConstants = {
   },
   //Error MSGs
   ERROR_MESSAGES: {
+    VIMEO_FORBIDDEN: {
+      en: "The authenticated user can't delete this video.",
+      ar: "The authenticated user can't delete this video.",
+    },
+    VIMEO_NO_CONTENT: {
+      en: 'The video was deleted.',
+      ar: 'The video was deleted.',
+    },
+    VIMEO_ERROR_UNKNOWN: {
+      en: 'Vimeo Unknown Error',
+      ar: 'Vimeo Unknown Error',
+    },
     VIMEO_ERROR_CODE_4003: {
       en: 'There is a problem initiating the upload.',
       ar: 'There is a problem initiating the upload.',
