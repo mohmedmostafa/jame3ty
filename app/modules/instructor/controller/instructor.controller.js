@@ -492,50 +492,61 @@ exports.listInstructor = async (req, res) => {
   //Query
   let searchKey = req.query.searchKey ? req.query.searchKey : '';
 
+  //Check role from token if instructor return info for that instructor only
+  let instructorId = '%%';
+  if (req.userRoles && req.userRoles[0] === 'instructor') {
+    instructorId = req.instructorId;
+  }
+
   //check if
-  const userData = await helper.getUserdata(req, res).catch((err) => {
-    console.log(err);
-    return Response(
-      res,
-      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
-      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
-        .ORM_OPERATION_FAILED,
-      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
-    );
-  });
-  console.log(userData);
+  // const userData = await helper.getUserdata(req, res).catch((err) => {
+  //   console.log(err);
+  //   return Response(
+  //     res,
+  //     ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+  //     ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+  //       .ORM_OPERATION_FAILED,
+  //     ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+  //   );
+  // });
+  // console.log(userData);
 
   //if there no user data returned
-  if (
-    userData.type == 'instructor' &&
-    (userData.data == null || userData.data.id != req.params.id)
-  ) {
-    return Response(
-      res,
-      ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
-      ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
-      ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
-    );
-  }
+  // if (
+  //   userData.type == 'instructor' &&
+  //   (userData.data == null || userData.data.id != req.params.id)
+  // ) {
+  //   return Response(
+  //     res,
+  //     ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.code,
+  //     ResponseConstants.HTTP_STATUS_CODES.FORBIDDEN.type.ACCESS_DENIED,
+  //     ResponseConstants.ERROR_MESSAGES.ACCESS_DENIED
+  //   );
+  // }
 
   try {
     let data = await db_Instructor.findAndCountAll({
       where: {
-        [Op.or]: [
+        [Op.and]: [
+          { id: { [Op.like]: instructorId } },
           {
-            name_ar: {
-              [Op.substring]: searchKey,
-            },
-          },
-          {
-            name_en: {
-              [Op.substring]: searchKey,
-            },
-          },
-          {
-            mobile: {
-              [Op.substring]: searchKey,
-            },
+            [Op.or]: [
+              {
+                name_ar: {
+                  [Op.substring]: searchKey,
+                },
+              },
+              {
+                name_en: {
+                  [Op.substring]: searchKey,
+                },
+              },
+              {
+                mobile: {
+                  [Op.substring]: searchKey,
+                },
+              },
+            ],
           },
         ],
       },
@@ -546,22 +557,26 @@ exports.listInstructor = async (req, res) => {
 
     let data_all = await db_Instructor.findAndCountAll({
       where: {
-        [Op.or]: [
+        [Op.and]: [
+          { id: { [Op.like]: instructorId } },
           {
-            name_ar: {
-              [Op.substring]: searchKey,
-            },
-          },
-
-          {
-            name_en: {
-              [Op.substring]: searchKey,
-            },
-          },
-          {
-            mobile: {
-              [Op.substring]: searchKey,
-            },
+            [Op.or]: [
+              {
+                name_ar: {
+                  [Op.substring]: searchKey,
+                },
+              },
+              {
+                name_en: {
+                  [Op.substring]: searchKey,
+                },
+              },
+              {
+                mobile: {
+                  [Op.substring]: searchKey,
+                },
+              },
+            ],
           },
         ],
       },
