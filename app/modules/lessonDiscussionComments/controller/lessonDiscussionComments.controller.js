@@ -988,6 +988,14 @@ function listLessonDiscussion_NOPagination(
               'createdAt',
               'updatedAt',
             ],
+            include: [
+              {
+                model: db_Instructor,
+              },
+              {
+                model: db_Student,
+              },
+            ],
           },
           {
             model: db_lessonDiscussionComments,
@@ -1001,6 +1009,14 @@ function listLessonDiscussion_NOPagination(
                   'isVerified',
                   'createdAt',
                   'updatedAt',
+                ],
+                include: [
+                  {
+                    model: db_Instructor,
+                  },
+                  {
+                    model: db_Student,
+                  },
                 ],
               },
             ],
@@ -1069,6 +1085,14 @@ function listLessonDiscussion_DoPagination(
               'createdAt',
               'updatedAt',
             ],
+            include: [
+              {
+                model: db_Instructor,
+              },
+              {
+                model: db_Student,
+              },
+            ],
           },
           {
             model: db_lessonDiscussionComments,
@@ -1082,6 +1106,14 @@ function listLessonDiscussion_DoPagination(
                   'isVerified',
                   'createdAt',
                   'updatedAt',
+                ],
+                include: [
+                  {
+                    model: db_Instructor,
+                  },
+                  {
+                    model: db_Student,
+                  },
                 ],
               },
             ],
