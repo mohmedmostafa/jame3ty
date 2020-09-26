@@ -33,6 +33,7 @@ const db_CourseSubscribe = db.CourseSubscribe;
 const db_Student = db.Student;
 const db_Instructor = db.Instructor;
 const db_Payment = db.Payment;
+const db_Group = db.Group;
 
 //---------------------------------------------------------------
 exports.generatePaymentRequest = async (req, res) => {
@@ -90,6 +91,29 @@ exports.generatePaymentRequest = async (req, res) => {
     );
   }
 
+  //
+  if (req.body.groupId) {
+    let group = await db_Group.findOne({
+      where: {
+        id: req.body.groupId,
+        courseId: req.body.courseId,
+      },
+    });
+
+    //If group not found
+    if (!group) {
+      console.log('!student');
+      // onErrorDeleteFiles(req);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        ResponseConstants.ERROR_MESSAGES
+          .RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND
+      );
+    }
+  }
+
   //Check if the student try to buy this course before or not
   let studentCourseSubscribe = await db_CourseSubscribe.findOne({
     where: {
@@ -103,6 +127,7 @@ exports.generatePaymentRequest = async (req, res) => {
     studentCourseSubscribe = await db_CourseSubscribe.create({
       studentId: req.body.studentId,
       courseId: req.body.courseId,
+      groupId: req.body.groupId ? req.body.groupId : '',
       details: JSON.stringify([course, student]),
     });
     console.log(studentCourseSubscribe);
@@ -125,7 +150,12 @@ exports.generatePaymentRequest = async (req, res) => {
     //Update if no CAPTURED payment for that course from student
     if (!studentCourseSubscribePayment) {
       await db_CourseSubscribe.update(
-        { details: JSON.stringify([course, student]) },
+        {
+          details: JSON.stringify([course, student]),
+          groupId: req.body.groupId
+            ? req.body.groupId
+            : studentCourseSubscribe.groupId,
+        },
         {
           where: {
             studentId: req.body.studentId,

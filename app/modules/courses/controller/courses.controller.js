@@ -78,22 +78,26 @@ exports.addCourse = async (req, res) => {
     req.body.img = field_1.join();
   }
 
-  //Upload Video to Vimeo
-  await VimeoHelper.uploadVideoTOVimeo(req, res)
-    .catch((error) => {
+  let cont = 1;
+  if (req.files.vedio) {
+    //Upload Video to Vimeo
+    await VimeoHelper.uploadVideoTOVimeo(req, res).catch((error) => {
+      cont = 0;
       onErrorDeleteFiles(req);
       VimeoHelper.vimeoErrorResHandler(req, res, error);
-    })
-    .then((uri) => {
-      //Add Course
-      //If the Course Methiod is 'Recorded Lessons'
-      if (req.params.method === '0') {
-        addRecordedLessonsCourse(req, res, instructor);
-      } else {
-        //If the Course Methiod is 'Live Streaming'
-        addLiveStreamingCourse(req, res, instructor);
-      }
     });
+  }
+
+  if (cont) {
+    //Add Course
+    //If the Course Methiod is 'Recorded Lessons'
+    if (req.params.method === '0') {
+      addRecordedLessonsCourse(req, res, instructor);
+    } else {
+      //If the Course Methiod is 'Live Streaming'
+      addLiveStreamingCourse(req, res, instructor);
+    }
+  }
 };
 
 //Add Course with 'Recorded Lessons' as a Method
@@ -266,6 +270,12 @@ exports.deleteCourse = async (req, res) => {
       }
     }
 
+    course = await db_Course.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
     //Delete
     let deletedCourse = await db_Course.destroy({
       where: { id: req.params.id },
@@ -273,7 +283,7 @@ exports.deleteCourse = async (req, res) => {
 
     //If the record Deleted then delete files in img and vedio
     if (deletedCourse) {
-      //
+      //Remove images from fs
       let imgStr = course.getDataValue('img');
       if (imgStr.length > 0) {
         let locations = imgStr.split(',');
@@ -283,14 +293,12 @@ exports.deleteCourse = async (req, res) => {
         });
       }
 
-      //
+      //remove video from vimeo
       let vedioStr = course.getDataValue('vedio');
       if (vedioStr.length > 0) {
         let locations = vedioStr.split(',');
         console.log(locations);
-        locations.forEach((loc) => {
-          deleteFile(loc);
-        });
+        await VimeoHelper.removeVideoTOVimeo(locations);
       }
     }
 
@@ -572,80 +580,86 @@ exports.updateCourse = async (req, res) => {
       req.body.img = field_1.join();
     }
 
-    //Create Attachment String
+    let cont = 1;
     if (req.files.vedio) {
-      let field_2 = [];
-      req.files['vedio'].forEach((file) => {
-        let fileUrl = file.path.replace(/\\/g, '/');
-        field_2.push(fileUrl);
-      });
-      req.body.vedio = field_2.join();
-    }
-
-    //Do Update
-    let updatedCourse = await db_Course.update(
-      {
-        name_ar: req.body.name_ar ? req.body.name_ar : course.name_ar,
-        name_en: req.body.name_en ? req.body.name_en : course.name_en,
-        code: req.body.code ? req.body.code : course.code,
-        desc: req.body.desc ? req.body.desc : course.desc,
-        prerequisiteText: req.body.prerequisiteText
-          ? req.body.prerequisiteText
-          : course.prerequisiteText,
-        whatYouWillLearn: req.body.whatYouWillLearn
-          ? req.body.whatYouWillLearn
-          : course.whatYouWillLearn,
-        numOfLessons: req.body.numOfLessons
-          ? req.body.numOfLessons
-          : course.numOfLessons,
-        numOfHours: req.body.numOfHours
-          ? req.body.numOfHours
-          : course.numOfHours,
-        price: req.body.price ? req.body.price : course.price,
-        priceBeforeDiscount: req.body.priceBeforeDiscount
-          ? req.body.priceBeforeDiscount
-          : course.priceBeforeDiscount,
-        startDate: req.body.startDate
-          ? moment.utc(req.body.startDate)
-          : moment.utc(course.startDate),
-        type: req.body.type ? req.body.type : course.type,
-        subjectId: req.body.subjectId ? req.body.subjectId : course.subjectId,
-        img: req.body.img ? req.body.img : course.getDataValue('img'),
-        vedio: req.body.vedio ? req.body.vedio : course.getDataValue('vedio'),
-      },
-      { where: { id: req.params.id } }
-    );
-
-    //If the record Updated then delete files in img and vedio
-    if (updatedCourse && req.body.img) {
-      let imgStr = course.getDataValue('img');
-      if (imgStr.length > 0) {
-        let locations = imgStr.split(',');
-        console.log(locations);
-        locations.forEach((loc) => {
-          deleteFile(loc);
-        });
-      }
-    }
-
-    if (updatedCourse && req.body.vedio) {
       let vedioStr = course.getDataValue('vedio');
+      //If already has video
       if (vedioStr.length > 0) {
         let locations = vedioStr.split(',');
         console.log(locations);
-        locations.forEach((loc) => {
-          deleteFile(loc);
+        //Replace Vimeo Video
+        await VimeoHelper.replaceVideoTOVimeo(req, res, locations).catch(
+          (error) => {
+            cont = 0;
+            onErrorDeleteFiles(req);
+            VimeoHelper.vimeoErrorResHandler(req, res, error);
+          }
+        );
+      } else {
+        //Upload Video to Vimeo
+        await VimeoHelper.uploadVideoTOVimeo(req, res).catch((error) => {
+          cont = 0;
+          onErrorDeleteFiles(req);
+          VimeoHelper.vimeoErrorResHandler(req, res, error);
         });
       }
     }
 
-    //Success
-    return Response(
-      res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      ResponseConstants.ERROR_MESSAGES.SUCCESS
-    );
+    if (cont) {
+      //Do Update
+      let updatedCourse = await db_Course.update(
+        {
+          name_ar: req.body.name_ar ? req.body.name_ar : course.name_ar,
+          name_en: req.body.name_en ? req.body.name_en : course.name_en,
+          code: req.body.code ? req.body.code : course.code,
+          desc: req.body.desc ? req.body.desc : course.desc,
+          prerequisiteText: req.body.prerequisiteText
+            ? req.body.prerequisiteText
+            : course.prerequisiteText,
+          whatYouWillLearn: req.body.whatYouWillLearn
+            ? req.body.whatYouWillLearn
+            : course.whatYouWillLearn,
+          numOfLessons: req.body.numOfLessons
+            ? req.body.numOfLessons
+            : course.numOfLessons,
+          numOfHours: req.body.numOfHours
+            ? req.body.numOfHours
+            : course.numOfHours,
+          price: req.body.price ? req.body.price : course.price,
+          priceBeforeDiscount: req.body.priceBeforeDiscount
+            ? req.body.priceBeforeDiscount
+            : course.priceBeforeDiscount,
+          startDate: req.body.startDate
+            ? moment.utc(req.body.startDate)
+            : moment.utc(course.startDate),
+          type: req.body.type ? req.body.type : course.type,
+          subjectId: req.body.subjectId ? req.body.subjectId : course.subjectId,
+          img: req.body.img ? req.body.img : course.getDataValue('img'),
+          vedio: req.body.uri ? req.body.uri : course.getDataValue('vedio'),
+        },
+        { where: { id: req.params.id } }
+      );
+
+      //If the record Updated then delete files in img and vedio
+      if (updatedCourse && req.body.img) {
+        let imgStr = course.getDataValue('img');
+        if (imgStr.length > 0) {
+          let locations = imgStr.split(',');
+          console.log(locations);
+          locations.forEach((loc) => {
+            deleteFile(loc);
+          });
+        }
+      }
+
+      //Success
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+        ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+        ResponseConstants.ERROR_MESSAGES.SUCCESS
+      );
+    }
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
