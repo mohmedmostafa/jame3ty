@@ -26,6 +26,7 @@ const db_Student = db.Student;
 const db_Lesson = db.Lesson;
 const db_Instructor = db.Instructor;
 const db_AssignmentSubmission = db.AssignmentSubmission;
+const db_user = db.User;
 
 //---------------------------------------------------------------
 exports.addAssignmentSubmission = async (req, res) => {
@@ -505,6 +506,7 @@ function listAssignmentsSubmission_NOPagination(
               },
             ],
           },
+         
         ],
         distinct: true,
         order: Sequelize.literal(orderBy),
