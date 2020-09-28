@@ -100,8 +100,10 @@ updateInstructorValidation = async (req, res, next) => {
     name_en: Joi.string().trim().min(3).max(30).messages(Joi_messages),
     bio: Joi.string().trim().min(5).max(30).messages(Joi_messages),
     mobile: Joi.string().trim().alphanum().required().messages(Joi_messages),
-    password: Joi.string().min(5).max(30).required().messages(Joi_messages),
-  }).options({ abortEarly: false });
+    //password: Joi.string().min(5).max(30).required().messages(Joi_messages),
+  })
+    .options({ abortEarly: false })
+    .unknown(true);
 
   const { error } = schema.validate(req.body);
   console.log(error);
