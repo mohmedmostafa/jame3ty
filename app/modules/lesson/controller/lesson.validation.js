@@ -188,23 +188,6 @@ deleteLessonValidation = (req, res, next) => {
     }
   }
 
-  //Body Validation
-  // let schema = Joi.object({
-  //   attachmentPath: Joi.string().min(3).required().messages(Joi_messages),
-  // }).options({ abortEarly: false });
-
-  // const { error } = schema.validate(req.body);
-  // console.log(error);
-  // if (error) {
-  //   // onErrorDeleteFiles(req);
-  //   return ValidateResponse(
-  //     res,
-  //     ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
-  //       .JOI_VALIDATION_INVALID_DATA,
-  //     error.details
-  //   );
-  // }
-
   return next();
 };
 
@@ -227,6 +210,23 @@ deleteAttachmentValidation = (req, res, next) => {
         error.details
       );
     }
+  }
+
+  //Body Validation
+  let schema = Joi.object({
+    attachmentPath: Joi.string().min(3).required().messages(Joi_messages),
+  }).options({ abortEarly: false });
+
+  const { error } = schema.validate(req.body);
+  console.log(error);
+  if (error) {
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
   }
 
   return next();
