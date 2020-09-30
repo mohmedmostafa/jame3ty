@@ -22,7 +22,7 @@ addAssignmentSubmissionValidation = (req, res, next) => {
   const { error } = schema.validate(req.body);
   console.log(error);
   if (error) {
-    // onErrorDeleteFiles(req);
+    onErrorDeleteFiles(req);
     return ValidateResponse(
       res,
       ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
@@ -45,7 +45,7 @@ updateAssignmentSubmissionValidation = (req, res, next) => {
     const { error } = schemaParam.validate(req.params);
     console.log(error);
     if (error) {
-      // onErrorDeleteFiles(req);
+      onErrorDeleteFiles(req);
       return ValidateResponse(
         res,
         ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
@@ -182,6 +182,48 @@ listAssignmentSubmissionByIdValidation = (req, res, next) => {
 };
 
 //----------------------------------------------------------
+evaluateAssignmentSubmissionValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
+
+    const { error } = schemaParam.validate(req.params);
+    console.log(error);
+    if (error) {
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
+    }
+  }
+
+  //Body Validation
+  let schema = Joi.object({
+    status: Joi.number().integer().valid(1, 0).messages(Joi_messages),
+    statusComments: Joi.string().allow('', null).messages(Joi_messages),
+  }).options({ abortEarly: false });
+
+  const { error } = schema.validate(req.body);
+  console.log(error);
+  if (error) {
+    // onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
 const AssignmentSubmissionValidation = {
   addAssignmentSubmissionValidation: addAssignmentSubmissionValidation,
   deleteAssignmentSubmissionValidation: deleteAssignmentSubmissionValidation,
@@ -189,6 +231,7 @@ const AssignmentSubmissionValidation = {
   listAssignmentsSubmissionValidation: listAssignmentsSubmissionValidation,
   listAssignmentSubmissionByIdValidation: listAssignmentSubmissionByIdValidation,
   updateAssignmentSubmissionValidation: updateAssignmentSubmissionValidation,
+  evaluateAssignmentSubmissionValidation: evaluateAssignmentSubmissionValidation,
 };
 
 module.exports = AssignmentSubmissionValidation;

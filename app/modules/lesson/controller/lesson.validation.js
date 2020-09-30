@@ -49,6 +49,11 @@ addLessonValidation = (req, res, next) => {
       then: Joi.date().iso().required().messages(Joi_messages),
       otherwise: Joi.string().allow('', null).messages(Joi_messages),
     }),
+    liveStreamingEndTime: Joi.when('isLiveStreaming', {
+      is: 1,
+      then: Joi.date().iso().required().messages(Joi_messages),
+      otherwise: Joi.string().allow('', null).messages(Joi_messages),
+    }),
     isAssostatedWithGroup: Joi.number()
       .integer()
       .min(0)
@@ -133,6 +138,11 @@ updateLessonValidation = (req, res, next) => {
       otherwise: Joi.string().allow('', null).messages(Joi_messages),
     }),
     liveStreamingTime: Joi.when('isLiveStreaming', {
+      is: 1,
+      then: Joi.date().iso().required().messages(Joi_messages),
+      otherwise: Joi.string().allow('', null).messages(Joi_messages),
+    }),
+    liveStreamingEndTime: Joi.when('isLiveStreaming', {
       is: 1,
       then: Joi.date().iso().required().messages(Joi_messages),
       otherwise: Joi.string().allow('', null).messages(Joi_messages),

@@ -1,6 +1,7 @@
 const db = require('../..');
 const {
   Response,
+  ValidateResponse,
   ResponseConstants,
 } = require('../../../common/response/response.handler');
 
@@ -76,6 +77,24 @@ exports.addLesson = async (req, res) => {
       }
     }
 
+    //Check if liveStreamingEndTime is after liveStreamingTime or not
+    if (req.body.isLiveStreaming === '1') {
+      if (
+        moment
+          .utc(req.body.liveStreamingTime)
+          .isAfter(moment.utc(req.body.liveStreamingEndTime))
+      ) {
+        onErrorDeleteFiles(req);
+        return ValidateResponse(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+            .UNACCEPTABLE_DATE,
+          ResponseConstants.ERROR_MESSAGES
+            .UNACCEPTABLE_DATE_LESSON_LIVESTREAMINGENDTIME
+        );
+      }
+    }
+
     console.log(req.files);
 
     //Create Attachment String
@@ -96,6 +115,7 @@ exports.addLesson = async (req, res) => {
     if (req.body.isLiveStreaming === '0') {
       req.body.liveStreamingInfo = null;
       req.body.liveStreamingTime = null;
+      req.body.liveStreamingEndTime = null;
     }
 
     //Save to DB
@@ -107,6 +127,7 @@ exports.addLesson = async (req, res) => {
       isLiveStreaming: req.body.isLiveStreaming,
       liveStreamingInfo: req.body.liveStreamingInfo,
       liveStreamingTime: moment.utc(req.body.liveStreamingTime),
+      liveStreamingEndTime: moment.utc(req.body.liveStreamingEndTime),
       isAssostatedWithGroup: req.body.isAssostatedWithGroup,
       groupId: req.body.groupId,
       courseId: req.body.courseId,
@@ -386,6 +407,24 @@ exports.updateLesson = async (req, res) => {
       }
     }
 
+    //Check if liveStreamingEndTime is after liveStreamingTime or not
+    if (req.body.isLiveStreaming === '1') {
+      if (
+        moment
+          .utc(req.body.liveStreamingTime)
+          .isAfter(moment.utc(req.body.liveStreamingEndTime))
+      ) {
+        onErrorDeleteFiles(req);
+        return ValidateResponse(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+            .UNACCEPTABLE_DATE,
+          ResponseConstants.ERROR_MESSAGES
+            .UNACCEPTABLE_DATE_LESSON_LIVESTREAMINGENDTIME
+        );
+      }
+    }
+
     //Append Attachment String
     if (req.files.attachments) {
       //Get Current Paths from DB
@@ -416,6 +455,7 @@ exports.updateLesson = async (req, res) => {
     if (req.body.isLiveStreaming === '0') {
       req.body.liveStreamingInfo = null;
       req.body.liveStreamingTime = null;
+      req.body.liveStreamingEndTime = null;
     }
 
     console.log(req.body);
@@ -436,6 +476,9 @@ exports.updateLesson = async (req, res) => {
         liveStreamingTime: req.body.liveStreamingTime
           ? moment.utc(req.body.liveStreamingTime)
           : moment.utc(lesson.liveStreamingTime),
+        liveStreamingEndTime: req.body.liveStreamingEndTime
+          ? moment.utc(req.body.liveStreamingEndTime)
+          : moment.utc(lesson.liveStreamingEndTime),
         isAssostatedWithGroup: req.body.isAssostatedWithGroup
           ? req.body.isAssostatedWithGroup
           : lesson.isAssostatedWithGroup,
