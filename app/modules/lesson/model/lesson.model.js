@@ -58,6 +58,9 @@ module.exports = (connection, Sequelize) => {
       liveStreamingTime: {
         type: Sequelize.DATE,
       },
+      liveStreamingEndTime: {
+        type: Sequelize.DATE,
+      },
       isAssostatedWithGroup: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

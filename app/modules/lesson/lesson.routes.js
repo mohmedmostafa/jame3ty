@@ -96,7 +96,7 @@ module.exports = function (app) {
     [
       LessonValidation.updateLessonValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     LessonController.updateLesson
   );

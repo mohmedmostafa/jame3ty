@@ -506,6 +506,11 @@ exports.ResponseConstants = {
       ar:
         'التاريخ غير مقبول, يجب ان يكون قبل تاريخ بدايه جميع المجموعات التابعه له',
     },
+    UNACCEPTABLE_DATE_LESSON_LIVESTREAMINGENDTIME: {
+      en:
+        'liveStreamingEndTime unacceptable, it must be after liveStreamingTime Date.',
+      ar: 'تاريخ نهايه البث المباشر يجب ان تكون بعد تاريخ بدايته',
+    },
     UNACCEPTABLE_DATE_GROUP_STARTDATE: {
       en:
         'Startdate unacceptable, it must be greater than startdate of the Course which belongs to.',
