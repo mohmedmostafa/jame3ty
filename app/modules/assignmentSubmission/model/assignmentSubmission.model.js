@@ -50,6 +50,15 @@ module.exports = (connection, Sequelize) => {
           key: 'id',
         },
       },
+      status: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: '2',
+        comment: '0 : Rejected | 1 : Accepted | 2 : Not Reviewed',
+      },
+      statusComments: {
+        type: Sequelize.STRING(255),
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),

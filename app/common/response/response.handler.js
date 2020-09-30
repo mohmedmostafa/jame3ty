@@ -74,6 +74,9 @@ exports.ResponseConstants = {
       code: '400',
       type: {
         BAD_REQUEST: 'BAD_REQUEST',
+        ASSIGNMENT_SUBMISSION_UNEDITABLE: 'ASSIGNMENT_SUBMISSION_UNEDITABLE',
+        LAST_SUBMISSION_NOT_EVALUATED_YET: 'LAST_SUBMISSION_NOT_EVALUATED_YET',
+        LAST_SUBMISSION_IS_ACCEPTED: 'LAST_SUBMISSION_IS_ACCEPTED',
         EXPIRED_VERIFICATION_CODE: 'EXPIRED_VERIFICATION_CODE',
         UPAYMENT_PROCESS_FAILED: 'UPAYMENT_PROCESS_FAILED',
         UPAYMENT_PROCESS_CANCELED: 'UPAYMENT_PROCESS_CANCELED',
@@ -167,6 +170,18 @@ exports.ResponseConstants = {
   },
   //Error MSGs
   ERROR_MESSAGES: {
+    LAST_SUBMISSION_IS_ACCEPTED: {
+      en: 'Last Submission is accepted',
+      ar: 'تم تقييم اخر محاوله بالفعل',
+    },
+    LAST_SUBMISSION_NOT_EVALUATED_YET: {
+      en: "Last Submission is n't evaluated yet",
+      ar: 'اخر محاوله لم يتم تقييمها بعد',
+    },
+    ASSIGNMENT_SUBMISSION_UNEDITABLE: {
+      en: 'Submission already evaluated.',
+      ar: 'لا يمكن تعديله حيث انه قد تم تقيمه بالفعل',
+    },
     VIMEO_FORBIDDEN: {
       en: "The authenticated user can't delete this video.",
       ar: "The authenticated user can't delete this video.",

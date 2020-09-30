@@ -110,4 +110,15 @@ module.exports = function (app) {
     ],
     AssignmentSubmissionController.updateAssignmentSubmission
   );
+
+  app.post(
+    '/api/evaluateAssignmentSubmission/:id',
+    FileUploader.upload.none(),
+    [
+      AssignmentSubmissionValidation.evaluateAssignmentSubmissionValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructor,
+    ],
+    AssignmentSubmissionController.evaluateAssignmentSubmission
+  );
 };

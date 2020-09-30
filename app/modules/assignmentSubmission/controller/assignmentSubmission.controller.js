@@ -46,6 +46,40 @@ exports.addAssignmentSubmission = async (req, res) => {
       );
     }
 
+    //Check if student submission for lesson is already accepted then can't resubmit another
+    let assignmentSubmission = await db_AssignmentSubmission.findAll({
+      where: {
+        studentId: req.body.studentId,
+        lessonId: req.body.lessonId,
+      },
+      order: Sequelize.literal('createdAt DESC'),
+    });
+
+    if (assignmentSubmission.length > 0) {
+      //if last submission isn't yet evaluted
+      if (assignmentSubmission[0].status === 2) {
+        onErrorDeleteFiles(req);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+          ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+            .LAST_SUBMISSION_NOT_EVALUATED_YET,
+          ResponseConstants.ERROR_MESSAGES.LAST_SUBMISSION_NOT_EVALUATED_YET
+        );
+      }
+      //if last submission for this lesson is accepted
+      else if (assignmentSubmission[0].status === 1) {
+        onErrorDeleteFiles(req);
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+          ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+            .LAST_SUBMISSION_IS_ACCEPTED,
+          ResponseConstants.ERROR_MESSAGES.LAST_SUBMISSION_IS_ACCEPTED
+        );
+      }
+    }
+
     //Create Attachment String
     if (req.files.attachments) {
       let field_1 = [];
@@ -62,7 +96,7 @@ exports.addAssignmentSubmission = async (req, res) => {
     // });
 
     //Save to DB
-    let assignmentSubmission = db_AssignmentSubmission.create({
+    assignmentSubmission = db_AssignmentSubmission.create({
       submissionDate: moment.utc(req.body.submissionDate),
       attachments: req.body.attachments,
       studentId: parseInt(req.body.studentId),
@@ -308,6 +342,22 @@ exports.updateAssignmentSubmission = async (req, res) => {
       );
     }
 
+    //if the status of submission is 0 : Rejected || 1 : Accepted then reject any update
+    if (
+      assignmentSubmission.status === 1 ||
+      assignmentSubmission.status === 0
+    ) {
+      console.log("Can't update submission , Already evaluated.");
+      onErrorDeleteFiles(req);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+        ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+          .ASSIGNMENT_SUBMISSION_UNEDITABLE,
+        ResponseConstants.ERROR_MESSAGES.ASSIGNMENT_SUBMISSION_UNEDITABLE
+      );
+    }
+
     //Append Attachment String
     if (req.files.attachments) {
       //Get Current Paths from DB
@@ -458,6 +508,72 @@ exports.listAssignmentsSubmission = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ORM_OPERATION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
+  }
+};
+
+//---------------------------------------------------------------
+exports.evaluateAssignmentSubmission = async (req, res) => {
+  try {
+    //Check if the Lesson is found
+    let assignmentSubmission = await db_AssignmentSubmission.findOne({
+      where: {
+        [Op.and]: [{ id: parseInt(req.params.id) }],
+      },
+    });
+
+    if (!assignmentSubmission) {
+      console.log('!assignmentSubmission');
+      // onErrorDeleteFiles(req);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_ASSIGNMENTSUBMISSION
+      );
+    }
+
+    //if the status of submission is 0 : Rejected || 1 : Accepted then reject any evaluate
+    if (
+      assignmentSubmission.status === 1 ||
+      assignmentSubmission.status === 0
+    ) {
+      console.log("Can't evaluate submission , Already evaluated.");
+      // onErrorDeleteFiles(req);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+        ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+          .ASSIGNMENT_SUBMISSION_UNEDITABLE,
+        ResponseConstants.ERROR_MESSAGES.ASSIGNMENT_SUBMISSION_UNEDITABLE
+      );
+    }
+
+    //Do Update
+    let updatedAssignmentSubmission = await db_AssignmentSubmission.update(
+      {
+        status: req.body.status,
+        statusComments: req.body.statusComments ? req.body.statusComments : '',
+      },
+      { where: { id: req.params.id } }
+    );
+
+    //Success
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
+    );
+  } catch (error) {
+    console.log(error);
+    // onErrorDeleteFiles(req);
     return Response(
       res,
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
