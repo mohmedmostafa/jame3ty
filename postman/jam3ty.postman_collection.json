@@ -88,7 +88,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "mohaned1234@gmail.com",
+									"value": "adminAll@gmail.com",
 									"type": "text"
 								},
 								{
@@ -1668,7 +1668,7 @@
 								},
 								{
 									"key": "endDateGroup",
-									"value": "2020-11-07",
+									"value": "2020-11-01",
 									"type": "text"
 								},
 								{
@@ -3116,34 +3116,34 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "RRRRR",
+									"value": "FFFFFF",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "RRRRR",
+									"value": "FFFFFF",
 									"type": "text"
 								},
 								{
 									"key": "desc",
-									"value": "RRRRR",
+									"value": "FFFFFF",
 									"type": "text"
 								},
 								{
 									"key": "type",
-									"value": "0",
+									"value": "1",
 									"description": "0:Assignment | 1:Visual Lesson",
 									"type": "text"
 								},
 								{
 									"key": "isLiveStreaming",
-									"value": "0",
+									"value": "1",
 									"description": "0 or 1",
 									"type": "text"
 								},
 								{
 									"key": "liveStreamingInfo",
-									"value": "RRRRR",
+									"value": "FFFFFF",
 									"type": "text"
 								},
 								{
@@ -3153,12 +3153,12 @@
 								},
 								{
 									"key": "liveStreamingEndTime",
-									"value": "2020-07-16 07:01:43",
+									"value": "2020-09-16 09:01:43",
 									"type": "text"
 								},
 								{
 									"key": "isAssostatedWithGroup",
-									"value": "0",
+									"value": "1",
 									"description": "0 or 1",
 									"type": "text"
 								},
@@ -3173,9 +3173,9 @@
 									"type": "text"
 								},
 								{
-									"key": "youtubeLink",
-									"value": "",
-									"type": "text"
+									"key": "vedio",
+									"type": "file",
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback2.mp4"
 								},
 								{
 									"key": "attachments",
@@ -3211,13 +3211,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/deleteLesson/9",
+							"raw": "{{url}}api/deleteLesson/16",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"deleteLesson",
-								"9"
+								"16"
 							]
 						}
 					},
@@ -3245,13 +3245,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listLessonById/13",
+							"raw": "{{url}}api/listLessonById/16",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listLessonById",
-								"13"
+								"16"
 							]
 						}
 					},
@@ -3386,9 +3386,9 @@
 									"type": "text"
 								},
 								{
-									"key": "youtubeLink",
-									"value": "",
-									"type": "text"
+									"key": "vedio",
+									"type": "file",
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback333.mp4"
 								},
 								{
 									"key": "attachments",
@@ -3401,13 +3401,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateLesson/7",
+							"raw": "{{url}}api/updateLesson/18",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateLesson",
-								"7"
+								"18"
 							]
 						}
 					},
@@ -3490,7 +3490,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/2.jpeg"
+									"src": []
 								},
 								{
 									"key": "academicYearId",
@@ -4286,17 +4286,17 @@
 							"formdata": [
 								{
 									"key": "studentId",
-									"value": "3",
+									"value": "4",
 									"type": "text"
 								},
 								{
 									"key": "courseId",
-									"value": "15",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "groupId",
-									"value": "6",
+									"value": "5",
 									"type": "text"
 								}
 							],
@@ -4344,17 +4344,17 @@
 	],
 	"variable": [
 		{
-			"id": "746394a6-dc3d-4011-ac32-e675e36180f4",
+			"id": "7790f2c1-0bb5-48d2-a8d4-e631e0bfabfc",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "b4361555-2867-4219-8cf8-5ea49eebc17c",
+			"id": "8f6dcc46-3871-4b7a-abed-5f59b449881e",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJPc2FtYUBnbWFpbC5jb20iLCJyb2xlcyI6WyJpbnN0cnVjdG9yIl0sImluc3RydWN0b3JJZCI6MSwic3R1ZGVudElkIjpudWxsLCJpYXQiOjE2MDA5OTI4NTEsImV4cCI6MTYwMTA3OTI1MX0.bvN0sgDjbJ8UhJEFOuhf7iJKqqYIrETM-91r5fqADJg"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJPc2FtYUBnbWFpbC5jb20iLCJyb2xlcyI6WyJpbnN0cnVjdG9yIl0sImluc3RydWN0b3JJZCI6MSwic3R1ZGVudElkIjpudWxsLCJpYXQiOjE2MDE0OTY0MzIsImV4cCI6MTYwMTU4MjgzMn0.oVNKvk00_VySnR7bmDE8FVSP93dUJIRe6Zd4mjtfuD4"
 		},
 		{
-			"id": "d73b6cdc-c1dd-4364-84a2-9b3e3a74d451",
+			"id": "cf99b524-30c8-420e-956e-2c6192a7c70e",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}
