@@ -22,6 +22,10 @@ module.exports = function (app) {
       name: 'attachments',
       maxCount: 10,
     },
+    {
+      name: 'vedio',
+      maxCount: 1,
+    },
   ]);
 
   app.post(
@@ -85,6 +89,10 @@ module.exports = function (app) {
     {
       name: 'attachments',
       maxCount: 10,
+    },
+    {
+      name: 'vedio',
+      maxCount: 1,
     },
   ]);
 

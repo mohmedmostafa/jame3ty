@@ -4,6 +4,7 @@ const {
   ValidateResponse,
   ResponseConstants,
 } = require('../../../common/response/response.handler');
+const VimeoHelper = require('../../../common/vimeo/vimeoHelper');
 
 const {
   onErrorDeleteFiles,
@@ -97,6 +98,17 @@ exports.addLesson = async (req, res) => {
 
     console.log(req.files);
 
+    //Validation
+    if (req.body.isAssostatedWithGroup === '0') {
+      req.body.groupId = null;
+    }
+
+    if (req.body.isLiveStreaming === '0') {
+      req.body.liveStreamingInfo = '';
+      req.body.liveStreamingTime = '0000-00-00 00:00:00';
+      req.body.liveStreamingEndTime = '0000-00-00 00:00:00';
+    }
+
     //Create Attachment String
     if (req.files.attachments) {
       let field_1 = [];
@@ -107,41 +119,42 @@ exports.addLesson = async (req, res) => {
       req.body.attachments = field_1.join();
     }
 
-    //Validation
-    if (req.body.isAssostatedWithGroup === '0') {
-      req.body.groupId = null;
+    let cont = 1;
+    if (req.files.vedio) {
+      //Upload Video to Vimeo
+      await VimeoHelper.uploadVideoTOVimeo(req, res).catch((error) => {
+        cont = 0;
+        onErrorDeleteFiles(req);
+        VimeoHelper.vimeoErrorResHandler(req, res, error);
+      });
     }
 
-    if (req.body.isLiveStreaming === '0') {
-      req.body.liveStreamingInfo = null;
-      req.body.liveStreamingTime = null;
-      req.body.liveStreamingEndTime = null;
+    if (cont) {
+      //Save to DB
+      let lesson = await db_Lesson.create({
+        name_ar: req.body.name_ar,
+        name_en: req.body.name_en,
+        desc: req.body.desc,
+        type: req.body.type,
+        isLiveStreaming: req.body.isLiveStreaming,
+        liveStreamingInfo: req.body.liveStreamingInfo,
+        liveStreamingTime: moment.utc(req.body.liveStreamingTime),
+        liveStreamingEndTime: moment.utc(req.body.liveStreamingEndTime),
+        isAssostatedWithGroup: req.body.isAssostatedWithGroup,
+        groupId: req.body.groupId,
+        courseId: req.body.courseId,
+        vedio: req.body.uri ? req.body.uri : '',
+        attachments: req.body.attachments ? req.body.attachments : '',
+      });
+
+      //Success
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
+        ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
+        ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
+      );
     }
-
-    //Save to DB
-    let lesson = db_Lesson.create({
-      name_ar: req.body.name_ar,
-      name_en: req.body.name_en,
-      desc: req.body.desc,
-      type: req.body.type,
-      isLiveStreaming: req.body.isLiveStreaming,
-      liveStreamingInfo: req.body.liveStreamingInfo,
-      liveStreamingTime: moment.utc(req.body.liveStreamingTime),
-      liveStreamingEndTime: moment.utc(req.body.liveStreamingEndTime),
-      isAssostatedWithGroup: req.body.isAssostatedWithGroup,
-      groupId: req.body.groupId,
-      courseId: req.body.courseId,
-      youtubeLink: req.body.youtubeLink,
-      attachments: req.body.attachments,
-    });
-
-    //Success
-    return Response(
-      res,
-      ResponseConstants.HTTP_STATUS_CODES.CREATED.code,
-      ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
-      ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
-    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -184,6 +197,7 @@ exports.deleteLesson = async (req, res) => {
 
     //If the record Deleted then delete files in attachments
     if (deletedLesson) {
+      //remove attachments
       let attachmentsStr = lesson.getDataValue('attachments');
       if (attachmentsStr.length > 0) {
         let locations = attachmentsStr.split(',');
@@ -191,6 +205,14 @@ exports.deleteLesson = async (req, res) => {
         locations.forEach((loc) => {
           deleteFile(loc);
         });
+      }
+
+      //remove video from vimeo
+      let vedioStr = lesson.getDataValue('vedio');
+      if (vedioStr.length > 0) {
+        let locations = vedioStr.split(',');
+        console.log(locations);
+        await VimeoHelper.removeVideoTOVimeo(locations);
       }
     }
 
@@ -425,6 +447,17 @@ exports.updateLesson = async (req, res) => {
       }
     }
 
+    //Validation
+    if (req.body.isAssostatedWithGroup === '0') {
+      req.body.groupId = null;
+    }
+
+    if (req.body.isLiveStreaming === '0') {
+      req.body.liveStreamingInfo = '';
+      req.body.liveStreamingTime = '0000-00-00 00:00:00';
+      req.body.liveStreamingEndTime = '0000-00-00 00:00:00';
+    }
+
     //Append Attachment String
     if (req.files.attachments) {
       //Get Current Paths from DB
@@ -447,60 +480,72 @@ exports.updateLesson = async (req, res) => {
       req.body.attachments = fieldFilesPaths.join();
     }
 
-    //Validation
-    if (req.body.isAssostatedWithGroup === '0') {
-      req.body.groupId = null;
+    let cont = 1;
+    if (req.files.vedio) {
+      let vedioStr = lesson.getDataValue('vedio');
+      //If already has video
+      if (vedioStr.length > 0) {
+        let locations = vedioStr.split(',');
+        console.log(locations);
+        //Replace Vimeo Video
+        await VimeoHelper.replaceVideoTOVimeo(req, res, locations).catch(
+          (error) => {
+            cont = 0;
+            onErrorDeleteFiles(req);
+            VimeoHelper.vimeoErrorResHandler(req, res, error);
+          }
+        );
+      } else {
+        //Upload Video to Vimeo
+        await VimeoHelper.uploadVideoTOVimeo(req, res).catch((error) => {
+          cont = 0;
+          onErrorDeleteFiles(req);
+          VimeoHelper.vimeoErrorResHandler(req, res, error);
+        });
+      }
     }
 
-    if (req.body.isLiveStreaming === '0') {
-      req.body.liveStreamingInfo = null;
-      req.body.liveStreamingTime = null;
-      req.body.liveStreamingEndTime = null;
+    if (cont) {
+      //Do Update
+      let updatedLesson = await db_Lesson.update(
+        {
+          name_ar: req.body.name_ar ? req.body.name_ar : lesson.name_ar,
+          name_en: req.body.name_en ? req.body.name_en : lesson.name_en,
+          desc: req.body.desc ? req.body.desc : lesson.desc,
+          type: req.body.type ? req.body.type : lesson.type,
+          isLiveStreaming: req.body.isLiveStreaming
+            ? req.body.isLiveStreaming
+            : lesson.isLiveStreaming,
+          liveStreamingInfo: req.body.liveStreamingInfo
+            ? req.body.liveStreamingInfo
+            : lesson.liveStreamingInfo,
+          liveStreamingTime: req.body.liveStreamingTime
+            ? moment.utc(req.body.liveStreamingTime)
+            : moment.utc(lesson.liveStreamingTime),
+          liveStreamingEndTime: req.body.liveStreamingEndTime
+            ? moment.utc(req.body.liveStreamingEndTime)
+            : moment.utc(lesson.liveStreamingEndTime),
+          isAssostatedWithGroup: req.body.isAssostatedWithGroup
+            ? req.body.isAssostatedWithGroup
+            : lesson.isAssostatedWithGroup,
+          groupId: req.body.groupId ? req.body.groupId : lesson.groupId,
+          courseId: req.body.courseId ? req.body.courseId : lesson.courseId,
+          vedio: req.body.uri ? req.body.uri : lesson.getDataValue('vedio'),
+          attachments: req.body.attachments
+            ? req.body.attachments
+            : lesson.getDataValue('attachments'),
+        },
+        { where: { id: req.params.id } }
+      );
+
+      //Success
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+        ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+        ResponseConstants.ERROR_MESSAGES.SUCCESS
+      );
     }
-
-    console.log(req.body);
-
-    //Do Update
-    let updatedLesson = await db_Lesson.update(
-      {
-        name_ar: req.body.name_ar ? req.body.name_ar : lesson.name_ar,
-        name_en: req.body.name_en ? req.body.name_en : lesson.name_en,
-        desc: req.body.desc ? req.body.desc : lesson.desc,
-        type: req.body.type ? req.body.type : lesson.type,
-        isLiveStreaming: req.body.isLiveStreaming
-          ? req.body.isLiveStreaming
-          : lesson.isLiveStreaming,
-        liveStreamingInfo: req.body.liveStreamingInfo
-          ? req.body.liveStreamingInfo
-          : lesson.liveStreamingInfo,
-        liveStreamingTime: req.body.liveStreamingTime
-          ? moment.utc(req.body.liveStreamingTime)
-          : moment.utc(lesson.liveStreamingTime),
-        liveStreamingEndTime: req.body.liveStreamingEndTime
-          ? moment.utc(req.body.liveStreamingEndTime)
-          : moment.utc(lesson.liveStreamingEndTime),
-        isAssostatedWithGroup: req.body.isAssostatedWithGroup
-          ? req.body.isAssostatedWithGroup
-          : lesson.isAssostatedWithGroup,
-        groupId: req.body.groupId ? req.body.groupId : lesson.groupId,
-        courseId: req.body.courseId ? req.body.courseId : lesson.courseId,
-        youtubeLink: req.body.youtubeLink
-          ? req.body.youtubeLink
-          : lesson.youtubeLink,
-        attachments: req.body.attachments
-          ? req.body.attachments
-          : lesson.getDataValue('attachments'),
-      },
-      { where: { id: req.params.id } }
-    );
-
-    //Success
-    return Response(
-      res,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
-      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
-      ResponseConstants.ERROR_MESSAGES.SUCCESS
-    );
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);

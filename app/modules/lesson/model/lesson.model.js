@@ -1,4 +1,9 @@
-const { PORT, HOST, ENV } = require('../../../config/env.config');
+const {
+  PORT,
+  HOST,
+  ENV,
+  VIMEO_HOST_URL,
+} = require('../../../config/env.config');
 
 module.exports = (connection, Sequelize) => {
   const Lesson = connection.define(
@@ -24,9 +29,20 @@ module.exports = (connection, Sequelize) => {
         allowNull: true,
         comment: '0:Assignment | 1:Visual Lesson',
       },
-      youtubeLink: {
-        type: Sequelize.STRING(255),
+      vedio: {
+        type: Sequelize.STRING,
         defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('vedio');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              fieldFilesPaths[index] = `${VIMEO_HOST_URL}` + location;
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
       },
       attachments: {
         type: Sequelize.STRING(255),

@@ -66,7 +66,7 @@ addLessonValidation = (req, res, next) => {
       otherwise: Joi.string().allow('', null).messages(Joi_messages),
     }),
     courseId: Joi.number().integer().required().messages(Joi_messages),
-    youtubeLink: Joi.string().allow('', null).messages(Joi_messages),
+    // youtubeLink: Joi.string().allow('', null).messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);
@@ -159,7 +159,7 @@ updateLessonValidation = (req, res, next) => {
       otherwise: Joi.string().allow('', null).messages(Joi_messages),
     }),
     courseId: Joi.number().integer().required().messages(Joi_messages),
-    youtubeLink: Joi.string().allow('', null).messages(Joi_messages),
+    // youtubeLink: Joi.string().allow('', null).messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);
