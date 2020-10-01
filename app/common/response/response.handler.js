@@ -77,6 +77,8 @@ exports.ResponseConstants = {
         ASSIGNMENT_SUBMISSION_UNEDITABLE: 'ASSIGNMENT_SUBMISSION_UNEDITABLE',
         LAST_SUBMISSION_NOT_EVALUATED_YET: 'LAST_SUBMISSION_NOT_EVALUATED_YET',
         LAST_SUBMISSION_IS_ACCEPTED: 'LAST_SUBMISSION_IS_ACCEPTED',
+        EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION:
+          'EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION',
         EXPIRED_VERIFICATION_CODE: 'EXPIRED_VERIFICATION_CODE',
         UPAYMENT_PROCESS_FAILED: 'UPAYMENT_PROCESS_FAILED',
         UPAYMENT_PROCESS_CANCELED: 'UPAYMENT_PROCESS_CANCELED',
@@ -170,6 +172,10 @@ exports.ResponseConstants = {
   },
   //Error MSGs
   ERROR_MESSAGES: {
+    EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION: {
+      en: 'can\'t exceed group max count of subscription',
+      ar: 'لا يوجد اماكن متاحه - هذه المجموعه ممتلئه',
+    },
     LAST_SUBMISSION_IS_ACCEPTED: {
       en: 'Last Submission is accepted',
       ar: 'تم تقييم اخر محاوله بالفعل',

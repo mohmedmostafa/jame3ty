@@ -112,6 +112,27 @@ exports.generatePaymentRequest = async (req, res) => {
           .RESOURCE_NOT_FOUND_COURSE_WITH_GROUP_NOT_FOUND
       );
     }
+
+    //Count num of subscribtion of x group in course
+    let courseGroupSubscribtion = await db_CourseSubscribe.findAndCountAll({
+      where: {
+        courseId: req.body.courseId,
+        groupId: req.body.groupId,
+        paymentResult: 'CAPTURED',
+      },
+    });
+
+    if (courseGroupSubscribtion.count >= group.maxNumOfStudents) {
+      console.log('!EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION');
+      // onErrorDeleteFiles(req);
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.code,
+        ResponseConstants.HTTP_STATUS_CODES.BAD_REQUEST.type
+          .EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION,
+        ResponseConstants.ERROR_MESSAGES.EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION
+      );
+    }
   }
 
   //Check if the student try to buy this course before or not
