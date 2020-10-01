@@ -22,7 +22,7 @@ addInstructorValidation = async (req, res, next) => {
       .required()
       .messages(Joi_messages),
     name_en: Joi.string().trim().min(3).max(30).messages(Joi_messages),
-    bio: Joi.string().trim().min(5).max(30).messages(Joi_messages),
+    bio: Joi.string().trim().min(5).max(2000).messages(Joi_messages),
     mobile: Joi.string().trim().alphanum().required().messages(Joi_messages),
     email: Joi.string().trim().email().required().messages(Joi_messages),
     username: Joi.string()
@@ -98,7 +98,7 @@ updateInstructorValidation = async (req, res, next) => {
       .required()
       .messages(Joi_messages),
     name_en: Joi.string().trim().min(3).max(30).messages(Joi_messages),
-    bio: Joi.string().trim().min(5).max(30).messages(Joi_messages),
+    bio: Joi.string().trim().min(5).max(2000).messages(Joi_messages),
     mobile: Joi.string().trim().alphanum().required().messages(Joi_messages),
     //password: Joi.string().min(5).max(30).required().messages(Joi_messages),
   })
