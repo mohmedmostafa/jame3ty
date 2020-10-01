@@ -104,18 +104,31 @@ addCourseValidation = (req, res, next) => {
 
     //Course with Group Body Validation
     schema = schema.keys({
-      nameGroup: Joi.string().trim().min(3).max(30).required(),
+      nameGroup: Joi.string()
+        .trim()
+        .min(3)
+        .max(30)
+        .required()
+        .messages(Joi_messages),
       maxNumOfStudentsGroup: Joi.number()
         .integer()
         .positive()
         .min(1)
-        .required(),
-      startDateGroup: Joi.date().iso().greater(Joi.ref('startDate')).required(),
+        .required()
+        .messages(Joi_messages),
+      startDateGroup: Joi.date()
+        .iso()
+        .greater(Joi.ref('startDate'))
+        .required()
+        .messages(Joi_messages),
       endDateGroup: Joi.date()
         .greater(Joi.ref('startDateGroup'))
         .iso()
-        .required(),
-      groupSchedule: Joi.array().items(groupScheduleSchema),
+        .required()
+        .messages(Joi_messages),
+      groupSchedule: Joi.array()
+        .items(groupScheduleSchema)
+        .messages(Joi_messages),
     });
   }
 
