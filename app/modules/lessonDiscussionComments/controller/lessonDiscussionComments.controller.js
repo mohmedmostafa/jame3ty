@@ -25,7 +25,18 @@ const db_Instructor = db.Instructor;
 
 //---------------------------------------------------------------
 exports.addlessonDiscussionComments = async (req, res) => {
-  const user = await db_User.findByPk(req.body.userId);
+  //const user = await db_User.findByPk(req.body.userId);
+  const user = await db_User.findOne({
+    where: { id: req.body.userId },
+    include: [
+      {
+        model: db_Student,
+      },
+      {
+        model: db_Instructor,
+      },
+    ],
+  });
 
   console.log('test', user);
   if (!user) {
@@ -126,6 +137,10 @@ function addPost(req, user, lesson) {
 
         return uni;
       });
+
+      post.dataValues.user = user.dataValues;
+      post.dataValues.lesson = lesson.dataValues;
+
       //Success
       return res({ post });
     } catch (error) {
@@ -154,6 +169,10 @@ function addComment(req, user, lessonDiscussion) {
 
         return comment;
       });
+      
+      comment.dataValues.user=user.dataValues;
+      comment.dataValues.lessonDiscussion=lessonDiscussion.dataValues;
+
       //Success
       return res({ comment });
     } catch (error) {
