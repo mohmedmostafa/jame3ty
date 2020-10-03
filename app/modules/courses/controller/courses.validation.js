@@ -82,6 +82,15 @@ addCourseValidation = (req, res, next) => {
       .max(1)
       .required()
       .messages(Joi_messages),
+    course_keyword: Joi.string()
+      .trim()
+      .min(2)
+      .required()
+      .messages(Joi_messages),
+    attachement_price: Joi.number()
+      .positive()
+      .required()
+      .messages(Joi_messages),
     subjectId: Joi.number().integer().required().messages(Joi_messages),
     instructorId: Joi.number().integer().required().messages(Joi_messages),
   }).options({ abortEarly: false });
@@ -218,6 +227,15 @@ updateCourseValidation = (req, res, next) => {
       .max(1)
       .required()
       .messages(Joi_messages),
+    course_keyword: Joi.string()
+      .trim()
+      .min(2)
+      .required()
+      .messages(Joi_messages),
+    attachement_price: Joi.number()
+      .positive()
+      .required()
+      .messages(Joi_messages),
     subjectId: Joi.number().integer().required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
@@ -225,6 +243,47 @@ updateCourseValidation = (req, res, next) => {
   console.log(error);
   if (error) {
     onErrorDeleteFiles(req);
+    return ValidateResponse(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+        .JOI_VALIDATION_INVALID_DATA,
+      error.details
+    );
+  }
+
+  return next();
+};
+
+//----------------------------------------------------------
+deleteAttachmentValidation = (req, res, next) => {
+  //URL Params Validation
+  if (req.params) {
+    const schemaParam = Joi.object({
+      id: Joi.number().integer().min(1).required().messages(Joi_messages),
+    }).options({ abortEarly: false });
+
+    const { error } = schemaParam.validate(req.params);
+    console.log(error);
+    if (error) {
+      // onErrorDeleteFiles(req);
+      return ValidateResponse(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+          .JOI_VALIDATION_INVALID_URL_PARAM,
+        error.details
+      );
+    }
+  }
+
+  //Body Validation
+  let schema = Joi.object({
+    attachmentPath: Joi.string().min(3).required().messages(Joi_messages),
+  }).options({ abortEarly: false });
+
+  const { error } = schema.validate(req.body);
+  console.log(error);
+  if (error) {
+    // onErrorDeleteFiles(req);
     return ValidateResponse(
       res,
       ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
@@ -495,6 +554,7 @@ const CourseValidation = {
   listCourseNoDateValidation: listCourseNoDateValidation,
   listCourseNoDateByDepartmentValidation: listCourseNoDateByDepartmentValidation,
   listCourseNoDateByInstructorValidation: listCourseNoDateByInstructorValidation,
+  deleteAttachmentValidation: deleteAttachmentValidation,
 };
 
 module.exports = CourseValidation;

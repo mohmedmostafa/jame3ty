@@ -43,6 +43,11 @@ module.exports = (connection, Sequelize) => {
           return this.getDataValue('details').toString('utf8');
         },
       },
+      whichPrice: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        comment: '0 : price | 1 : attachement_price',
+      },
       paymentResult: {
         type: Sequelize.STRING(255),
         allowNull: false,

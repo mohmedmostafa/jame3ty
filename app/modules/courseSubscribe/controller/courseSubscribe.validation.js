@@ -16,6 +16,12 @@ generatePaymentRequestValidation = (req, res, next) => {
   let schema = Joi.object({
     studentId: Joi.number().integer().messages(Joi_messages),
     courseId: Joi.number().integer().messages(Joi_messages),
+    whichPrice: Joi.number()
+      .integer()
+      .min(0)
+      .max(1)
+      .required()
+      .messages(Joi_messages),
   })
     .options({ abortEarly: false })
     .unknown(true);

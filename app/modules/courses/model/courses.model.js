@@ -62,6 +62,33 @@ module.exports = (connection, Sequelize) => {
         allowNull: false,
         comment: '0:Recorded Lessons | 1:Live Streaming',
       },
+      course_keyword: {
+        type: Sequelize.STRING(500),
+        defaultValue: '',
+      },
+      attachement_price: {
+        type: Sequelize.DOUBLE,
+        defaultValue: '0',
+      },
+      attachments: {
+        type: Sequelize.STRING(255),
+        defaultValue: '',
+        get() {
+          let fieldFilesPaths = this.getDataValue('attachments');
+          if (fieldFilesPaths.length > 0) {
+            fieldFilesPaths = fieldFilesPaths.split(',');
+            fieldFilesPaths.forEach((location, index) => {
+              if (ENV === 'dev') {
+                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              } else {
+                fieldFilesPaths[index] = `${HOST}` + '/' + location;
+              }
+            });
+            fieldFilesPaths = fieldFilesPaths.join();
+          }
+          return fieldFilesPaths ? fieldFilesPaths : '';
+        },
+      },
       img: {
         type: Sequelize.STRING,
         defaultValue: '',

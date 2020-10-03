@@ -22,11 +22,15 @@ module.exports = function (app) {
   const upload_addCourse = FileUploader.upload.fields([
     {
       name: 'img',
-      maxCount: 2,
+      maxCount: 1,
     },
     {
       name: 'vedio',
       maxCount: 1,
+    },
+    {
+      name: 'attachments',
+      maxCount: 10,
     },
   ]);
 
@@ -57,11 +61,15 @@ module.exports = function (app) {
   const upload_updateCourse = FileUploader.upload.fields([
     {
       name: 'img',
-      maxCount: 2,
+      maxCount: 1,
     },
     {
       name: 'vedio',
       maxCount: 1,
+    },
+    {
+      name: 'attachments',
+      maxCount: 10,
     },
   ]);
 
@@ -76,6 +84,17 @@ module.exports = function (app) {
       AuthJwt.isInstructorOrAdmin,
     ],
     CourseController.updateCourse
+  );
+
+  app.post(
+    '/api/deleteCourseAttachment/:id',
+    FileUploader.upload.none(),
+    [
+      CourseValidation.deleteAttachmentValidation,
+      AuthJwt.VerifyToken,
+      AuthJwt.isInstructorOrAdmin,
+    ],
+    CourseController.deleteAttachment
   );
 
   app.get(

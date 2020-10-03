@@ -47,6 +47,8 @@ exports.generatePaymentRequest = async (req, res) => {
       'priceBeforeDiscount',
       'type',
       'method',
+      'course_keyword',
+      'attachement_price',
     ],
     where: {
       id: req.body.courseId,
@@ -140,6 +142,7 @@ exports.generatePaymentRequest = async (req, res) => {
     where: {
       studentId: req.body.studentId,
       courseId: req.body.courseId,
+      whichPrice: req.body.whichPrice,
     },
   });
 
@@ -149,6 +152,7 @@ exports.generatePaymentRequest = async (req, res) => {
       studentId: req.body.studentId,
       courseId: req.body.courseId,
       groupId: req.body.groupId ? req.body.groupId : '',
+      whichPrice: req.body.whichPrice,
       details: JSON.stringify([course, student]),
     });
     console.log(studentCourseSubscribe);
@@ -158,6 +162,7 @@ exports.generatePaymentRequest = async (req, res) => {
       where: {
         studentId: req.body.studentId,
         courseId: req.body.courseId,
+        whichPrice: req.body.whichPrice,
       },
       include: [
         {
@@ -181,6 +186,7 @@ exports.generatePaymentRequest = async (req, res) => {
           where: {
             studentId: req.body.studentId,
             courseId: req.body.courseId,
+            whichPrice: req.body.whichPrice,
           },
         }
       );
@@ -192,6 +198,14 @@ exports.generatePaymentRequest = async (req, res) => {
         ResponseConstants.ERROR_MESSAGES.ALREADY_SUBSCRIBED
       );
     }
+  }
+
+  //Course Price
+  let coursePrice;
+  if (req.body.whichPrice === '1' || req.body.whichPrice === 1) {
+    coursePrice = course.attachement_price;
+  } else {
+    coursePrice = course.price;
   }
 
   //Generate Order Id for Payment Getway
@@ -211,7 +225,7 @@ exports.generatePaymentRequest = async (req, res) => {
     api_key: UPAYMENTS_API_KEY,
     //api_key: bcrypt.hashSync('jtest123', 8),
     order_id: orderId,
-    total_price: course.price,
+    total_price: coursePrice,
     CurrencyCode: 'USD',
     success_url:
       HOST +
@@ -231,7 +245,7 @@ exports.generatePaymentRequest = async (req, res) => {
     whitelabled: true,
     ProductTitle: course.name_ar,
     ProductName: course.name_en,
-    ProductPrice: course.price,
+    ProductPrice: coursePrice,
     ProductQty: '1',
     Reference: orderId,
   };

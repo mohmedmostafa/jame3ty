@@ -78,6 +78,16 @@ exports.addCourse = async (req, res) => {
     req.body.img = field_1.join();
   }
 
+  //Create Attachment String
+  if (req.files.attachments) {
+    let field_1 = [];
+    req.files['attachments'].forEach((file) => {
+      let fileUrl = file.path.replace(/\\/g, '/');
+      field_1.push(fileUrl);
+    });
+    req.body.attachments = field_1.join();
+  }
+
   let cont = 1;
   if (req.files.vedio) {
     //Upload Video to Vimeo
@@ -118,6 +128,9 @@ async function addRecordedLessonsCourse(req, res, instructor) {
       startDate: moment.utc(req.body.startDate),
       type: req.body.type,
       method: req.params.method,
+      course_keyword: req.body.course_keyword,
+      attachement_price: req.body.attachement_price,
+      attachments: req.body.attachments ? req.body.attachments : '',
       img: req.body.img ? req.body.img : '',
       vedio: req.body.uri ? req.body.uri : '',
       subjectId: parseInt(req.body.subjectId),
@@ -165,6 +178,9 @@ async function addLiveStreamingCourse(req, res, instructor) {
           startDate: moment.utc(req.body.startDate),
           type: req.body.type,
           method: req.params.method,
+          course_keyword: req.body.course_keyword,
+          attachement_price: req.body.attachement_price,
+          attachments: req.body.attachments ? req.body.attachments : '',
           img: req.body.img ? req.body.img : '',
           vedio: req.body.uri ? req.body.uri : '',
           subjectId: parseInt(req.body.subjectId),
@@ -287,6 +303,16 @@ exports.deleteCourse = async (req, res) => {
       let imgStr = course.getDataValue('img');
       if (imgStr.length > 0) {
         let locations = imgStr.split(',');
+        console.log(locations);
+        locations.forEach((loc) => {
+          deleteFile(loc);
+        });
+      }
+
+      //remove attachments
+      let attachmentsStr = course.getDataValue('attachments');
+      if (attachmentsStr.length > 0) {
+        let locations = attachmentsStr.split(',');
         console.log(locations);
         locations.forEach((loc) => {
           deleteFile(loc);
@@ -580,6 +606,28 @@ exports.updateCourse = async (req, res) => {
       req.body.img = field_1.join();
     }
 
+    //Append Attachment String
+    if (req.files.attachments) {
+      //Get Current Paths from DB
+      let fieldFilesPaths = course.getDataValue('attachments');
+      if (fieldFilesPaths.length > 0) {
+        fieldFilesPaths = fieldFilesPaths.split(',');
+      } else {
+        fieldFilesPaths = [];
+      }
+
+      //Append
+      let field_1 = [];
+      req.files['attachments'].forEach((file) => {
+        let fileUrl = file.path.replace(/\\/g, '/');
+        field_1.push(fileUrl);
+      });
+
+      //
+      fieldFilesPaths = fieldFilesPaths.concat(field_1);
+      req.body.attachments = fieldFilesPaths.join();
+    }
+
     let cont = 1;
     if (req.files.vedio) {
       let vedioStr = course.getDataValue('vedio');
@@ -633,6 +681,15 @@ exports.updateCourse = async (req, res) => {
             ? moment.utc(req.body.startDate)
             : moment.utc(course.startDate),
           type: req.body.type ? req.body.type : course.type,
+          course_keyword: req.body.course_keyword
+            ? req.body.course_keyword
+            : course.course_keyword,
+          attachement_price: req.body.attachement_price
+            ? req.body.attachement_price
+            : course.attachement_price,
+          attachments: req.body.attachments
+            ? req.body.attachments
+            : course.getDataValue('attachments'),
           subjectId: req.body.subjectId ? req.body.subjectId : course.subjectId,
           img: req.body.img ? req.body.img : course.getDataValue('img'),
           vedio: req.body.uri ? req.body.uri : course.getDataValue('vedio'),
@@ -669,6 +726,88 @@ exports.updateCourse = async (req, res) => {
       ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
         .ORM_OPERATION_FAILED,
       ResponseConstants.ERROR_MESSAGES.ORM_OPERATION_FAILED
+    );
+  }
+};
+
+//---------------------------------------------------------------
+exports.deleteAttachment = async (req, res) => {
+  try {
+    //Check if the Course is already exsits
+    let course = await db_Course.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!course) {
+      console.log('!course');
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.RESOURCE_NOT_FOUND,
+        ResponseConstants.ERROR_MESSAGES.RESOURCE_NOT_FOUND_COURSE
+      );
+    }
+
+    console.log(course);
+
+    //Read current Attachments
+    let attachmentsStr = course.getDataValue('attachments');
+    if (attachmentsStr.length > 0) {
+      let locations = attachmentsStr.split(',');
+      console.log(locations);
+
+      const index = locations.indexOf(req.body.attachmentPath);
+      if (index > -1) {
+        deleteFile(locations[index]);
+        locations.splice(index, 1);
+        locations = locations.join();
+
+        //Update DB
+        await db_Course.update(
+          {
+            attachments: locations,
+          },
+          {
+            where: { id: req.params.id },
+          }
+        );
+      } else {
+        //'Attachemt Not Found!'
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+          ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type
+            .NO_ATTACHMENTS_FOUND,
+          ResponseConstants.ERROR_MESSAGES.NO_ATTACHMENTS_FOUND
+        );
+      }
+    } else {
+      //'Lesson has zero attachments!'
+      return Response(
+        res,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.code,
+        ResponseConstants.HTTP_STATUS_CODES.NOT_FOUND.type.NO_ATTACHMENTS_FOUND,
+        ResponseConstants.ERROR_MESSAGES.NO_ATTACHMENTS_FOUND
+      );
+    }
+
+    //Success
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+      ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+      ResponseConstants.ERROR_MESSAGES.SUCCESS
+    );
+  } catch (error) {
+    console.log(error);
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.code,
+      ResponseConstants.HTTP_STATUS_CODES.INTERNAL_ERROR.type
+        .ATTACHMENT_DELETION_FAILED,
+      ResponseConstants.ERROR_MESSAGES.ATTACHMENT_DELETION_FAILED
     );
   }
 };
