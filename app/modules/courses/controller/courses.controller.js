@@ -3190,6 +3190,16 @@ function listCourseOriginal_NOPagination(
           {
             model: db_Lesson,
           },
+          {
+            model: db_CourseSubscribe,
+            required: false,
+            where: { paymentResult: 'CAPTURED' },
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
+          },
         ],
         distinct: true,
         order: Sequelize.literal(orderBy),
@@ -3315,6 +3325,16 @@ function listCourseOriginal_DoPagination(
           },
           {
             model: db_Lesson,
+          },
+          {
+            model: db_CourseSubscribe,
+            required: false,
+            where: { paymentResult: 'CAPTURED' },
+            include: [
+              {
+                model: db_Student,
+              },
+            ],
           },
         ],
         distinct: true,
