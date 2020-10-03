@@ -1015,6 +1015,16 @@
 									"type": "text"
 								},
 								{
+									"key": "course_keyword",
+									"value": "NEW rrrrrrrrrr",
+									"type": "text"
+								},
+								{
+									"key": "attachement_price",
+									"value": "123",
+									"type": "text"
+								},
+								{
 									"key": "subjectId",
 									"value": "1",
 									"type": "text"
@@ -1025,9 +1035,14 @@
 									"type": "text"
 								},
 								{
+									"key": "attachments",
+									"type": "file",
+									"src": []
+								},
+								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/titleShadow-1024x341.png"
+									"src": []
 								},
 								{
 									"key": "vedio",
@@ -1060,7 +1075,7 @@
 								},
 								{
 									"key": "groupSchedule",
-									"value": "[{\"day\":\"Friday1\",\"time\":\"05:00\"},{\"day\":\"Friday2\",\"time\":\"05:00\"},{\"day\":\"Friday3\",\"time\":\"05:00\"}]",
+									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1994-12-05T08:15:30-05:00\"}]",
 									"description": "Array of JSON Objects => As String",
 									"type": "text",
 									"disabled": true
@@ -1194,13 +1209,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseById/15",
+							"raw": "{{url}}api/listCourseById/18",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseById",
-								"15"
+								"18"
 							]
 						}
 					},
@@ -1287,19 +1302,34 @@
 									"type": "text"
 								},
 								{
+									"key": "course_keyword",
+									"value": "dffdf",
+									"type": "text"
+								},
+								{
+									"key": "attachement_price",
+									"value": "1233",
+									"type": "text"
+								},
+								{
 									"key": "subjectId",
 									"value": "1",
 									"type": "text"
 								},
 								{
+									"key": "attachments",
+									"type": "file",
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/orca_share_media1563969304927-١.pdf"
+								},
+								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/Screenshot 2020-09-25 013621.png"
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140200.jpg"
 								},
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback2.mp4"
 								}
 							],
 							"options": {
@@ -1307,13 +1337,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/updateCourse/20",
+							"raw": "{{url}}api/updateCourse/18",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"updateCourse",
-								"20"
+								"18"
 							]
 						}
 					},
@@ -1626,6 +1656,43 @@
 							],
 							"path": [
 								"uploadVedioVimeo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/deleteCourseAttachment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachmentPath",
+									"value": "public/files/Islam Said Ramadan-1601732909832-.pdf",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/deleteCourseAttachment/18",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"deleteCourseAttachment",
+								"18"
 							]
 						}
 					},
@@ -4291,12 +4358,18 @@
 								},
 								{
 									"key": "courseId",
-									"value": "1",
+									"value": "17",
 									"type": "text"
 								},
 								{
 									"key": "groupId",
-									"value": "5",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "whichPrice",
+									"value": "0",
+									"description": "0 : price | 1 : attachement_price",
 									"type": "text"
 								}
 							],
@@ -4344,17 +4417,17 @@
 	],
 	"variable": [
 		{
-			"id": "7790f2c1-0bb5-48d2-a8d4-e631e0bfabfc",
+			"id": "19db0bfc-06de-4099-b7ba-3c4ea1bcbe95",
 			"key": "url",
 			"value": "http://localhost:3001/"
 		},
 		{
-			"id": "8f6dcc46-3871-4b7a-abed-5f59b449881e",
+			"id": "7ce1e4f8-0e6f-42eb-b46d-b5e3172652a8",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJPc2FtYUBnbWFpbC5jb20iLCJyb2xlcyI6WyJpbnN0cnVjdG9yIl0sImluc3RydWN0b3JJZCI6MSwic3R1ZGVudElkIjpudWxsLCJpYXQiOjE2MDE0OTY0MzIsImV4cCI6MTYwMTU4MjgzMn0.oVNKvk00_VySnR7bmDE8FVSP93dUJIRe6Zd4mjtfuD4"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJPc2FtYUBnbWFpbC5jb20iLCJyb2xlcyI6WyJpbnN0cnVjdG9yIl0sImluc3RydWN0b3JJZCI6MSwic3R1ZGVudElkIjpudWxsLCJpYXQiOjE2MDE3MzcxOTUsImV4cCI6MTYwMTgyMzU5NX0.B7hyC3AWakLou3sFjECJYNQhznMZ1OwuWXnC2LB_nyQ"
 		},
 		{
-			"id": "cf99b524-30c8-420e-956e-2c6192a7c70e",
+			"id": "10c8b7a4-843c-4039-93d4-e68c9ba3e12f",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		}
