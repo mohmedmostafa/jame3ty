@@ -30,6 +30,8 @@ const db_Instructor = db.Instructor;
 
 //---------------------------------------------------------------
 exports.addLesson = async (req, res) => {
+  console.log(req.files);
+
   try {
     //Check if the Course is already exsits
     let course = await db_Course.findOne({
