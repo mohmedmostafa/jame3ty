@@ -109,6 +109,10 @@ exports.addLesson = async (req, res) => {
       req.body.liveStreamingEndTime = '0000-00-00 00:00:00';
     }
 
+    if (req.body.type === '1') {
+      req.body.assignmentDeadLineDate = '0000-00-00 00:00:00';
+    }
+
     //Create Attachment String
     if (req.files.attachments) {
       let field_1 = [];
@@ -136,6 +140,7 @@ exports.addLesson = async (req, res) => {
         name_en: req.body.name_en,
         desc: req.body.desc,
         type: req.body.type,
+        assignmentDeadLineDate: moment.utc(req.body.assignmentDeadLineDate),
         isLiveStreaming: req.body.isLiveStreaming,
         liveStreamingInfo: req.body.liveStreamingInfo,
         liveStreamingTime: moment.utc(req.body.liveStreamingTime),
@@ -458,6 +463,10 @@ exports.updateLesson = async (req, res) => {
       req.body.liveStreamingEndTime = '0000-00-00 00:00:00';
     }
 
+    if (req.body.type === '1') {
+      req.body.assignmentDeadLineDate = '0000-00-00 00:00:00';
+    }
+
     //Append Attachment String
     if (req.files.attachments) {
       //Get Current Paths from DB
@@ -513,6 +522,9 @@ exports.updateLesson = async (req, res) => {
           name_en: req.body.name_en ? req.body.name_en : lesson.name_en,
           desc: req.body.desc ? req.body.desc : lesson.desc,
           type: req.body.type ? req.body.type : lesson.type,
+          assignmentDeadLineDate: req.body.assignmentDeadLineDate
+            ? moment.utc(req.body.assignmentDeadLineDate)
+            : moment.utc(lesson.assignmentDeadLineDate),
           isLiveStreaming: req.body.isLiveStreaming
             ? req.body.isLiveStreaming
             : lesson.isLiveStreaming,

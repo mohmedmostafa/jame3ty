@@ -33,6 +33,11 @@ addLessonValidation = (req, res, next) => {
       .max(1)
       .required()
       .messages(Joi_messages),
+    assignmentDeadLineDate: Joi.when('type', {
+      is: 0,
+      then: Joi.date().iso().required().messages(Joi_messages),
+      otherwise: Joi.string().allow('', null).messages(Joi_messages),
+    }),
     isLiveStreaming: Joi.number()
       .integer()
       .min(0)
@@ -126,6 +131,11 @@ updateLessonValidation = (req, res, next) => {
       .max(1)
       .required()
       .messages(Joi_messages),
+    assignmentDeadLineDate: Joi.when('type', {
+      is: 0,
+      then: Joi.date().iso().required().messages(Joi_messages),
+      otherwise: Joi.string().allow('', null).messages(Joi_messages),
+    }),
     isLiveStreaming: Joi.number()
       .integer()
       .min(0)

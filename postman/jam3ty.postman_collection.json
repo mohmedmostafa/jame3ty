@@ -1037,7 +1037,7 @@
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/Soft and Bio.xlsx"
+									"src": []
 								},
 								{
 									"key": "img",
@@ -1047,7 +1047,7 @@
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback2.mp4"
+									"src": []
 								},
 								{
 									"key": "nameGroup",
@@ -1209,13 +1209,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseById/18",
+							"raw": "{{url}}api/listCourseById/3",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseById",
-								"18"
+								"3"
 							]
 						}
 					},
@@ -1489,18 +1489,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseNoDateByInstructor/1?doPagination=0&numPerPage=10&page=1&searchKey=&method=0",
+							"raw": "{{url}}api/listCourseNoDateByInstructor/7?doPagination=1&numPerPage=10&page=1&searchKey=&method=both",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseNoDateByInstructor",
-								"1"
+								"7"
 							],
 							"query": [
 								{
 									"key": "doPagination",
-									"value": "0"
+									"value": "1"
 								},
 								{
 									"key": "numPerPage",
@@ -1516,7 +1516,7 @@
 								},
 								{
 									"key": "method",
-									"value": "0",
+									"value": "both",
 									"description": "1 or 0 or both"
 								}
 							]
@@ -1546,7 +1546,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseOriginal?doPagination=0&numPerPage=2&page=2",
+							"raw": "{{url}}api/listCourseOriginal?doPagination=0&numPerPage=2&page=2&instructorId=7",
 							"host": [
 								"{{url}}api"
 							],
@@ -1580,7 +1580,7 @@
 								},
 								{
 									"key": "method",
-									"value": "both",
+									"value": "",
 									"description": "0 for Recorded Lessons  or 1 for Live Streaming",
 									"disabled": true
 								},
@@ -1621,8 +1621,7 @@
 								},
 								{
 									"key": "instructorId",
-									"value": null,
-									"disabled": true
+									"value": "7"
 								},
 								{
 									"key": "orderBy",
@@ -3203,6 +3202,11 @@
 									"type": "text"
 								},
 								{
+									"key": "assignmentDeadLineDate",
+									"value": "2020-09-16 08:01:43",
+									"type": "text"
+								},
+								{
 									"key": "isLiveStreaming",
 									"value": "1",
 									"description": "0 or 1",
@@ -3413,6 +3417,11 @@
 									"key": "type",
 									"value": "0",
 									"description": "0:Assignment | 1:Visual Lesson",
+									"type": "text"
+								},
+								{
+									"key": "assignmentDeadLineDate",
+									"value": "2020-09-16 08:01:43",
 									"type": "text"
 								},
 								{
@@ -3900,13 +3909,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listRatingAndReviewByCourseId/1",
+							"raw": "{{url}}api/listRatingAndReviewByCourseId/2",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listRatingAndReviewByCourseId",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -4417,22 +4426,22 @@
 	],
 	"variable": [
 		{
-			"id": "47e7b535-71a4-4381-8a09-f9deb0f980fc",
+			"id": "a61a424e-d379-40e5-b889-41da872c3fd1",
 			"key": "url",
 			"value": "http://jam3ty.net:30001/"
 		},
 		{
-			"id": "502fa68e-6540-4458-8a84-3db4671f4410",
+			"id": "22bc43da-8d55-4a07-aa8c-3fb2d3a00c38",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		},
 		{
-			"id": "d2d40287-8a84-40fd-b575-37457cdf5eca",
+			"id": "643bede3-c5e3-494a-ab6d-47ca9f83fd0e",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "c6b2d01d-17fe-4635-a5a8-a1a0fcc4b722",
+			"id": "72199e35-b1f9-4176-9928-ca57285a87de",
 			"value": ""
 		}
 	],

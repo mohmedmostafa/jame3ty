@@ -145,6 +145,7 @@ exports.ResponseConstants = {
         JOI_VALIDATION_INVALID_QUERY_PARAM:
           'JOI_VALIDATION_INVALID_QUERY_PARAM',
         FILE_EXTENSION_INVALID: 'FILE_EXTENSION_INVALID',
+        EXCEED_ASSIGNMENT_DEADLINE: 'EXCEED ASSIGNMENT DEADLINE',
         UNEXPECTED_FIELD: 'UNEXPECTED_FIELD',
         MULTER_UNEXPECTED_ERROR: 'MULTER_UNEXPECTED_ERROR',
         INVALID_DATE: 'INVALID_DATE',
@@ -172,8 +173,12 @@ exports.ResponseConstants = {
   },
   //Error MSGs
   ERROR_MESSAGES: {
+    EXCEED_ASSIGNMENT_DEADLINE: {
+      en: 'Exceed Deadline',
+      ar: 'انتهت الفتره المسموح فيها رفع الواجب',
+    },
     EXCEED_GROUP_MAX_COUNT_SUBSCRIPTION: {
-      en: 'can\'t exceed group max count of subscription',
+      en: "can't exceed group max count of subscription",
       ar: 'لا يوجد اماكن متاحه - هذه المجموعه ممتلئه',
     },
     LAST_SUBMISSION_IS_ACCEPTED: {

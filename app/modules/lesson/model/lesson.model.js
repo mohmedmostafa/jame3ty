@@ -29,6 +29,7 @@ module.exports = (connection, Sequelize) => {
         allowNull: true,
         comment: '0:Assignment | 1:Visual Lesson',
       },
+      assignmentDeadLineDate: { type: Sequelize.DATE },
       vedio: {
         type: Sequelize.STRING,
         defaultValue: '',

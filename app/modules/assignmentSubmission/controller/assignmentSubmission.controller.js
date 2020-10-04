@@ -47,6 +47,23 @@ exports.addAssignmentSubmission = async (req, res) => {
       );
     }
 
+    //Check if liveStreamingEndTime is after liveStreamingTime or not
+    if (lesson.type === '0') {
+      if (
+        moment
+          .utc(req.body.submissionDate)
+          .isAfter(moment.utc(lesson.assignmentDeadLineDate))
+      ) {
+        onErrorDeleteFiles(req);
+        return ValidateResponse(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNPROCESSABLE_ENTITY.type
+            .EXCEED_ASSIGNMENT_DEADLINE,
+          ResponseConstants.ERROR_MESSAGES.EXCEED_ASSIGNMENT_DEADLINE
+        );
+      }
+    }
+
     //Check if student submission for lesson is already accepted then can't resubmit another
     let assignmentSubmission = await db_AssignmentSubmission.findAll({
       where: {
@@ -111,7 +128,6 @@ exports.addAssignmentSubmission = async (req, res) => {
       ResponseConstants.HTTP_STATUS_CODES.CREATED.type.RECOURSE_CREATED,
       ResponseConstants.ERROR_MESSAGES.RECOURSE_CREATED
     );
-    
   } catch (error) {
     console.log(error);
     onErrorDeleteFiles(req);
@@ -636,7 +652,6 @@ function listAssignmentsSubmission_NOPagination(
               },
             ],
           },
-         
         ],
         distinct: true,
         order: Sequelize.literal(orderBy),
