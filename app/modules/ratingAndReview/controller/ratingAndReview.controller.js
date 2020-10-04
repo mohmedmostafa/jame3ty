@@ -216,6 +216,19 @@ exports.listRatingAndReviewByCourseId = async (req, res) => {
             courseId: req.params.courseId,
             paymentResult: 'CAPTURED',
           },
+          include: [
+            {
+              model: db_Student,
+            },
+            {
+              model: db_Course,
+              include: [
+                {
+                  model: db_Instructor,
+                },
+              ],
+            },
+          ],
         },
       ],
     });
