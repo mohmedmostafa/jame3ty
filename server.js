@@ -9,7 +9,8 @@ const bcrypt = require('bcryptjs');
 
 const app = express();
 
-app.use('/public', express.static('public'));
+// app.use('/public', express.static('public'));
+app.use('/public', express.static(__dirname + 'public'));
 
 // var corsOptions = {
 //   origin: `${HOST}` + `${PORT}`,

@@ -21,10 +21,15 @@ module.exports = (connection, Sequelize) => {
           if (fieldFilesPaths.length > 0) {
             fieldFilesPaths = fieldFilesPaths.split(',');
             fieldFilesPaths.forEach((location, index) => {
-              if (ENV === 'dev') {
-                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
-              } else {
+              // if (HOST === 'dev') {
+              //   fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
+              // } else {
+              //   fieldFilesPaths[index] = `${HOST}` + '/' + location;
+              // }
+              if (HOST.includes('heroku')) {
                 fieldFilesPaths[index] = `${HOST}` + '/' + location;
+              } else {
+                fieldFilesPaths[index] = `${HOST}` + `${PORT}` + '/' + location;
               }
             });
             fieldFilesPaths = fieldFilesPaths.join();

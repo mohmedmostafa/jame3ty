@@ -24,12 +24,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "admin23",
+									"value": "admin2",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "admin23@gmail.com",
+									"value": "admin2@gmail.com",
 									"type": "text"
 								},
 								{
@@ -663,32 +663,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "rrrrrrrr",
+									"value": "Mohaned",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "rrrrrrrr",
+									"value": "Mohaned",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "rrrrrrrr",
+									"value": "Mohaned",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "03117555422",
+									"value": "01050947517",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "rrrrrrrr",
+									"value": "Mohaned",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "rrrrrrrr@gmail.com",
+									"value": "Mohaned@gmail.com",
 									"type": "text"
 								},
 								{
@@ -699,7 +699,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/1.PNG"
+									"src": "/C:/Users/Farag/Pictures/2.jpeg"
 								},
 								{
 									"key": "password",
@@ -1031,23 +1031,23 @@
 								},
 								{
 									"key": "instructorId",
-									"value": "1",
+									"value": "7",
 									"type": "text"
 								},
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/Soft and Bio.xlsx"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140338.jpg"
 								},
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback2.mp4"
 								},
 								{
 									"key": "nameGroup",
@@ -4417,18 +4417,22 @@
 	],
 	"variable": [
 		{
-			"id": "19db0bfc-06de-4099-b7ba-3c4ea1bcbe95",
+			"id": "47e7b535-71a4-4381-8a09-f9deb0f980fc",
 			"key": "url",
-			"value": "http://localhost:3001/"
+			"value": "http://jam3ty.net:30001/"
 		},
 		{
-			"id": "7ce1e4f8-0e6f-42eb-b46d-b5e3172652a8",
+			"id": "502fa68e-6540-4458-8a84-3db4671f4410",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJPc2FtYUBnbWFpbC5jb20iLCJyb2xlcyI6WyJpbnN0cnVjdG9yIl0sImluc3RydWN0b3JJZCI6MSwic3R1ZGVudElkIjpudWxsLCJpYXQiOjE2MDE3MzcxOTUsImV4cCI6MTYwMTgyMzU5NX0.B7hyC3AWakLou3sFjECJYNQhznMZ1OwuWXnC2LB_nyQ"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		},
 		{
-			"id": "10c8b7a4-843c-4039-93d4-e68c9ba3e12f",
+			"id": "d2d40287-8a84-40fd-b575-37457cdf5eca",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
+			"value": ""
+		},
+		{
+			"id": "c6b2d01d-17fe-4635-a5a8-a1a0fcc4b722",
 			"value": ""
 		}
 	],
