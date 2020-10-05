@@ -6,6 +6,8 @@ const { upload } = require('./app/common/attachmentsUpload/multerConfig');
 const { PORT, HOST, ENV } = require('./app/config/env.config');
 const db = require('./app/modules');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const https = require('https');
 
 const app = express();
 
@@ -61,6 +63,24 @@ app.listen(process.env.PORT || PORT, () => {
     `Server set up and running on port number: ${process.env.PORT}, environment: ${process.env.NODE_ENV}`
   );
 });
+
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync('./certs/server.key'),
+//       cert: fs.readFileSync('./certs/server.cert'),
+//     },
+//     app
+//   )
+//   .listen(process.env.PORT || PORT, function () {
+//     // console.log(corsOptions);
+//     console.log(
+//       `Server set up and running on port number: ${PORT}, environment: ${ENV}`
+//     );
+//     console.log(
+//       `Server set up and running on port number: ${process.env.PORT}, environment: ${process.env.NODE_ENV}`
+//     );
+//   });
 
 //--------------------------------------
 //--------------------------------------
