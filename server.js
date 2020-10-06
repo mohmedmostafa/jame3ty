@@ -53,7 +53,7 @@ require('./app/modules/student/student.routes')(app);
 require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
 require('./app/modules/courseSubscribe/courseSubscribe.routes')(app);
 
-// set port, listen for requests
+// Http Server - set port, listen for requests
 app.listen(process.env.PORT || PORT, () => {
   // console.log(corsOptions);
   console.log(
@@ -64,11 +64,12 @@ app.listen(process.env.PORT || PORT, () => {
   );
 });
 
+//Https Server - set port, listen for requests
 // https
 //   .createServer(
 //     {
-//       key: fs.readFileSync('./certs/server.key'),
-//       cert: fs.readFileSync('./certs/server.cert'),
+//       key: fs.readFileSync('./certs/d0759_4258f_ad5ab773f19a8b9e8c487b1e90ed3618.key'),
+//       cert: fs.readFileSync('./certs/jam3ty_net_d0759_4258f_1609286399_46fdbef6bc68d5738cafadc02fd8a375.crt'),
 //     },
 //     app
 //   )

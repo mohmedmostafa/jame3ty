@@ -1,5 +1,12 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const {
+  ENV,
+  SMTP_HOST,
+  SMTP_PORT,
+  SMTP_AUTH_USER,
+  SMTP_AUTH_PASSWORD,
+} = require('../config/env.config');
 
 //-------------------------------------------------
 //Generate random token
@@ -28,20 +35,34 @@ exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
   // Only needed if you don't have a real mail account for testing
   let testAccount = await nodemailer.createTestAccount();
 
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
+  //Auth Info for dev / testing / production
+  let authInfo;
+  if (ENV === 'dev' || ENV === 'testing') {
+    authInfo = {
       user: testAccount.user, // generated ethereal user
       pass: testAccount.pass, // generated ethereal password
-    },
+    };
+  } else {
+    authInfo = {
+      user: SMTP_AUTH_USER, // generated ethereal user
+      pass: SMTP_AUTH_PASSWORD, // generated ethereal password
+    };
+  }
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    // host: 'smtp.ethereal.email',
+    // port: 587,
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465 ? true : false, // true for 465, false for other ports
+    auth: authInfo,
   });
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <mal.menofiauniversity@gmail.com>', // sender address
+    // from: '"Fred Foo 👻" <mal.menofiauniversity@gmail.com>', // sender address
+    from: '"Fred Foo 👻" <jamtynet@jam3ty.net>', // sender address
     to: receiverEmail, // list of receivers
     subject: 'Hello ✔', // Subject line
     text: 'Hello world?', // plain text body
