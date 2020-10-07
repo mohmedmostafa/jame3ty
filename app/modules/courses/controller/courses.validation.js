@@ -87,13 +87,12 @@ addCourseValidation = (req, res, next) => {
       .min(2)
       .required()
       .messages(Joi_messages),
-    attachement_price: Joi.number()
-      .positive()
-      .required()
-      .messages(Joi_messages),
+    // attachement_price: Joi.number().positive().required().messages(Joi_messages),
     subjectId: Joi.number().integer().required().messages(Joi_messages),
     instructorId: Joi.number().integer().required().messages(Joi_messages),
-  }).options({ abortEarly: false });
+  })
+    .options({ abortEarly: false })
+    .unknown(true);
 
   //Only when param = 1 which means Live Streaming
   if (req.params.method === '1') {
@@ -232,12 +231,11 @@ updateCourseValidation = (req, res, next) => {
       .min(2)
       .required()
       .messages(Joi_messages),
-    attachement_price: Joi.number()
-      .positive()
-      .required()
-      .messages(Joi_messages),
+    // attachement_price: Joi.number().positive().required().messages(Joi_messages),
     subjectId: Joi.number().integer().required().messages(Joi_messages),
-  }).options({ abortEarly: false });
+  })
+    .options({ abortEarly: false })
+    .unknown(true);
 
   const { error } = schema.validate(req.body);
   console.log(error);
