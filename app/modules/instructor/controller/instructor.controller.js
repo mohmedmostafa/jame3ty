@@ -205,7 +205,11 @@ exports.addInstructor = async (req, res) => {
     if (!isVerifiedByAdmin) {
       //Send Verification Email with Code
       await email
-        .sendSignupVerificationEmail(instructor.randomToken, req.body.email)
+        .sendSignupVerificationEmail(
+          instructor.randomToken,
+          req.body.email,
+          req.body.username
+        )
         .catch((err) => {
           console.log(err);
           console.error(err.message);

@@ -30,7 +30,11 @@ exports.generateRandomToken = ({
 
 //-------------------------------------------------
 //Send token/code to Email
-exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
+exports.sendSignupVerificationEmail = async (
+  token,
+  receiverEmail,
+  receiverUsername
+) => {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   let testAccount = await nodemailer.createTestAccount();
@@ -61,12 +65,16 @@ exports.sendSignupVerificationEmail = async (token, receiverEmail) => {
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    // from: '"Fred Foo 👻" <mal.menofiauniversity@gmail.com>', // sender address
-    from: '"Fred Foo 👻" <jamtynet@jam3ty.net>', // sender address
+    from: '"Jam3ty" <jamtynet@jam3ty.net>', // sender address
     to: receiverEmail, // list of receivers
-    subject: 'Hello ✔', // Subject line
+    subject: 'Please verify your email address', // Subject line
     text: 'Hello world?', // plain text body
-    html: '<b>Verification Code : <strong>' + token + '</strong></b>', // html body
+    html:
+      '<b>Hello ' +
+      receiverUsername +
+      '</b></br> <b>Your verification Code : <strong>' +
+      token +
+      '</strong></b>', // html body
   });
 
   console.log('Message sent: %s', info.messageId);

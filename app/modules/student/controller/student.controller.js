@@ -172,7 +172,11 @@ exports.addStudent = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupVerificationEmail(result.randomToken, req.body.email)
+      .sendSignupVerificationEmail(
+        result.randomToken,
+        req.body.email,
+        req.body.username
+      )
       .catch((err) => {
         console.log(err);
         console.error(err.message);

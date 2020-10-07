@@ -89,7 +89,11 @@ exports.signup = async (req, res) => {
 
     //Send Verification Email with Code
     await email
-      .sendSignupVerificationEmail(user.randomToken, req.body.email)
+      .sendSignupVerificationEmail(
+        user.randomToken,
+        req.body.email,
+        req.body.username
+      )
       .catch((err) => {
         console.error(err);
         return Response(
@@ -358,7 +362,11 @@ exports.sendVerificationCode = async (req, res) => {
 
         //Send Verification Email with Code
         await email
-          .sendSignupVerificationEmail(randomToken, req.body.email)
+          .sendSignupVerificationEmail(
+            randomToken,
+            req.body.email,
+            req.body.username
+          )
           .catch((err) => {
             console.log(err);
             console.error(err.message);
