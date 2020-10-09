@@ -104,7 +104,7 @@ exports.generatePaymentRequest = async (req, res) => {
 
     //If group not found
     if (!group) {
-      console.log('!student');
+      console.log('!group');
       // onErrorDeleteFiles(req);
       return Response(
         res,
@@ -151,7 +151,7 @@ exports.generatePaymentRequest = async (req, res) => {
     studentCourseSubscribe = await db_CourseSubscribe.create({
       studentId: req.body.studentId,
       courseId: req.body.courseId,
-      groupId: req.body.groupId ? req.body.groupId : '',
+      groupId: req.body.groupId ? req.body.groupId : null,
       whichPrice: req.body.whichPrice,
       details: JSON.stringify([course, student]),
     });
@@ -226,7 +226,7 @@ exports.generatePaymentRequest = async (req, res) => {
     api_key: bcrypt.hashSync(UPAYMENTS_API_KEY, 8),
     order_id: orderId,
     total_price: coursePrice,
-    CurrencyCode: 'USD',
+    CurrencyCode: 'KWD',
     success_url:
       HOST +
       PORT +
