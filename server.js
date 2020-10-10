@@ -52,6 +52,7 @@ require('./app/modules/lessonDiscussionComments/lessonDiscussionComments.routes'
 require('./app/modules/student/student.routes')(app);
 require('./app/modules/ratingAndReview/ratingAndReview.routes')(app);
 require('./app/modules/courseSubscribe/courseSubscribe.routes')(app);
+require('./app/modules/configForMobile/configForMobile.routes')(app);
 
 // Http Server - set port, listen for requests
 app.listen(process.env.PORT || PORT, () => {

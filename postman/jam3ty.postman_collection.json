@@ -24,12 +24,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "admin2",
+									"value": "admin",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "admin2@gmail.com",
+									"value": "admin@gmail.com",
 									"type": "text"
 								},
 								{
@@ -88,7 +88,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "adminAll@gmail.com",
+									"value": "admin@gmail.com",
 									"type": "text"
 								},
 								{
@@ -148,12 +148,12 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "Hatem@gmail.com",
+									"value": "ahmedfarag1993@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "772215",
+									"value": "654303",
 									"type": "text"
 								}
 							],
@@ -342,6 +342,9 @@
 				},
 				{
 					"name": "{{url}}api/listUniversity",
+					"protocolProfileBehavior": {
+						"strictSSL": false
+					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -663,32 +666,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "Mohaned",
+									"value": "Tataddaat",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Mohaned",
+									"value": "Tataddaat",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "Mohaned",
+									"value": "Tataddaat",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01050947517",
+									"value": "01001299517",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "Mohaned",
+									"value": "Tataddaat",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "Mohaned@gmail.com",
+									"value": "ahmedfarag1993@gmail.com",
 									"type": "text"
 								},
 								{
@@ -699,7 +702,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/2.jpeg"
+									"src": "/C:/Users/Farag/Pictures/download.jpeg"
 								},
 								{
 									"key": "password",
@@ -1209,13 +1212,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listCourseById/3",
+							"raw": "{{url}}api/listCourseById/4",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listCourseById",
-								"3"
+								"4"
 							]
 						}
 					},
@@ -3107,13 +3110,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listSubjectById/8",
+							"raw": "{{url}}api/listSubjectById/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listSubjectById",
-								"8"
+								"1"
 							]
 						}
 					},
@@ -3197,7 +3200,7 @@
 								},
 								{
 									"key": "type",
-									"value": "1",
+									"value": "0",
 									"description": "0:Assignment | 1:Visual Lesson",
 									"type": "text"
 								},
@@ -3246,7 +3249,7 @@
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback2.mp4"
+									"src": []
 								},
 								{
 									"key": "attachments",
@@ -4362,17 +4365,17 @@
 							"formdata": [
 								{
 									"key": "studentId",
-									"value": "4",
+									"value": "2",
 									"type": "text"
 								},
 								{
 									"key": "courseId",
-									"value": "17",
+									"value": "10",
 									"type": "text"
 								},
 								{
 									"key": "groupId",
-									"value": "7",
+									"value": "8",
 									"type": "text"
 								},
 								{
@@ -4393,6 +4396,46 @@
 							],
 							"path": [
 								"generatePaymentRequest"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ConfigForMobile",
+			"item": [
+				{
+					"name": "{{url}}api/listConfigForMobileById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "{{url}}api/listConfigForMobileById/1",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"listConfigForMobileById",
+								"1"
 							]
 						}
 					},
@@ -4426,23 +4469,27 @@
 	],
 	"variable": [
 		{
-			"id": "a61a424e-d379-40e5-b889-41da872c3fd1",
+			"id": "102281ce-c302-4366-bc9c-0e601e9fdb46",
 			"key": "url",
-			"value": "http://jam3ty.net:30001/"
+			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "22bc43da-8d55-4a07-aa8c-3fb2d3a00c38",
+			"id": "e8fa76b8-5027-45b3-876f-beb1ed331f69",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiTW9oYW5lZDJAZ21haWwuY29tIiwicm9sZXMiOlsic3R1ZGVudCJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6MSwiaWF0IjoxNjAxOTM1NTUzLCJleHAiOjE2MDIwMjE5NTN9.Rlf4Gi6TX3etCnVd6xI5Rc4j12OFS3fQfcUUG9hyP3Y"
 		},
 		{
-			"id": "643bede3-c5e3-494a-ab6d-47ca9f83fd0e",
+			"id": "f925cfd4-754f-40b8-95d8-ab0267e8072e",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "72199e35-b1f9-4176-9928-ca57285a87de",
+			"id": "dcecf152-4084-4b0b-b2ed-990855f218c0",
 			"value": ""
+		},
+		{
+			"id": "9dd94542-44d2-4694-8feb-609496982ec8",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],
 	"protocolProfileBehavior": {}
