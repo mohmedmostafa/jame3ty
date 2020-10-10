@@ -96,6 +96,10 @@ db.Payment = require('../modules/courseSubscribe/model/payment.model')(
   connection,
   Sequelize
 );
+db.ConfigForMobile = require('./configForMobile/configForMobile.model')(
+  connection,
+  Sequelize
+);
 
 //-----------------------
 //Relations
