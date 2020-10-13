@@ -46,4 +46,11 @@ module.exports = function (app) {
     [UserValidation.forgotPasswordValidation],
     AuthController.forgotPassword
   );
+
+  app.post(
+    '/api/auth/hasLastAccessToken',
+    upload.none(),
+    [],
+    AuthController.hasLastAccessToken
+  );
 };

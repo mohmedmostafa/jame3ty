@@ -153,7 +153,7 @@
 								},
 								{
 									"key": "code",
-									"value": "654303",
+									"value": "135572",
 									"type": "text"
 								}
 							],
@@ -241,6 +241,30 @@
 							"path": [
 								"auth",
 								"sendVerificationCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}api/auth/hasLastAccessToken",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}api/auth/hasLastAccessToken",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"auth",
+								"hasLastAccessToken"
 							]
 						}
 					},
@@ -666,32 +690,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "Tataddaat",
+									"value": "Dr Hatem",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Tataddaat",
+									"value": "Dr Hatem",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "Tataddaat",
+									"value": "Dr Hatem",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01001299517",
+									"value": "01001209517",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "Tataddaat",
+									"value": "drhatem",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "ahmedfarag1993@gmail.com",
+									"value": "drhatem@gmail.com",
 									"type": "text"
 								},
 								{
@@ -702,7 +726,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/download.jpeg"
+									"src": "/C:/Users/Farag/Pictures/2222.jpeg"
 								},
 								{
 									"key": "password",
@@ -958,52 +982,52 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "NEW rrrrrrrrrr",
+									"value": "Network - 1",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "NEW rrrrrrrrrr",
+									"value": "Network - 1",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "102",
+									"value": "IT 102",
 									"type": "text"
 								},
 								{
 									"key": "desc",
-									"value": "NEW rrrrrrrrrr",
+									"value": "Network - 1",
 									"type": "text"
 								},
 								{
 									"key": "prerequisiteText",
-									"value": "NEW rrrrrrrrrr",
+									"value": "Network - 1",
 									"type": "text"
 								},
 								{
 									"key": "whatYouWillLearn",
-									"value": "NEW rrrrrrrrrr",
+									"value": "Network - 1",
 									"type": "text"
 								},
 								{
 									"key": "numOfLessons",
-									"value": "144",
+									"value": "44",
 									"type": "text"
 								},
 								{
 									"key": "numOfHours",
-									"value": "404",
+									"value": "120",
 									"type": "text"
 								},
 								{
 									"key": "price",
-									"value": "604",
+									"value": "22",
 									"type": "text"
 								},
 								{
 									"key": "priceBeforeDiscount",
-									"value": "904",
+									"value": "22",
 									"type": "text"
 								},
 								{
@@ -1019,12 +1043,12 @@
 								},
 								{
 									"key": "course_keyword",
-									"value": "NEW rrrrrrrrrr",
+									"value": "مكثف",
 									"type": "text"
 								},
 								{
 									"key": "attachement_price",
-									"value": "123",
+									"value": "30",
 									"type": "text"
 								},
 								{
@@ -1034,54 +1058,56 @@
 								},
 								{
 									"key": "instructorId",
-									"value": "7",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": []
+									"src": [
+										"/C:/Users/Farag/Desktop/New folder (2)/Soft and Bio.xlsx",
+										"/C:/Users/Farag/Desktop/New folder (2)/Princ of Prog.xlsx",
+										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140225.jpg",
+										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140236.jpg",
+										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140338.jpg",
+										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140200.jpg"
+									]
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140338.jpg"
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/titleShadow-1024x341.png"
 								},
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback333.mp4"
 								},
 								{
 									"key": "nameGroup",
 									"value": "NEW fffffffff",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "maxNumOfStudentsGroup",
-									"value": "204",
-									"type": "text",
-									"disabled": true
+									"value": "24",
+									"type": "text"
 								},
 								{
 									"key": "startDateGroup",
 									"value": "2020-11-25",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "endDateGroup",
 									"value": "2020-12-20",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "groupSchedule",
 									"value": "[{\"day\":\"Friday1\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday2\",\"time\":\"1994-12-05T08:15:30-05:00\"},{\"day\":\"Friday3\",\"time\":\"1994-12-05T08:15:30-05:00\"}]",
 									"description": "Array of JSON Objects => As String",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								}
 							],
 							"options": {
@@ -1089,13 +1115,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/addCourse/0",
+							"raw": "{{url}}api/addCourse/1",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"addCourse",
-								"0"
+								"1"
 							]
 						}
 					},
@@ -1722,7 +1748,7 @@
 							"formdata": [
 								{
 									"key": "nameGroup",
-									"value": "GGGGGGGGG",
+									"value": "Group 2",
 									"type": "text"
 								},
 								{
@@ -1737,7 +1763,7 @@
 								},
 								{
 									"key": "endDateGroup",
-									"value": "2020-11-01",
+									"value": "2020-12-01",
 									"type": "text"
 								},
 								{
@@ -1748,7 +1774,7 @@
 								},
 								{
 									"key": "courseId",
-									"value": "4",
+									"value": "2",
 									"type": "text"
 								},
 								{
@@ -3548,28 +3574,28 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "HHHHHHHH",
+									"value": "Mohamed",
 									"type": "text"
 								},
 								{
 									"key": "mobile",
-									"value": "01053300317",
+									"value": "01013300317",
 									"type": "text"
 								},
 								{
 									"key": "username",
-									"value": "HHHHHHHH",
+									"value": "Mohamed",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "HHHHHHHH@gmail.com",
+									"value": "Mohamed@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Farag/Pictures/download.jpeg"
 								},
 								{
 									"key": "academicYearId",
@@ -4469,26 +4495,26 @@
 	],
 	"variable": [
 		{
-			"id": "102281ce-c302-4366-bc9c-0e601e9fdb46",
+			"id": "f34e952f-0260-4124-be0b-8970e5bd6c15",
 			"key": "url",
 			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "e8fa76b8-5027-45b3-876f-beb1ed331f69",
+			"id": "81b35602-6ca1-4896-a447-ca682b3dbabb",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiTW9oYW5lZDJAZ21haWwuY29tIiwicm9sZXMiOlsic3R1ZGVudCJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6MSwiaWF0IjoxNjAxOTM1NTUzLCJleHAiOjE2MDIwMjE5NTN9.Rlf4Gi6TX3etCnVd6xI5Rc4j12OFS3fQfcUUG9hyP3Y"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMjUwMTk0NSwiZXhwIjoxNjAyNTg4MzQ1fQ._bxqyGYm8jZSSNMYFHQEFZ23uK3TdhgjbqEKi9vyKrM"
 		},
 		{
-			"id": "f925cfd4-754f-40b8-95d8-ab0267e8072e",
+			"id": "f4a51c7f-c47b-4693-abd7-192c6a161c06",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "dcecf152-4084-4b0b-b2ed-990855f218c0",
+			"id": "88f576bb-a09f-430c-b19e-08fad3886779",
 			"value": ""
 		},
 		{
-			"id": "9dd94542-44d2-4694-8feb-609496982ec8",
+			"id": "89874866-4bb7-4eae-8ca0-d13af14849e0",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],

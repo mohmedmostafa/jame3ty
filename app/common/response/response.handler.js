@@ -99,6 +99,7 @@ exports.ResponseConstants = {
         TOKEN_TYPE_INVALID: 'TOKEN_TYPE_INVALID',
         TOKEN_NOT_FOUND: 'TOKEN_NOT_FOUND',
         TOKEN_INVALID: 'TOKEN_INVALID',
+        MANY_LOGINS_WITH_SAME_ACCOUNT: 'MANY_LOGINS_WITH_SAME_ACCOUNT',
         EMAIL_UNVERIFIED: 'EMAIL_UNVERIFIED',
         INVALID_PASSWORD: 'INVALID_PASSWORD',
         VERIFICATION_CODE_INCORRECT: 'VERIFICATION_CODE_INCORRECT',
@@ -343,6 +344,11 @@ exports.ResponseConstants = {
     TOKEN_NOT_FOUND: {
       en: 'Token is not found.',
       ar: 'رمز الدخول غير موجود',
+    },
+    MANY_LOGINS_WITH_SAME_ACCOUNT: {
+      en: 'The token is valid but not the same as generated in the last login.',
+      ar:
+        'الرمز المميز صالح ولكنه ليس هو نفسه الذي تم إنشاؤه في آخر تسجيل دخول',
     },
     TOKEN_INVALID: {
       en: 'Token is not valid.',

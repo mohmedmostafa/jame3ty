@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');
 const db = require('../../app/modules');
 const { JWT_SECRET_KEY } = require('../../app/config/env.config');
+const db_User = db.User;
 
 //---------------------------------------
 verifyToken = (req, res, next) => {
@@ -58,7 +59,8 @@ verifyToken = (req, res, next) => {
     //let token = req.headers['x-access-token'];
     let token = req.headers.authorization.split(' ')[1];
 
-    jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+    //jWT Verfiy token
+    jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
       if (err) {
         return Response(
           res,
@@ -75,8 +77,30 @@ verifyToken = (req, res, next) => {
       req.instructorId = decoded.instructorId;
       req.studentId = decoded.studentId;
 
-      next();
-      return;
+      //Check if current access token is same as last access token generated in last login
+      if (req.userId) {
+        await db_User.findByPk(req.userId).then((user) => {
+          if (user.accessToken.localeCompare(token) === 0) {
+            next();
+            return;
+          } else {
+            return Response(
+              res,
+              ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+              ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+                .MANY_LOGINS_WITH_SAME_ACCOUNT,
+              ResponseConstants.ERROR_MESSAGES.MANY_LOGINS_WITH_SAME_ACCOUNT
+            );
+          }
+        });
+      } else {
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+          ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+        );
+      }
     });
   }
 };

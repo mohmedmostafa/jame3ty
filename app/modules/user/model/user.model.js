@@ -21,6 +21,12 @@ module.exports = (connection, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      accessToken: {
+        type: Sequelize.STRING,
+      },
+      notificationToken: {
+        type: Sequelize.STRING,
+      },
       isVerified: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

@@ -147,7 +147,7 @@ exports.signin = async (req, res) => {
         },
       ],
     })
-    .then((loginUser) => {
+    .then(async (loginUser) => {
       //If username not found
       if (loginUser.length <= 0) {
         return Response(
@@ -216,6 +216,16 @@ exports.signin = async (req, res) => {
           JWT_SECRET_KEY,
           {
             expiresIn: 86400, // 24 hours
+          }
+        );
+
+        //Update accessToken column in DB
+        await db_User.update(
+          {
+            accessToken: token,
+          },
+          {
+            where: { id: loginUser.id },
           }
         );
 
@@ -468,4 +478,103 @@ exports.forgotPassword = async (req, res) => {
         }
       }
     });
+};
+
+//-----------------------------------------
+exports.hasLastAccessToken = async (req, res) => {
+  console.log(req.headers.authorization);
+
+  //If no auth in headers
+  if (!req.headers.authorization) {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+        .AUTHORIZATION_NOT_FOUND,
+      ResponseConstants.ERROR_MESSAGES.AUTHORIZATION_NOT_FOUND
+    );
+  }
+
+  //If token type is not Bearer
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[0] != 'Bearer'
+  ) {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.TOKEN_TYPE_INVALID,
+      ResponseConstants.ERROR_MESSAGES.TOKEN_TYPE_INVALID
+    );
+  }
+
+  //If Bearer token type is found but with no token value
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[1].length === 0
+  ) {
+    return Response(
+      res,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+      ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.TOKEN_NOT_FOUND,
+      ResponseConstants.ERROR_MESSAGES.TOKEN_NOT_FOUND
+    );
+  }
+
+  //If token value is exists but not valid or not correct
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[0] === 'Bearer'
+  ) {
+    //let token = req.headers['x-access-token'];
+    let token = req.headers.authorization.split(' ')[1];
+
+    //jWT Verfiy token
+    jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
+      if (err) {
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.TOKEN_INVALID,
+          ResponseConstants.ERROR_MESSAGES.TOKEN_INVALID
+        );
+      }
+
+      console.log(decoded);
+      req.userId = decoded.id;
+      req.userEmail = decoded.email;
+      req.userRoles = decoded.roles;
+      req.instructorId = decoded.instructorId;
+      req.studentId = decoded.studentId;
+
+      //Check if current access token is same as last access token generated in last login
+      if (req.userId) {
+        await db_User.findByPk(req.userId).then((user) => {
+          if (user.accessToken.localeCompare(token) === 0) {
+            return Response(
+              res,
+              ResponseConstants.HTTP_STATUS_CODES.SUCCESS.code,
+              ResponseConstants.HTTP_STATUS_CODES.SUCCESS.type.SUCCESS,
+              ResponseConstants.ERROR_MESSAGES.SUCCESS
+            );
+          } else {
+            return Response(
+              res,
+              ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+              ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+                .MANY_LOGINS_WITH_SAME_ACCOUNT,
+              ResponseConstants.ERROR_MESSAGES.MANY_LOGINS_WITH_SAME_ACCOUNT
+            );
+          }
+        });
+      } else {
+        return Response(
+          res,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+          ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type.SIGNIN_REQUIRED,
+          ResponseConstants.ERROR_MESSAGES.SIGNIN_REQUIRED
+        );
+      }
+    });
+  }
 };
