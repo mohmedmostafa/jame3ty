@@ -231,6 +231,7 @@ exports.listRatingAndReviewByCourseId = async (req, res) => {
           ],
         },
       ],
+      order: Sequelize.literal('RatingAndReviews.createdAt DESC'),
     });
 
     if (!ratingAndReview) {
