@@ -274,6 +274,7 @@ listLessonValidation = (req, res, next) => {
       .required()
       .messages(Joi_messages),
     course_id: Joi.any().messages(Joi_messages),
+    group_id: Joi.any().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.query);

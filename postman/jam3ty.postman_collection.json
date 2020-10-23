@@ -726,7 +726,7 @@
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Pictures/2222.jpeg"
+									"src": []
 								},
 								{
 									"key": "password",
@@ -982,32 +982,32 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "Network - 1",
+									"value": "Network - 3",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Network - 1",
+									"value": "Network - 3",
 									"type": "text"
 								},
 								{
 									"key": "code",
-									"value": "IT 102",
+									"value": "IT 104",
 									"type": "text"
 								},
 								{
 									"key": "desc",
-									"value": "Network - 1",
+									"value": "Network - 3",
 									"type": "text"
 								},
 								{
 									"key": "prerequisiteText",
-									"value": "Network - 1",
+									"value": "Network - 3",
 									"type": "text"
 								},
 								{
 									"key": "whatYouWillLearn",
-									"value": "Network - 1",
+									"value": "Network - 3",
 									"type": "text"
 								},
 								{
@@ -1064,24 +1064,17 @@
 								{
 									"key": "attachments",
 									"type": "file",
-									"src": [
-										"/C:/Users/Farag/Desktop/New folder (2)/Soft and Bio.xlsx",
-										"/C:/Users/Farag/Desktop/New folder (2)/Princ of Prog.xlsx",
-										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140225.jpg",
-										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140236.jpg",
-										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140338.jpg",
-										"/C:/Users/Farag/Desktop/New folder (2)/IMG_20200920_140200.jpg"
-									]
+									"src": []
 								},
 								{
 									"key": "img",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/titleShadow-1024x341.png"
+									"src": []
 								},
 								{
 									"key": "vedio",
 									"type": "file",
-									"src": "/C:/Users/Farag/Desktop/New folder (2)/videoplayback333.mp4"
+									"src": []
 								},
 								{
 									"key": "nameGroup",
@@ -2178,7 +2171,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=1&doPagination=1&numPerPage=1&page=3",
+							"raw": "{{url}}api/listlessonDiscussionComments?lessonId=2&doPagination=0&numPerPage=1&page=1",
 							"host": [
 								"{{url}}api"
 							],
@@ -2188,11 +2181,11 @@
 							"query": [
 								{
 									"key": "lessonId",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "doPagination",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "numPerPage",
@@ -2200,7 +2193,7 @@
 								},
 								{
 									"key": "page",
-									"value": "3"
+									"value": "1"
 								}
 							]
 						}
@@ -2219,13 +2212,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionCommentsById/4",
+							"raw": "{{url}}api/listlessonDiscussionCommentsById/90",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listlessonDiscussionCommentsById",
-								"4"
+								"90"
 							]
 						}
 					},
@@ -2243,13 +2236,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionById/2",
+							"raw": "{{url}}api/listlessonDiscussionById/69",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listlessonDiscussionById",
-								"2"
+								"69"
 							]
 						}
 					},
@@ -2487,13 +2480,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}api/listlessonDiscussionByCourseId/1?doPagination=0&numPerPage=10&page=1&searchKey=",
+							"raw": "{{url}}api/listlessonDiscussionByCourseId/2?doPagination=0&numPerPage=10&page=1&searchKey=",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"listlessonDiscussionByCourseId",
-								"1"
+								"2"
 							],
 							"query": [
 								{
@@ -3269,7 +3262,7 @@
 								},
 								{
 									"key": "courseId",
-									"value": "1",
+									"value": "3",
 									"type": "text"
 								},
 								{
@@ -3379,7 +3372,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both",
+							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both&course_id=3&group_id",
 							"host": [
 								"{{url}}api"
 							],
@@ -3407,6 +3400,14 @@
 									"key": "type",
 									"value": "both",
 									"description": "1 or 0 or both"
+								},
+								{
+									"key": "course_id",
+									"value": "3"
+								},
+								{
+									"key": "group_id",
+									"value": null
 								}
 							]
 						}
@@ -4495,26 +4496,26 @@
 	],
 	"variable": [
 		{
-			"id": "f34e952f-0260-4124-be0b-8970e5bd6c15",
+			"id": "34063ffe-ed8a-427c-a059-e05c9d9508b6",
 			"key": "url",
 			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "81b35602-6ca1-4896-a447-ca682b3dbabb",
+			"id": "5ebb098b-85ee-4420-889f-63d4ecbef9d7",
 			"key": "accessToken",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMjUwMTk0NSwiZXhwIjoxNjAyNTg4MzQ1fQ._bxqyGYm8jZSSNMYFHQEFZ23uK3TdhgjbqEKi9vyKrM"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMzQwMjEzOCwiZXhwIjoxNjAzNDg4NTM4fQ.Df6btsoWSTDOn6rYwQx0T-4Ck9nROvNrl05HVmt-UPA"
 		},
 		{
-			"id": "f4a51c7f-c47b-4693-abd7-192c6a161c06",
+			"id": "24042c48-f0f1-48db-8bd2-2823a3f73356",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "88f576bb-a09f-430c-b19e-08fad3886779",
+			"id": "de12449c-04ac-4596-863d-1c9051f59dce",
 			"value": ""
 		},
 		{
-			"id": "89874866-4bb7-4eae-8ca0-d13af14849e0",
+			"id": "44dd0cbd-40b8-4d53-9a95-ec670c70a5be",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],

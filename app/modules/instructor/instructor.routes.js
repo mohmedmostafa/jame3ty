@@ -55,7 +55,7 @@ module.exports = function (app, Uploader) {
     },
     [
       AuthJwt.VerifyToken,
-      AuthJwt.isAdmin,
+      AuthJwt.isInstructorOrAdmin,
       InstructorValidation.updateInstructorValidation,
     ],
     InstructorController.updateInstructor

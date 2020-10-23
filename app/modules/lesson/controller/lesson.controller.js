@@ -575,6 +575,10 @@ exports.updateLesson = async (req, res) => {
 
 //---------------------------------------------------------------
 exports.listLesson = async (req, res) => {
+  let course_id = req.query.course_id ? req.query.course_id : '%%';
+  let group_id = req.query.group_id ? req.query.group_id : '%%';
+
+  //
   const doPagination = parseInt(req.query.doPagination);
   const numPerPage = parseInt(req.query.numPerPage);
   const page = parseInt(req.query.page);
@@ -589,18 +593,38 @@ exports.listLesson = async (req, res) => {
     if (doPagination) {
       if (req.query.type != 'both') {
         //Do Pagination & Type 1 or 0
-        data = await listLesson_DoPagination_Type_1_or_0(req, skip, _limit);
+        data = await listLesson_DoPagination_Type_1_or_0(
+          req,
+          skip,
+          _limit,
+          course_id,
+          group_id
+        );
       } else {
         //Do Pagination & Type Both
-        data = await listLesson_DoPagination_Type_Both(req, skip, _limit);
+        data = await listLesson_DoPagination_Type_Both(
+          req,
+          skip,
+          _limit,
+          course_id,
+          group_id
+        );
       }
     } else {
       if (req.query.type != 'both') {
         //NO Pagination & Type 1 or 0
-        data = await listLesson_NOPagination_Type_1_or_0(req);
+        data = await listLesson_NOPagination_Type_1_or_0(
+          req,
+          course_id,
+          group_id
+        );
       } else {
         //NO Pagination & Type Both
-        data = await listLesson_NOPagination_Type_Both(req);
+        data = await listLesson_NOPagination_Type_Both(
+          req,
+          course_id,
+          group_id
+        );
       }
     }
 
@@ -634,7 +658,13 @@ exports.listLesson = async (req, res) => {
   }
 };
 
-function listLesson_DoPagination_Type_Both(req, skip, _limit) {
+function listLesson_DoPagination_Type_Both(
+  req,
+  skip,
+  _limit,
+  course_id,
+  group_id
+) {
   return new Promise(async (resolve, reject) => {
     await db_Lesson
       .findAndCountAll({
@@ -664,9 +694,11 @@ function listLesson_DoPagination_Type_Both(req, skip, _limit) {
         include: [
           {
             model: db_Course,
+            where: { id: { [Op.like]: course_id } },
           },
           {
             model: db_Group,
+            where: { id: { [Op.like]: group_id } },
           },
         ],
         distinct: true,
@@ -683,7 +715,13 @@ function listLesson_DoPagination_Type_Both(req, skip, _limit) {
   });
 }
 
-function listLesson_DoPagination_Type_1_or_0(req, skip, _limit) {
+function listLesson_DoPagination_Type_1_or_0(
+  req,
+  skip,
+  _limit,
+  course_id,
+  group_id
+) {
   return new Promise(async (resolve, reject) => {
     await db_Lesson
       .findAndCountAll({
@@ -711,9 +749,11 @@ function listLesson_DoPagination_Type_1_or_0(req, skip, _limit) {
         include: [
           {
             model: db_Course,
+            where: { id: { [Op.like]: course_id } },
           },
           {
             model: db_Group,
+            where: { id: { [Op.like]: group_id } },
           },
         ],
         distinct: true,
@@ -730,7 +770,7 @@ function listLesson_DoPagination_Type_1_or_0(req, skip, _limit) {
   });
 }
 
-function listLesson_NOPagination_Type_Both(req) {
+function listLesson_NOPagination_Type_Both(req, course_id, group_id) {
   return new Promise(async (resolve, reject) => {
     await db_Lesson
       .findAndCountAll({
@@ -755,9 +795,11 @@ function listLesson_NOPagination_Type_Both(req) {
         include: [
           {
             model: db_Course,
+            where: { id: { [Op.like]: course_id } },
           },
           {
             model: db_Group,
+            where: { id: { [Op.like]: group_id } },
           },
         ],
         distinct: true,
@@ -772,7 +814,7 @@ function listLesson_NOPagination_Type_Both(req) {
   });
 }
 
-function listLesson_NOPagination_Type_1_or_0(req) {
+function listLesson_NOPagination_Type_1_or_0(req, course_id, group_id) {
   return new Promise(async (resolve, reject) => {
     await db_Lesson
       .findAndCountAll({
@@ -800,9 +842,11 @@ function listLesson_NOPagination_Type_1_or_0(req) {
         include: [
           {
             model: db_Course,
+            where: { id: { [Op.like]: course_id } },
           },
           {
             model: db_Group,
+            where: { id: { [Op.like]: group_id } },
           },
         ],
         distinct: true,
