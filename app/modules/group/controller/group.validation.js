@@ -30,8 +30,8 @@ addGroupValidation = (req, res, next) => {
   const schema = Joi.object({
     nameGroup: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     maxNumOfStudentsGroup: Joi.number()
@@ -90,8 +90,8 @@ updateGroupValidation = (req, res, next) => {
   const schema = Joi.object({
     nameGroup: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     maxNumOfStudentsGroup: Joi.number()

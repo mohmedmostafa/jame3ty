@@ -16,7 +16,7 @@ const db = require('../../');
 addStudentValidation = async (req, res, next) => {
   //Body Validation
   let schema = Joi.object({
-    name: Joi.string().trim().min(3).max(30).required().messages(Joi_messages),
+    name: Joi.string().trim().min(1).max(100).required().messages(Joi_messages),
     mobile: Joi.string().trim().alphanum().required().messages(Joi_messages),
     email: Joi.string().trim().email().required().messages(Joi_messages),
     academicYearId: Joi.number().integer().required().messages(Joi_messages),
@@ -81,7 +81,7 @@ updateStudentValidation = async (req, res, next) => {
 
   //Body Validation
   let schema = Joi.object({
-    name: Joi.string().trim().min(3).max(30).required().messages(Joi_messages),
+    name: Joi.string().trim().min(1).max(100).required().messages(Joi_messages),
     mobile: Joi.string().trim().alphanum().required().messages(Joi_messages),
     academicYearId: Joi.number().integer().required().messages(Joi_messages),
     password: Joi.string().min(5).max(30).required().messages(Joi_messages),

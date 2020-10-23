@@ -16,17 +16,17 @@ addLessonValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
-    desc: Joi.string().trim().min(5).allow('', null).messages(Joi_messages),
+    desc: Joi.string().trim().min(1).allow('', null).messages(Joi_messages),
     type: Joi.number()
       .integer()
       .min(0)
@@ -46,7 +46,7 @@ addLessonValidation = (req, res, next) => {
       .messages(Joi_messages),
     liveStreamingInfo: Joi.when('isLiveStreaming', {
       is: 1,
-      then: Joi.string().min(3).required().messages(Joi_messages),
+      then: Joi.string().min(1).required().messages(Joi_messages),
       otherwise: Joi.string().allow('', null).messages(Joi_messages),
     }),
     liveStreamingTime: Joi.when('isLiveStreaming', {
@@ -114,17 +114,17 @@ updateLessonValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
-    desc: Joi.string().trim().min(5).allow('', null).messages(Joi_messages),
+    desc: Joi.string().trim().min(1).allow('', null).messages(Joi_messages),
     type: Joi.number()
       .integer()
       .min(0)
@@ -144,7 +144,7 @@ updateLessonValidation = (req, res, next) => {
       .messages(Joi_messages),
     liveStreamingInfo: Joi.when('isLiveStreaming', {
       is: 1,
-      then: Joi.string().min(3).required().messages(Joi_messages),
+      then: Joi.string().min(1).required().messages(Joi_messages),
       otherwise: Joi.string().allow('', null).messages(Joi_messages),
     }),
     liveStreamingTime: Joi.when('isLiveStreaming', {
@@ -234,7 +234,7 @@ deleteAttachmentValidation = (req, res, next) => {
 
   //Body Validation
   let schema = Joi.object({
-    attachmentPath: Joi.string().min(3).required().messages(Joi_messages),
+    attachmentPath: Joi.string().min(1).required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);

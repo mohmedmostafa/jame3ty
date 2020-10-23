@@ -81,7 +81,7 @@ deleteAssignmentSubmissionAttachmentValidation = (req, res, next) => {
 
   //Body Validation
   let schema = Joi.object({
-    attachmentPath: Joi.string().min(3).required().messages(Joi_messages),
+    attachmentPath: Joi.string().min(1).required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);

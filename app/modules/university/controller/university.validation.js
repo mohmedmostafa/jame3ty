@@ -21,14 +21,14 @@ addUniversityValidation = (req, res, next) => {
     .keys({
       faculty_name_ar: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
       faculty_name_en: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
     });
@@ -37,14 +37,14 @@ addUniversityValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     faculties: Joi.array().items(facultySchema).messages(Joi_messages),
@@ -92,14 +92,14 @@ updateUniversityValidation = (req, res, next) => {
   const schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
   }).options({ abortEarly: false });

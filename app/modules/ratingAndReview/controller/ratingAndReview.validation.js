@@ -14,7 +14,7 @@ addRatingAndReviewValidation = (req, res, next) => {
     date: Joi.date().iso().required().messages(Joi_messages),
     reviewText: Joi.string()
       .trim()
-      .min(5)
+      .min(1)
       .max(300)
       .allow('', null)
       .messages(Joi_messages),
@@ -67,7 +67,7 @@ updateRatingAndReviewValidation = (req, res, next) => {
   const schema = Joi.object({
     reviewText: Joi.string()
       .trim()
-      .min(5)
+      .min(1)
       .max(300)
       .allow('', null)
       .messages(Joi_messages),

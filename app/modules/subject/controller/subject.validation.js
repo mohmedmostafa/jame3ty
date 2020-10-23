@@ -16,14 +16,14 @@ addSubjectValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     academicYearId: Joi.number().integer().required().messages(Joi_messages),
@@ -71,14 +71,14 @@ updateSubjectValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     academicYearId: Joi.number().integer().required().messages(Joi_messages),

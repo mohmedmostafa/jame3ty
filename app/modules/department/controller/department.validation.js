@@ -23,14 +23,14 @@ addDepartmentValidation = (req, res, next) => {
     .keys({
       subject_name_ar: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
       subject_name_en: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
     });
@@ -41,14 +41,14 @@ addDepartmentValidation = (req, res, next) => {
     .keys({
       academic_name_ar: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
       academic_name_en: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
       subjects: Joi.array().items(subjectsSchema).messages(Joi_messages),
@@ -58,14 +58,14 @@ addDepartmentValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     facultyId: Joi.number().integer().required().messages(Joi_messages),
@@ -116,14 +116,14 @@ updateDepartmentValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     facultyId: Joi.any().messages(Joi_messages),

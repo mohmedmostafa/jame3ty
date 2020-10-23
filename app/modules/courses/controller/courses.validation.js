@@ -40,26 +40,26 @@ addCourseValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     code: Joi.string().allow('', null).messages(Joi_messages),
-    desc: Joi.string().trim().min(5).required().messages(Joi_messages),
+    desc: Joi.string().trim().min(1).required().messages(Joi_messages),
     prerequisiteText: Joi.string()
       .trim()
-      .min(5)
+      .min(1)
       .required()
       .messages(Joi_messages),
     whatYouWillLearn: Joi.string()
       .trim()
-      .min(5)
+      .min(1)
       .required()
       .messages(Joi_messages),
     numOfLessons: Joi.number()
@@ -114,8 +114,8 @@ addCourseValidation = (req, res, next) => {
     schema = schema.keys({
       nameGroup: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
       maxNumOfStudentsGroup: Joi.number()
@@ -184,26 +184,26 @@ updateCourseValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     code: Joi.string().allow('', null).messages(Joi_messages),
-    desc: Joi.string().trim().min(5).required().messages(Joi_messages),
+    desc: Joi.string().trim().min(1).required().messages(Joi_messages),
     prerequisiteText: Joi.string()
       .trim()
-      .min(5)
+      .min(1)
       .required()
       .messages(Joi_messages),
     whatYouWillLearn: Joi.string()
       .trim()
-      .min(5)
+      .min(1)
       .required()
       .messages(Joi_messages),
     numOfLessons: Joi.number()
@@ -275,7 +275,7 @@ deleteAttachmentValidation = (req, res, next) => {
 
   //Body Validation
   let schema = Joi.object({
-    attachmentPath: Joi.string().min(3).required().messages(Joi_messages),
+    attachmentPath: Joi.string().min(1).required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);

@@ -23,14 +23,14 @@ addAcademicYearValidation = (req, res, next) => {
     .keys({
       subject_name_ar: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
       subject_name_en: Joi.string()
         .trim()
-        .min(3)
-        .max(30)
+        .min(1)
+        .max(100)
         .required()
         .messages(Joi_messages),
     });
@@ -39,14 +39,14 @@ addAcademicYearValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     departmentId: Joi.number().integer().required().messages(Joi_messages),
@@ -94,14 +94,14 @@ updateAcademicYearValidation = (req, res, next) => {
   let schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     departmentId: Joi.number().integer().messages(Joi_messages),

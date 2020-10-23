@@ -13,14 +13,14 @@ addFacultyValidation = (req, res, next) => {
   const schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     universityId: Joi.number().integer().required().messages(Joi_messages),
@@ -66,14 +66,14 @@ updateFacultyValidation = (req, res, next) => {
   const schema = Joi.object({
     name_ar: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     name_en: Joi.string()
       .trim()
-      .min(3)
-      .max(30)
+      .min(1)
+      .max(100)
       .required()
       .messages(Joi_messages),
     universityId: Joi.number().integer().required().messages(Joi_messages),

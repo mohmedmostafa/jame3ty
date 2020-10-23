@@ -18,7 +18,7 @@ signinValidation = async (req, res, next) => {
     username: Joi.string()
       .trim()
       .min(3)
-      .max(30)
+      .max(50)
       .required()
       .messages(Joi_messages),
     password: Joi.string()
@@ -60,7 +60,7 @@ signupValidation = async (req, res, next) => {
       .alphanum()
       .trim()
       .min(3)
-      .max(30)
+      .max(50)
       .required()
       .messages(Joi_messages),
     email: Joi.string().trim().email().required().messages(Joi_messages),
