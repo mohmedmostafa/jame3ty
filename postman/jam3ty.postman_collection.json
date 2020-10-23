@@ -3372,7 +3372,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both&course_id=2&group_id=1",
+							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both&course_id=4&group_id=",
 							"host": [
 								"{{url}}api"
 							],
@@ -3403,11 +3403,11 @@
 								},
 								{
 									"key": "course_id",
-									"value": "2"
+									"value": "4"
 								},
 								{
 									"key": "group_id",
-									"value": "1"
+									"value": ""
 								}
 							]
 						}
@@ -4496,26 +4496,26 @@
 	],
 	"variable": [
 		{
-			"id": "ac6d6ea4-bc17-4a42-8696-ab125113d865",
+			"id": "287383d3-e041-41ee-9777-8ed7fa65b41e",
 			"key": "url",
 			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "2f07b3fa-9789-4c70-92eb-6774a2834063",
+			"id": "d77268f6-aaa0-4c13-abab-c4aa184a69fe",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMzQwMjEzOCwiZXhwIjoxNjAzNDg4NTM4fQ.Df6btsoWSTDOn6rYwQx0T-4Ck9nROvNrl05HVmt-UPA"
 		},
 		{
-			"id": "d680d54b-ff0a-4523-ab3e-0d69246aacc1",
+			"id": "b0a6e696-4811-4fb7-b499-bb0e4d81d912",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "a3dbe81e-d780-4545-8727-edf9b470459e",
+			"id": "5df20fea-8581-4fa7-a500-61590da18c4b",
 			"value": ""
 		},
 		{
-			"id": "70da9dc4-91f4-4b25-bfae-d100bf281825",
+			"id": "8f8f011f-a636-4238-a810-5dcec1733e01",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],

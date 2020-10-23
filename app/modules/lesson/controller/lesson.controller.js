@@ -698,6 +698,7 @@ function listLesson_DoPagination_Type_Both(
           },
           {
             model: db_Group,
+            required: false,
             where: { id: { [Op.like]: group_id } },
           },
         ],
@@ -753,6 +754,7 @@ function listLesson_DoPagination_Type_1_or_0(
           },
           {
             model: db_Group,
+            required: false,
             where: { id: { [Op.like]: group_id } },
           },
         ],
@@ -790,6 +792,11 @@ function listLesson_NOPagination_Type_Both(req, course_id, group_id) {
                 },
               ],
             },
+            {
+              type: {
+                [Op.in]: ['0', '1'],
+              },
+            },
           ],
         },
         include: [
@@ -799,6 +806,7 @@ function listLesson_NOPagination_Type_Both(req, course_id, group_id) {
           },
           {
             model: db_Group,
+            required: false,
             where: { id: { [Op.like]: group_id } },
           },
         ],
@@ -846,6 +854,7 @@ function listLesson_NOPagination_Type_1_or_0(req, course_id, group_id) {
           },
           {
             model: db_Group,
+            required: false,
             where: { id: { [Op.like]: group_id } },
           },
         ],
