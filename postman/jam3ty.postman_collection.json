@@ -292,17 +292,17 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "حاحا",
+									"value": "ggggggggggg",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Haha",
+									"value": "ggggggggggg",
 									"type": "text"
 								},
 								{
 									"key": "faculties",
-									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
+									"value": "[{\"faculty_name_ar\":\"mmmmmmath3\",\"faculty_name_en\":\"mmmmmath3\"},{\"faculty_name_ar\":\"ppppphsyics3\", \"faculty_name_en\":\"pppphsyics3\"}]",
 									"type": "text"
 								}
 							],
@@ -4496,26 +4496,26 @@
 	],
 	"variable": [
 		{
-			"id": "40a96519-d1a8-4a76-9caa-a144d159e559",
+			"id": "ac6d6ea4-bc17-4a42-8696-ab125113d865",
 			"key": "url",
 			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "5b6e6462-013f-4d6c-bbb1-4446598e3c54",
+			"id": "2f07b3fa-9789-4c70-92eb-6774a2834063",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMzQwMjEzOCwiZXhwIjoxNjAzNDg4NTM4fQ.Df6btsoWSTDOn6rYwQx0T-4Ck9nROvNrl05HVmt-UPA"
 		},
 		{
-			"id": "6aa10334-c771-4df9-ba72-0701120e7527",
+			"id": "d680d54b-ff0a-4523-ab3e-0d69246aacc1",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "cc7a78b9-8478-4998-9842-8885144306ca",
+			"id": "a3dbe81e-d780-4545-8727-edf9b470459e",
 			"value": ""
 		},
 		{
-			"id": "411b2639-87d0-4e75-853f-6740df950ac6",
+			"id": "70da9dc4-91f4-4b25-bfae-d100bf281825",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],

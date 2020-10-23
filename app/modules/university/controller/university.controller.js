@@ -28,12 +28,21 @@ exports.addUniversity = async (req, res) => {
       );
 
       //Inject universityId into each Faculty belongs to the university
+      let allFaculties = [];
       req.body.faculties.forEach((faculty) => {
         faculty.universityId = university.id;
+        //
+        let fc = {};
+        fc.name_ar = faculty.faculty_name_ar;
+        fc.name_en = faculty.faculty_name_en;
+        fc.universityId = faculty.universityId;
+        allFaculties.push(fc);
       });
 
+      //
+
       //Save Faculties to DB for the university
-      await db_Faculty.bulkCreate(req.body.faculties, {
+      await db_Faculty.bulkCreate(allFaculties, {
         fields: ['name_ar', 'name_en', 'universityId'],
         transaction: t,
       });

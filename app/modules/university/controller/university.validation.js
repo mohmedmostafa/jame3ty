@@ -19,13 +19,13 @@ addUniversityValidation = (req, res, next) => {
   let facultySchema = Joi.object()
     .options({ abortEarly: false })
     .keys({
-      name_ar: Joi.string()
+      faculty_name_ar: Joi.string()
         .trim()
         .min(1)
         .max(100)
         .required()
         .messages(Joi_messages),
-      name_en: Joi.string()
+      faculty_name_en: Joi.string()
         .trim()
         .min(1)
         .max(100)
