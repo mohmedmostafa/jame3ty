@@ -33,7 +33,7 @@ exports.addUniversity = async (req, res) => {
       });
 
       //Save Faculties to DB for the university
-      var faculty = await db_Faculty.bulkCreate(req.body.faculties, {
+      await db_Faculty.bulkCreate(req.body.faculties, {
         fields: ['name_ar', 'name_en', 'universityId'],
         transaction: t,
       });

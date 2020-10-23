@@ -292,17 +292,17 @@
 							"formdata": [
 								{
 									"key": "name_ar",
-									"value": "جامعه قطر",
+									"value": "حاحا",
 									"type": "text"
 								},
 								{
 									"key": "name_en",
-									"value": "Qater",
+									"value": "Haha",
 									"type": "text"
 								},
 								{
 									"key": "faculties",
-									"value": "[{\"faculty_name_ar\":\"math3\",\"faculty_name_en\":\"math3\"},{\"faculty_name_ar\":\"phsyics3\", \"faculty_name_en\":\"phsyics3\"}]",
+									"value": "[{\"name_ar\":\"math3\",\"name_en\":\"math3\"},{\"name_ar\":\"phsyics3\", \"name_en\":\"phsyics3\"}]",
 									"type": "text"
 								}
 							],
@@ -3372,7 +3372,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both&course_id=3&group_id",
+							"raw": "{{url}}api/listLesson?doPagination=0&numPerPage=1&page=1&searchKey=&type=both&course_id=2&group_id=1",
 							"host": [
 								"{{url}}api"
 							],
@@ -3403,11 +3403,11 @@
 								},
 								{
 									"key": "course_id",
-									"value": "3"
+									"value": "2"
 								},
 								{
 									"key": "group_id",
-									"value": null
+									"value": "1"
 								}
 							]
 						}
@@ -4496,26 +4496,26 @@
 	],
 	"variable": [
 		{
-			"id": "34063ffe-ed8a-427c-a059-e05c9d9508b6",
+			"id": "40a96519-d1a8-4a76-9caa-a144d159e559",
 			"key": "url",
 			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "5ebb098b-85ee-4420-889f-63d4ecbef9d7",
+			"id": "5b6e6462-013f-4d6c-bbb1-4446598e3c54",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMzQwMjEzOCwiZXhwIjoxNjAzNDg4NTM4fQ.Df6btsoWSTDOn6rYwQx0T-4Ck9nROvNrl05HVmt-UPA"
 		},
 		{
-			"id": "24042c48-f0f1-48db-8bd2-2823a3f73356",
+			"id": "6aa10334-c771-4df9-ba72-0701120e7527",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "de12449c-04ac-4596-863d-1c9051f59dce",
+			"id": "cc7a78b9-8478-4998-9842-8885144306ca",
 			"value": ""
 		},
 		{
-			"id": "44dd0cbd-40b8-4d53-9a95-ec670c70a5be",
+			"id": "411b2639-87d0-4e75-853f-6740df950ac6",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],
