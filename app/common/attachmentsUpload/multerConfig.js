@@ -61,7 +61,15 @@ exports.upload = multer({ storage: storage, fileFilter: fieldsFileFilter });
 //----------------------------------------------------------------
 const valid_mim_types_constants = {
   IMAGE: ['image/jpg', 'image/png', 'image/jpeg'],
-  VEDIO: ['video/mp4'],
+  VEDIO: [
+    'video/mp4',
+    'video/x-flv',
+    'video/quicktime',
+    'video/x-msvideo',
+    'video/x-ms-wmv',
+    'video/avi',
+    'video/msvideo',
+  ],
   FILE_PDF: ['application/pdf'],
   FILE_WORD: [
     'application/msword',
