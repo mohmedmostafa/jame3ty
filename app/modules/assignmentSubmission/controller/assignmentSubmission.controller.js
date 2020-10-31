@@ -698,15 +698,18 @@ function listAssignmentsSubmission_DoPagination(
           },
           {
             model: db_Lesson,
+            required: true,
             include: [
               {
                 model: db_Course,
+                required: true,
                 where: {
                   id: { [Op.like]: courseId },
                 },
                 include: [
                   {
                     model: db_Instructor,
+                    required: true,
                     where: {
                       id: { [Op.like]: instructorId },
                     },
