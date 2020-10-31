@@ -20,7 +20,7 @@ module.exports = function (app) {
     [
       GroupValidation.addGroupValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     GroupController.addGroup
   );
@@ -31,7 +31,7 @@ module.exports = function (app) {
     [
       GroupValidation.deleteGroupValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     GroupController.deleteGroup
   );
@@ -42,7 +42,7 @@ module.exports = function (app) {
     [
       GroupValidation.updateGroupValidation,
       AuthJwt.VerifyToken,
-      AuthJwt.isInstructor,
+      AuthJwt.isInstructorOrAdmin,
     ],
     GroupController.updateGroup
   );
