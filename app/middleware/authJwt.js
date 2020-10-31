@@ -80,17 +80,22 @@ verifyToken = (req, res, next) => {
       //Check if current access token is same as last access token generated in last login
       if (req.userId) {
         await db_User.findByPk(req.userId).then((user) => {
-          if (user.accessToken.localeCompare(token) === 0) {
+          if (!user.accessToken) {
+            if (user.accessToken.localeCompare(token) === 0) {
+              next();
+              return;
+            } else {
+              return Response(
+                res,
+                ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
+                ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
+                  .MANY_LOGINS_WITH_SAME_ACCOUNT,
+                ResponseConstants.ERROR_MESSAGES.MANY_LOGINS_WITH_SAME_ACCOUNT
+              );
+            }
+          } else {
             next();
             return;
-          } else {
-            return Response(
-              res,
-              ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.code,
-              ResponseConstants.HTTP_STATUS_CODES.UNAUTHORIZED.type
-                .MANY_LOGINS_WITH_SAME_ACCOUNT,
-              ResponseConstants.ERROR_MESSAGES.MANY_LOGINS_WITH_SAME_ACCOUNT
-            );
           }
         });
       } else {
