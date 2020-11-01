@@ -3065,6 +3065,7 @@ exports.listCourseOriginal = async (req, res) => {
   let method = req.query.method ? req.query.method : '%%';
   let universityId = req.query.universityId ? req.query.universityId : '%%';
   let facultyId = req.query.facultyId ? req.query.facultyId : '%%';
+  let courseId = req.query.courseId ? req.query.courseId : '%%';
   let departmentId = req.query.departmentId ? req.query.departmentId : '%%';
   let academicYearId = req.query.academicYearId
     ? req.query.academicYearId
@@ -3125,6 +3126,7 @@ exports.listCourseOriginal = async (req, res) => {
       //Do Pagination
       data = await listCourseOriginal_DoPagination(
         req,
+        courseId,
         searchKey,
         type,
         method,
@@ -3153,6 +3155,7 @@ exports.listCourseOriginal = async (req, res) => {
       //NO Pagination
       data = await listCourseOriginal_NOPagination(
         req,
+        courseId,
         searchKey,
         type,
         method,
@@ -3221,6 +3224,7 @@ exports.listCourseOriginal = async (req, res) => {
 
 function listCourseOriginal_NOPagination(
   req,
+  courseId,
   searchKey,
   type,
   method,
@@ -3239,6 +3243,11 @@ function listCourseOriginal_NOPagination(
       .findAndCountAll({
         where: {
           [Op.and]: [
+            {
+              id: {
+                [Op.like]: courseId,
+              },
+            },
             {
               [Op.or]: [
                 {
@@ -3355,6 +3364,7 @@ function listCourseOriginal_NOPagination(
 
 function listCourseOriginal_DoPagination(
   req,
+  courseId,
   searchKey,
   type,
   method,
@@ -3375,6 +3385,11 @@ function listCourseOriginal_DoPagination(
       .findAndCountAll({
         where: {
           [Op.and]: [
+            {
+              id: {
+                [Op.like]: courseId,
+              },
+            },
             {
               [Op.or]: [
                 {

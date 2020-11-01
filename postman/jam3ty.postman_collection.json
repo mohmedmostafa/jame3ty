@@ -1649,6 +1649,11 @@
 									"key": "orderBy",
 									"value": "DESC",
 									"disabled": true
+								},
+								{
+									"key": "courseId",
+									"value": null,
+									"disabled": true
 								}
 							]
 						}
@@ -4496,26 +4501,26 @@
 	],
 	"variable": [
 		{
-			"id": "287383d3-e041-41ee-9777-8ed7fa65b41e",
+			"id": "9b85c8bc-fcc0-4e7e-80e3-ea594733ce33",
 			"key": "url",
 			"value": "https://jam3ty.net:30001/"
 		},
 		{
-			"id": "d77268f6-aaa0-4c13-abab-c4aa184a69fe",
+			"id": "6c0bc929-b856-4268-a6a4-0f25b11004a6",
 			"key": "accessToken",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJkcmhhdGVtQGdtYWlsLmNvbSIsInJvbGVzIjpbImluc3RydWN0b3IiXSwiaW5zdHJ1Y3RvcklkIjoyLCJzdHVkZW50SWQiOm51bGwsImlhdCI6MTYwMzQwMjEzOCwiZXhwIjoxNjAzNDg4NTM4fQ.Df6btsoWSTDOn6rYwQx0T-4Ck9nROvNrl05HVmt-UPA"
 		},
 		{
-			"id": "b0a6e696-4811-4fb7-b499-bb0e4d81d912",
+			"id": "471910bf-9a64-479f-9ca0-b049592c7d75",
 			"key": "172f4d51-b117-44ca-b621-d796dde2b974",
 			"value": ""
 		},
 		{
-			"id": "5df20fea-8581-4fa7-a500-61590da18c4b",
+			"id": "695322e0-ba7f-40a7-b876-9d623c1291cf",
 			"value": ""
 		},
 		{
-			"id": "8f8f011f-a636-4238-a810-5dcec1733e01",
+			"id": "951c61f0-ef39-41b2-a9d9-83f7cdfacee0",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlcyI6WyJhZG1pbiJdLCJpbnN0cnVjdG9ySWQiOm51bGwsInN0dWRlbnRJZCI6bnVsbCwiaWF0IjoxNjAxODM5Mjg0LCJleHAiOjE2MDE5MjU2ODR9.gjRQBG232ORR6Dvd-f0T8fL8PTTSF8cO9EgF-ilzfyc"
 		}
 	],
