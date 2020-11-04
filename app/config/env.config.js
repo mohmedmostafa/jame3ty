@@ -83,5 +83,6 @@ const config = {
 };
 
 const env = process.env.NODE_ENV;
+console.log(config[env]);
 
 module.exports = config[env];
