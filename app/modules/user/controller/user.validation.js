@@ -21,10 +21,7 @@ signinValidation = async (req, res, next) => {
       .max(50)
       .required()
       .messages(Joi_messages),
-    password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-      .required()
-      .messages(Joi_messages),
+    password: Joi.string().required().messages(Joi_messages),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);
@@ -65,7 +62,8 @@ signupValidation = async (req, res, next) => {
       .messages(Joi_messages),
     email: Joi.string().trim().email().required().messages(Joi_messages),
     password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .regex(RegExp('^\\S+$'))
       .required()
       .messages(Joi_messages),
     roles: Joi.string().trim().min(1).required().messages(Joi_messages),
@@ -122,7 +120,8 @@ updateUserValidation = async (req, res, next) => {
   //Body Validation
   const schema = Joi.object({
     password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .regex(RegExp('^\\S+$'))
       .required()
       .messages(Joi_messages),
     roles: Joi.string().trim().min(1).required().messages(Joi_messages),
@@ -284,15 +283,18 @@ sendVerificationCodeValidation = async (req, res, next) => {
 changePasswordInsideValidation = async (req, res, next) => {
   const schema = Joi.object({
     oldPassword: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .regex(RegExp('^\\S+$'))
       .required()
       .messages(Joi_messages),
     newPassword: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .regex(RegExp('^\\S+$'))
       .required()
       .messages(Joi_messages),
     newPasswordRepeat: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .regex(RegExp('^\\S+$'))
       .valid(Joi.ref('newPassword'))
       .required()
       .messages(Joi_messages),
@@ -318,7 +320,8 @@ forgotPasswordValidation = async (req, res, next) => {
   const schema = Joi.object({
     email: Joi.string().trim().email().required().messages(Joi_messages),
     password: Joi.string()
-      .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+      .regex(RegExp('^\\S+$'))
       .required()
       .messages(Joi_messages),
     code: Joi.string()

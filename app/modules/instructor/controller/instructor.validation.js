@@ -32,7 +32,12 @@ addInstructorValidation = async (req, res, next) => {
       .max(100)
       .required()
       .messages(Joi_messages),
-    password: Joi.string().min(5).max(30).required().messages(Joi_messages),
+    password: Joi.string()
+      .regex(RegExp('^\\S+$'))
+      .min(5)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
     'g-recaptcha-response': Joi.any().messages(Joi_messages),
     img: Joi.any().messages(Joi_messages),
     cv: Joi.any().messages(Joi_messages),

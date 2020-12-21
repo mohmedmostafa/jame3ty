@@ -27,7 +27,12 @@ addStudentValidation = async (req, res, next) => {
       .max(30)
       .required()
       .messages(Joi_messages),
-    password: Joi.string().min(5).max(30).required().messages(Joi_messages),
+    password: Joi.string()
+      .regex(RegExp('^\\S+$'))
+      .min(5)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
     'g-recaptcha-response': Joi.any().messages(Joi_messages),
   }).options({ abortEarly: false });
 
@@ -84,7 +89,12 @@ updateStudentValidation = async (req, res, next) => {
     name: Joi.string().trim().min(1).max(100).required().messages(Joi_messages),
     mobile: Joi.string().trim().alphanum().required().messages(Joi_messages),
     academicYearId: Joi.number().integer().required().messages(Joi_messages),
-    password: Joi.string().min(5).max(30).required().messages(Joi_messages),
+    password: Joi.string()
+      .regex(RegExp('^\\S+$'))
+      .min(5)
+      .max(30)
+      .required()
+      .messages(Joi_messages),
     'g-recaptcha-response': Joi.any().messages(Joi_messages),
   }).options({ abortEarly: false });
 
